@@ -45,4 +45,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function mahasiswa()
+    {
+        return $this->hasOne(Mahasiswa::class, 'user_id');
+    }
+
+    public function mitra()
+    {
+        return $this->hasOne(Mitra::class, 'user_id');
+    }
 }

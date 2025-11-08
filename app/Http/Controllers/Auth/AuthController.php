@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function index()
     {
-        return view('auth.signin');
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -27,16 +28,19 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credentials) && Auth::user()->role == "admin") {
-            return redirect('/admin')->with('success', 'Berhasil Login');
-        } elseif (Auth::attempt($credentials) && Auth::user()->role == "mitra") {
-            return redirect('/mitra/dashboard')->with('success', 'Berhasil Login');
-        } elseif (Auth::attempt($credentials) && Auth::user()->role == "kampus") {
-            return redirect('/kampus/dashboard')->with('success', 'Berhasil Login');
-        } elseif (Auth::attempt($credentials) && Auth::user()->role == "user") {
-            return redirect(route('beranda'))->with('success', 'Berhasil Login');
-        } else {
-            return redirect('/')->with('error', 'Login gagal');
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect('/admin')->with('success', 'Berhasil Login');
+            }
+            return redirect(route('home'))->with('success', 'Berhasil Login');
         }
+        return back()->with('error', 'Login gagal');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
     }
 }
