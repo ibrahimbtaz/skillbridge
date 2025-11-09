@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
                 'name' => 'user',
                 'email' => 'user@example.com',
                 'password' => Hash::make('password'),
-                'role' => 'mahasiswa',
+                'role' => '3',
             ],
             [
                 'name' => 'mitra',
                 'email' => 'mitra@example.com',
                 'password' => Hash::make('password'),
-                'role' => 'mitra',
+                'role' => '2',
             ],
         ];
         for ($i = 0; $i < 10; $i++) {
@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
                 'name' => now()->format('ymdHis').strtoupper(Str::random(4)),
                 'email' => fake()->unique()->safeEmail,
                 'password' => Hash::make('password'),
-                'role' => 'mahasiswa',
+                'role' => '3',
             ];
         }
         for ($i = 0; $i < 2; $i++) {
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
                 'name' => now()->format('mdHis').strtoupper(Str::random(4)),
                 'email' => fake()->unique()->safeEmail,
                 'password' => Hash::make('password'),
-                'role' => 'mitra',
+                'role' => '2',
             ];
         }
         User::insert($users);

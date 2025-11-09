@@ -14,9 +14,17 @@ return new class extends Migration
         Schema::create('mitras', function (Blueprint $table) {
             $table->id();
             $table->string('nama_mitra');
-            $table->string('alamat_mitra');
-            $table->string('no_telp_mitra');
+            $table->text('deskripsi')->nullable(); // Deskripsi Perusahaan
+            $table->string('industri')->nullable(); // Industri (Tech, Finance, etc)
+            $table->string('email')->unique(); // Email Perusahaan
+            $table->string('telepon')->nullable(); // Nomor Telepon
+            $table->string('website')->nullable(); // Website Perusahaan
+            $table->text('alamat')->nullable(); // Alamat Perusahaan
+            $table->string('provinsi')->nullable(); // Provinsi
+            $table->string('kota')->nullable(); // Kota
+            $table->string('logo')->nullable(); // Logo Perusahaan
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->softDeletes(); // Soft Delete
             $table->timestamps();
         });
     }

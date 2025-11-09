@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('tanggal_lahir')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

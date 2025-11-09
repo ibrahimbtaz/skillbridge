@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(MahasiswaSeeder::class);
         $this->call(MitraSeeder::class);
+        $this->call(LokerSeeder::class);
     }
 }

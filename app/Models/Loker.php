@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Mitra;
 
-class Mahasiswa extends Model
+
+class Loker extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "mahasiswas";
+    protected $table = "lokers";
     protected $guarded = ['id'];
 
     protected $hidden = [
@@ -21,8 +22,8 @@ class Mahasiswa extends Model
         'deleted_at',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+    public function mitra() {
+        return $this->belongsTo(Mitra::class);
     }
+
 }

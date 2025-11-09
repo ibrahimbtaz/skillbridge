@@ -99,13 +99,13 @@
         <a href="#services">Layanan</a>
         <div class="user-info">
             @php $u = Auth::user(); @endphp
-            @if ($u->role === 'mahasiswa')
+            @if ($u->role === '3')
                 Halo, <strong>{{ $u->mahasiswa->nama ?? 'Data mahasiswa tidak ditemukan'  }}</strong>
             @endif
-            @if ($u->role === 'mitra')
+            @if ($u->role === '2')
                 Halo, <strong>{{ $u->mitra->nama ?? 'Data mitra tidak ditemukan' }}</strong>
             @endif
-            @if ($u->role === 'kampus')
+            @if ($u->role === '1')
                 Halo, <strong>{{ $u->kampus->nama }}</strong>
             @endif
         </div>

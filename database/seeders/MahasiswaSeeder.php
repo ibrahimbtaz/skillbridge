@@ -17,8 +17,8 @@ class MahasiswaSeeder extends Seeder
     public function run(): void
     {
         Mahasiswa::truncate();
-        $userIds = User::where('role', 'mahasiswa')->pluck('id');
-        foreach ($userIds as $id) {
+        $user_ids = User::where('role', '3')->pluck('id');
+        foreach ($user_ids as $id) {
             Mahasiswa::create([
                 'nim' => date('Y') . fake()->numberBetween(51, 59) . str_pad(fake()->unique()->numberBetween(1, 999), 3, '0', STR_PAD_LEFT),
                 'nama' => fake()->name(),
