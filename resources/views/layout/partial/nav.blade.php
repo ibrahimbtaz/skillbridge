@@ -90,39 +90,31 @@
 </style>
 
 <!-- Navbar -->
-@auth
 <div class="navbar">
     <a href="/home" class="navbar-brand">Skillbridge</a>
     <div class="navbar-menu">
-        <a href="/home">Beranda</a>
-        <a href="#about">Tentang</a>
-        <a href="#services">Layanan</a>
-        <div class="user-info">
-            @php $u = Auth::user(); @endphp
-            @if ($u->role === '3')
-                Halo, <strong>{{ $u->mahasiswa->nama ?? 'Data mahasiswa tidak ditemukan'  }}</strong>
-            @endif
-            @if ($u->role === '2')
-                Halo, <strong>{{ $u->mitra->nama ?? 'Data mitra tidak ditemukan' }}</strong>
-            @endif
-            @if ($u->role === '1')
-                Halo, <strong>{{ $u->kampus->nama }}</strong>
-            @endif
-        </div>
-        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-            @csrf
-            <button type="submit" class="logout-button">Logout</button>
-        </form>
-    </div>
-</div>
-@else
-<div class="navbar">
-    <a href="/" class="navbar-brand">Skillbridge</a>
-    <div class="navbar-menu">
         <a href="{{ route('home') }}">Beranda</a>
         <a href="{{ route('loker.index') }}">Lowongan Kerja</a>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        @auth
+            <div class="user-info">
+                @php $u = Auth::user(); @endphp
+                @if ($u->role === '3')
+                    Halo, <strong>{{ $u->mahasiswa->nama ?? 'Data mahasiswa tidak ditemukan'  }}</strong>
+                @endif
+                @if ($u->role === '2')
+                    Halo, <strong><a href="{{ route('mitra.show', $u->mitra->id) }}">{{ $u->mitra->nama_mitra ?? 'Data mitra tidak ditemukan' }}</a></strong>
+                @endif
+                @if ($u->role === '1')
+                    Halo, <strong>{{ $u->kampus->nama }}</strong>
+                @endif
+            </div>
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        @else
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        @endauth
     </div>
 </div>
-@endauth

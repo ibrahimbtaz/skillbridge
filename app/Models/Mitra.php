@@ -27,7 +27,7 @@ class Mitra extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function lokers()
+    public function loker()
     {
         return $this->hasMany(Loker::class, 'mitra_id');
     }

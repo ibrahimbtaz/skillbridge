@@ -12,7 +12,7 @@ class MitraController extends Controller
      */
     public function index()
     {
-        //
+        // return(view('mitra.index'));
     }
 
     /**
@@ -34,9 +34,19 @@ class MitraController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mitra $mitra)
+    public function show($id = null)
     {
-        //
+        // PROFIL PRIBADI (mitra login)
+        if ($id === null) {
+            $mitra = auth()->user()->mitra;
+            return view('page.mitra.profile', compact('mitra'));
+        }
+
+        // PROFIL PUBLIK
+        $mitra = Mitra::findOrFail($id);
+        $loker = request()->query('loker'); // id loker asal
+
+        return view('page.mitra.profile', compact('mitra', 'loker'));
     }
 
     /**

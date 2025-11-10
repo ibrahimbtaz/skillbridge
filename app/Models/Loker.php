@@ -23,7 +23,7 @@ class Loker extends Model
     ];
 
     public function mitra() {
-        return $this->belongsTo(Mitra::class);
+        return $this->belongsTo(Mitra::class, 'mitra_id');
     }
 
 }

@@ -237,7 +237,7 @@
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 12px 10px;
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -345,11 +345,11 @@
                             <img src="{{ asset($loker->mitra->logo) }}" alt="Company Logo" class="company-logo">
                             <div style="flex: 1;">
                                 <h1 class="job-title">{{ $loker->title }}</h1>
-                                <a href="company_detail.html" class="company-name-link">{{ $loker->mitra->nama_mitra }}</a>
+                                <a href="{{ route('mitra.public',  ['id' => $loker->mitra->id, 'loker' => $loker->id]) }}" class="company-name-link">{{ $loker->mitra->nama_mitra }}</a>
                                 <div class="job-meta">
                                     <span><i class="fas fa-map-marker-alt"></i> {{ $loker->mitra->kota }}, {{ $loker->mitra->provinsi }}</span>
                                     <span><i class="fas fa-briefcase"></i> {{ $loker->jenis_kerja }}</span>
-                                    <span><i class="fas fa-clock"></i> {{ $loker->pengalaman }}</span>
+                                    <span><i class="fas fa-clock"></i> {{ $loker->tipe_kerja }}</span>
                                 </div>
                             </div>
                         </div>
@@ -421,7 +421,7 @@
                         <span class="info-value">1x</span>
                     </div>
 
-                    <div style="margin-top: 24px;">
+                    <div style="margin-top: 10px; padding: 10px 10px;">
                         <button class="btn btn-primary" id="applyBtn">
                             <i class="fas fa-paper-plane"></i>
                             Lamar Sekarang
