@@ -122,12 +122,6 @@
         .job-details { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
         .job-tag { padding: 6px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
 
-        /* Warna Tipe Pekerjaan */
-        .type-fulltime { background-color: #e0e7ff; color: #4338ca; }
-        .type-parttime { background-color: #fef3c7; color: #b45309; }
-        .type-contract { background-color: #e0e7ff; color: #4338ca; }
-        .type-freelance { background-color: #d1fae5; color: #065f46; }
-        .type-internship { background-color: #e0e7ff; color: #4338ca; }
 
         .type- { background-color: #e0e7ff; color: #4338ca; }
         /* Jenis Pekerjaan - Bold Version */

@@ -119,6 +119,8 @@
 <div class="navbar">
     <a href="/" class="navbar-brand">Skillbridge</a>
     <div class="navbar-menu">
+        <a href="{{ route('home') }}">Beranda</a>
+        <a href="{{ route('loker.index') }}">Lowongan Kerja</a>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
     </div>

@@ -75,9 +75,10 @@ class LokerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Loker $loker)
+    public function show(Loker $loker, Request $request)
     {
-
+        $loker = Loker::with(['mitra.user'])->findOrFail($loker->id);
+        return view('page.loker.show', compact('loker'));
     }
 
     /**
