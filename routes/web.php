@@ -27,11 +27,16 @@ Route::get('/loker/{loker}', [LokerController::class, 'show'])->name('loker.show
 
 Route::middleware(['auth', 'mitra'])->group(function () {
     Route::prefix('/mitra')->group(function () {
-        Route::get('/profile', [MitraController::class, 'show'])->name('mitra.show');
+    Route::get('/profile', [MitraController::class, 'show'])->name('mitra.show');
+    Route::get('/loker/kelola', [MitraController::class, 'kelola'])->name('mitra.loker.kelola');
+    Route::get('/loker/create', [LokerController::class, 'create'])->name('mitra.loker.create');
+    Route::post('/loker/store', [LokerController::class, 'store'])->name('mitra.loker.store');
+    Route::get('/loker/edit/{loker}', [LokerController::class, 'edit'])->name('mitra.loker.edit');
+    Route::get('/loker/show/{loker}', [LokerController::class, 'show'])->name('mitra.loker.show');
+    Route::get('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
     });
 });
 
 Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitra.public');
-
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

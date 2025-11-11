@@ -156,12 +156,17 @@
                     <p>{{ $mitra->kota }}, {{ $mitra->provinsi }}</p>
                 </div>
 
-                @if (auth()->user() === $mitra->user_id)
+                @if (auth()->check() && auth()->user()->role == 2)
                     <div class="profile-actions">
-                        <a href="edit_profil_mitra.html" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Edit Profil
+                        <a href="{{ route('dashboard', $mitra->id) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Dashboard Mitra
                         </a>
                     </div>
+                    {{-- <div class="profile-actions">
+                        <a href="{{ route('mitra.edit', $mitra->id) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
+                    </div> --}}
                 @endif
             </div>
 

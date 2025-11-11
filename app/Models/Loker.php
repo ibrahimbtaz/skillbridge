@@ -22,6 +22,13 @@ class Loker extends Model
         'deleted_at',
     ];
 
+    protected $casts = [
+    'tanggung_jawab' => 'array',
+    'kualifikasi' => 'array',
+    'benefits' => 'array',
+    'deadline' => 'date',
+];
+
     public function mitra() {
         return $this->belongsTo(Mitra::class, 'mitra_id');
     }

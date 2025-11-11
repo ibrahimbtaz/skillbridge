@@ -21,9 +21,9 @@ return new class extends Migration
             $table->enum('tipe_kerja', ['onsite', 'remote', 'hybrid'])->default('onsite');
             $table->integer('gaji_min')->nullable(); // Gaji Minimum
             $table->integer('gaji_max')->nullable(); // Gaji Maximum
-            $table->text('tanggung_jawab')->nullable(); // Tanggung Jawab
-            $table->text('kualifikasi')->nullable(); // Persyaratan/Qualifikasi
-            $table->text('benefits')->nullable(); // Benefit/Tunjangan
+            $table->json('tanggung_jawab')->nullable();
+            $table->json('kualifikasi')->nullable();
+            $table->json('benefits')->nullable();
             $table->enum('status', ['draft', 'published', 'closed', 'filled'])->default('draft');
             $table->timestamp('deadline')->nullable(); // Batas Waktu Lamaran
             $table->foreignId('mitra_id')->constrained()->onDelete('cascade');

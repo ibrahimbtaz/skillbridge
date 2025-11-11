@@ -56,12 +56,14 @@ class LokerController extends Controller
         return view('page.loker.home', compact('lokers', 'lokasi', 'jenis_kerja', 'total_loker', 'total_perusahaan'));
     }
 
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('page.mitra.loker.create');
     }
 
     /**
@@ -69,7 +71,37 @@ class LokerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'deskripsi' => 'required',
+            'lokasi' => 'required',
+            'jenis_kerja' => 'required',
+            'tipe_kerja' => 'required',
+            'gaji_min' => 'required|integer|min:0',
+            'gaji_max' => 'required|integer|min:0|gt:gaji_min',
+            'tanggung_jawab' => 'required',
+            'kualifikasi' => 'required',
+            'benefits' => 'required',
+            'deadline' => 'required|date|after:today',
+        ]);
+
+        $mitra = auth()->user()->mitra;
+
+        $loker = $mitra->loker()->create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'lokasi' => $request->lokasi,
+            'jenis_kerja' => $request->jenis_kerja,
+            'tipe_kerja' => $request->tipe_kerja,
+            'gaji_min' => $request->gaji_min,
+            'gaji_max' => $request->gaji_max,
+            'tanggung_jawab' => $request->tanggung_jawab,
+            'kualifikasi' => $request->kualifikasi,
+            'benefits' => $request->benefits,
+            'deadline' => $request->deadline,
+        ]);
+
+        return redirect()->route('mitra.dashboard')->with('success', 'Loker berhasil ditambahkan');
     }
 
     /**
@@ -86,7 +118,8 @@ class LokerController extends Controller
      */
     public function edit(Loker $loker)
     {
-        //
+        $loker = Loker::with(['mitra.user'])->findOrFail($loker->id);
+        return view('page.mitra.loker.edit', compact('loker'));
     }
 
     /**
@@ -94,7 +127,36 @@ class LokerController extends Controller
      */
     public function update(Request $request, Loker $loker)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'deskripsi' => 'required',
+            'lokasi' => 'required',
+            'jenis_kerja' => 'required',
+            'tipe_kerja' => 'required',
+            'gaji_min' => 'required|integer|min:0',
+            'gaji_max' => 'required|integer|min:0|gt:gaji_min',
+            'tanggung_jawab' => 'required',
+            'kualifikasi' => 'required',
+            'benefits' => 'required',
+            'deadline' => 'required|date|after:today',
+        ]);
+
+        $data = $loker->update([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'lokasi' => $request->lokasi,
+            'jenis_kerja' => $request->jenis_kerja,
+            'tipe_kerja' => $request->tipe_kerja,
+            'gaji_min' => $request->gaji_min,
+            'gaji_max' => $request->gaji_max,
+            'tanggung_jawab' => $request->responsibilities, // akan otomatis di-cast ke JSON
+            'kualifikasi' => $request->requirements,
+            'benefits' => $request->benefits,
+            'deadline' => $request->deadline,
+        ]);
+
+
+        return redirect()->route('mitra.loker.kelola')->with('success', 'Loker berhasil diperbarui');
     }
 
     /**

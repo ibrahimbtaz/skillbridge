@@ -49,6 +49,13 @@ class MitraController extends Controller
         return view('page.mitra.profile', compact('mitra', 'loker'));
     }
 
+    public function kelola()
+    {
+        $mitra = auth()->user()->mitra;
+        $lokers = $mitra->loker()->get();
+        return view('page.mitra.loker.kelola', compact('lokers'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

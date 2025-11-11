@@ -36,9 +36,20 @@ class LokerSeeder extends Seeder
                     'tipe_kerja' => fake()->randomElement(['onsite', 'remote', 'hybrid']),
                     'gaji_min' => $gaji_min,
                     'gaji_max' => $gaji_max,
-                    'tanggung_jawab' => fake()->paragraph(),
-                    'kualifikasi' => fake()->paragraph(),
-                    'benefits' => fake()->paragraph(),
+                    'tanggung_jawab' => [
+                        fake()->sentence(),
+                        fake()->sentence(),
+                        fake()->sentence(),
+                    ],
+                    'kualifikasi' => [
+                        fake()->sentence(),
+                        fake()->sentence(),
+                    ],
+                    'benefits' => [
+                        fake()->sentence(),
+                        fake()->sentence(),
+                    ],
+
                     'status' => fake()->randomElement(['draft', 'published', 'closed', 'filled']),
                     'deadline' => fake()->dateTimeBetween('now', '+3 months'),
                     'mitra_id' => $id,
