@@ -71,37 +71,49 @@ class LokerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'deskripsi' => 'required',
-            'lokasi' => 'required',
+            'description' => 'required|string',
+            'location' => 'required|string',
             'jenis_kerja' => 'required',
             'tipe_kerja' => 'required',
-            'gaji_min' => 'required|integer|min:0',
-            'gaji_max' => 'required|integer|min:0|gt:gaji_min',
-            'tanggung_jawab' => 'required',
-            'kualifikasi' => 'required',
-            'benefits' => 'required',
-            'deadline' => 'required|date|after:today',
+            'salary_min' => 'required|integer|min:0',
+            'salary_max' => 'required|integer|min:0|gte:salary_min',
+            'responsibilities' => 'nullable|array',
+            'responsibilities.*' => 'nullable|string',
+            'requirements' => 'nullable|array',
+            'requirements.*' => 'nullable|string',
+            'benefits' => 'nullable|array',
+            'benefits.*' => 'nullable|string',
+            'deadline_date' => 'required|date|after:today',
         ]);
 
-        $mitra = auth()->user()->mitra;
+        // Filter array kosong
+        $responsibilities = array_filter($validated['responsibilities'] ?? [], fn($item) => !empty(trim($item)));
+        $requirements = array_filter($validated['requirements'] ?? [], fn($item) => !empty(trim($item)));
+        $benefits = array_filter($validated['benefits'] ?? [], fn($item) => !empty(trim($item)));
 
-        $loker = $mitra->loker()->create([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'lokasi' => $request->lokasi,
-            'jenis_kerja' => $request->jenis_kerja,
-            'tipe_kerja' => $request->tipe_kerja,
-            'gaji_min' => $request->gaji_min,
-            'gaji_max' => $request->gaji_max,
-            'tanggung_jawab' => $request->tanggung_jawab,
-            'kualifikasi' => $request->kualifikasi,
-            'benefits' => $request->benefits,
-            'deadline' => $request->deadline,
+        // Ambil mitra_id dari user yang sedang login
+        $mitra = auth()->user()->mitra; // Asumsi relasi sudah dibuat
+
+        Loker::create([
+            'title' => $validated['title'],
+            'deskripsi' => $validated['description'],
+            'lokasi' => $validated['location'],
+            'jenis_kerja' => $validated['jenis_kerja'],
+            'tipe_kerja' => $validated['tipe_kerja'],
+            'gaji_min' => $validated['salary_min'],
+            'gaji_max' => $validated['salary_max'],
+            'tanggung_jawab' => $responsibilities ?: null,
+            'kualifikasi' => $requirements ?: null,
+            'benefits' => $benefits ?: null,
+            'deadline' => $validated['deadline_date'],
+            'status' => 'draft', // Default status
+            'mitra_id' => $mitra->id,
         ]);
 
-        return redirect()->route('mitra.dashboard')->with('success', 'Loker berhasil ditambahkan');
+        return redirect()->route('mitra.loker.kelola')
+            ->with('success', 'Lowongan berhasil ditambahkan');
     }
 
     /**
