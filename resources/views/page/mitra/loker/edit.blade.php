@@ -53,36 +53,54 @@
 
                 <div class="form-group" style="margin-top: 20px;">
                     <label class="form-label">Judul Posisi</label>
-                    <input type="text" name="title" class="form-control" value="{{ $loker->title }}">
+                    <input type="text" name="title" class="form-control" value="{{ old('title', $loker->title) }}">
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Lokasi</label>
-                        <input type="text" name="lokasi" class="form-control" value="{{ $loker->lokasi }}">
+                        <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi', $loker->lokasi) }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Tipe Pekerjaan</label>
-                        <select name="tipe_kerja" class="form-control">
-                            <option value="Full Time" {{ $loker->tipe_kerja === 'Full Time' ? 'selected' : '' }}>Full Time</option>
-                            <option value="Part Time" {{ $loker->tipe_kerja === 'Part Time' ? 'selected' : '' }}>Part Time</option>
-                            <option value="Contract" {{ $loker->tipe_kerja === 'Contract' ? 'selected' : '' }}>Contract</option>
-                            <option value="Freelance" {{ $loker->tipe_kerja === 'Freelance' ? 'selected' : '' }}>Freelance</option>
-                            <option value="Internship" {{ $loker->tipe_kerja === 'Internship' ? 'selected' : '' }}>Internship</option>
+                        <select name="jenis_kerja" class="form-control">
+                            <option value="fullTime" {{ old('jenis_kerja', $loker->jenis_kerja) === 'fullTime' ? 'selected' : '' }}>Full Time</option>
+                            <option value="partTime" {{ old('jenis_kerja', $loker->jenis_kerja) === 'partTime' ? 'selected' : '' }}>Part Time</option>
+                            <option value="contract" {{ old('jenis_kerja', $loker->jenis_kerja) === 'contract' ? 'selected' : '' }}>Contract</option>
+                            <option value="freelance" {{ old('jenis_kerja', $loker->jenis_kerja) === 'freelance' ? 'selected' : '' }}>Freelance</option>
+                            <option value="internship" {{ old('jenis_kerja', $loker->jenis_kerja) === 'internship' ? 'selected' : '' }}>Internship</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Jenis Kerja</label>
+                        <select name="tipe_kerja" class="form-control">
+
+                            <option value="onsite" {{ old('tipe_kerja', $loker->tipe_kerja) === 'onsite' ? 'selected' : '' }}>Onsite</option>
+                            <option value="remote" {{ old('tipe_kerja', $loker->tipe_kerja) === 'remote' ? 'selected' : '' }}>Remote</option>
+                            <option value="hybrid" {{ old('tipe_kerja', $loker->tipe_kerja) === 'hybrid' ? 'selected' : '' }}>Hybrid</option>
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group">
                         <label class="form-label">Gaji Minimum (Rp)</label>
-                        <input type="number" name="gaji_min" class="form-control" value="{{ $loker->gaji_min }}">
+                        <input type="number" name="gaji_min" class="form-control" value="{{ old('gaji_min', $loker->gaji_min) }}">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Gaji Maksimum (Rp)</label>
-                        <input type="number" name="gaji_max" class="form-control" value="{{ $loker->gaji_max }}">
+                        <input type="number" name="gaji_max" class="form-control" value="{{ old('gaji_max', $loker->gaji_max) }}">
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">Deadline Lamaran</label>
+                    <input type="date" name="deadline" class="form-control"
+                        value="{{ old('deadline', $loker->deadline?->format('Y-m-d')) }}"
+                        min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
+                </div>
+
             </div>
 
             <div class="form-section">
@@ -93,7 +111,7 @@
 
                 <div class="form-group" style="margin-top: 20px;">
                     <label class="form-label">Deskripsi Pekerjaan</label>
-                    <textarea name="description" class="form-control form-textarea" rows="6">{{ $loker->deskripsi }}</textarea>
+                    <textarea name="deskripsi" class="form-control form-textarea" rows="6">{{ old('deskripsi', $loker->deskripsi) }}</textarea>
                 </div>
 
                 <div class="form-group">

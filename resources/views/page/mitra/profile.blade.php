@@ -140,10 +140,9 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="{{ url()->previous() }}" class="back-btn">
-                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
-                Kembali
-            </a>
+        <a href="{{ auth()->user()->id === $mitra->user_id ? route('home') : ( isset($loker) ? route('loker.show', $loker) : route('home') ) }}" class="back-btn"> <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+            Kembali
+        </a>
         </div>
     </div>
 
@@ -162,11 +161,6 @@
                             <i class="fas fa-edit"></i> Dashboard Mitra
                         </a>
                     </div>
-                    {{-- <div class="profile-actions">
-                        <a href="{{ route('mitra.edit', $mitra->id) }}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Edit Profil
-                        </a>
-                    </div> --}}
                 @endif
             </div>
 

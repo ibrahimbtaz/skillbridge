@@ -33,7 +33,7 @@ Route::middleware(['auth', 'mitra'])->group(function () {
     Route::post('/loker/store', [LokerController::class, 'store'])->name('mitra.loker.store');
     Route::get('/loker/edit/{loker}', [LokerController::class, 'edit'])->name('mitra.loker.edit');
     Route::get('/loker/show/{loker}', [LokerController::class, 'show'])->name('mitra.loker.show');
-    Route::get('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
+    Route::put('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
     });
 });
 

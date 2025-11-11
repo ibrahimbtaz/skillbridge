@@ -22,12 +22,31 @@ class Loker extends Model
         'deleted_at',
     ];
 
+    protected $fillable = [
+        'title',
+        'deskripsi',
+        'lokasi',
+        'jenis_kerja',
+        'tipe_kerja',
+        'gaji_min',
+        'gaji_max',
+        'tanggung_jawab',
+        'kualifikasi',
+        'benefits',
+        'deadline',
+        'mitra_id',
+        'status'
+    ];
+
     protected $casts = [
-    'tanggung_jawab' => 'array',
-    'kualifikasi' => 'array',
-    'benefits' => 'array',
-    'deadline' => 'date',
-];
+        'tanggung_jawab' => 'array',  // ✅ Cast ke array
+        'kualifikasi' => 'array',
+        'benefits' => 'array',
+        'deadline' => 'date',
+        'gaji_min' => 'integer',
+        'gaji_max' => 'integer',
+    ];
+
 
     public function mitra() {
         return $this->belongsTo(Mitra::class, 'mitra_id');

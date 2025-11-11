@@ -340,7 +340,7 @@
         <div class="main-grid">
             <div>
                 <div class="job-card-main">
-                    <div class="job-header-section">
+                    <div class="job-header-section" style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div class="job-header">
                             <img src="{{ asset($loker->mitra->logo) }}" alt="Company Logo" class="company-logo">
                             <div style="flex: 1;">
@@ -353,7 +353,18 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if (auth()->check() && auth()->user()->id === $loker->mitra->user_id)
+                            <div class="job-actions">
+                                <a href="{{ route('mitra.loker.edit', $loker->id) }}" class="">
+                                    <i class="fas fa-edit"></i> Edit Loker
+                                </a>
+                            </div>
+                        @endif
+
                     </div>
+
+
 
                     <div class="card-section">
                         <h2 class="section-title">Deskripsi Pekerjaan</h2>
@@ -363,32 +374,51 @@
                     </div>
 
                     <div class="card-section">
-                        <h2 class="section-title">Tanggung Jawab</h2>
-                        <div class="list-item">
-                            <div class="bullet"></div>
-                            <span>Mengembangkan dan memelihara aplikasi web menggunakan React.js dan Next.js</span>
-                        </div>
-                    </div>
+    <h2 class="section-title">Tanggung Jawab</h2>
+    @forelse ($loker->tanggung_jawab ?? [] as $tanggung_jawab)
+        <div class="list-item">
+            <div class="bullet"></div>
+            <span>{{ $tanggung_jawab }}</span>
+        </div>
+    @empty
+        <div class="list-item">
+            <div class="bullet"></div>
+            <span>Tidak ada tanggung jawab yang tercantum</span>
+        </div>
+    @endforelse
+</div>
 
-                    <div class="card-section">
-                        <h2 class="section-title">Kualifikasi</h2>
-                        <div class="list-item requirement">
-                            <div class="bullet"></div>
-                            <span>Minimal 3 tahun pengalaman sebagai Frontend Developer</span>
-                        </div>
-                    </div>
+<div class="card-section">
+    <h2 class="section-title">Kualifikasi</h2>
+    @forelse ($loker->kualifikasi ?? [] as $kualifikasi)
+        <div class="list-item requirement">
+            <div class="bullet"></div>
+            <span>{{ $kualifikasi }}</span>
+        </div>
+    @empty
+        <div class="list-item requirement">
+            <div class="bullet"></div>
+            <span>Tidak ada kualifikasi yang tercantum</span>
+        </div>
+    @endforelse
+</div>
 
-                    <div class="card-section">
-                        <h2 class="section-title">Benefit & Fasilitas</h2>
-                        <div class="benefits-grid">
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Gaji kompetitif</span></div>
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Asuransi kesehatan</span></div>
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Tunjangan transportasi</span></div>
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Flexible working hours</span></div>
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Remote work option</span></div>
-                            <div class="benefit-item"><i class="fas fa-check-circle"></i><span>Budget training</span></div>
-                        </div>
-                    </div>
+<div class="card-section">
+    <h2 class="section-title">Benefit & Fasilitas</h2>
+    <div class="benefits-grid">
+        @forelse ($loker->benefits ?? [] as $benefit)
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>{{ $benefit }}</span>
+            </div>
+        @empty
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Tidak ada benefit yang tercantum</span>
+            </div>
+        @endforelse
+    </div>
+</div>
                 </div>
             </div>
 

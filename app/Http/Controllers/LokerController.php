@@ -127,33 +127,37 @@ class LokerController extends Controller
      */
     public function update(Request $request, Loker $loker)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'deskripsi' => 'required',
             'lokasi' => 'required',
             'jenis_kerja' => 'required',
             'tipe_kerja' => 'required',
             'gaji_min' => 'required|integer|min:0',
-            'gaji_max' => 'required|integer|min:0|gt:gaji_min',
-            'tanggung_jawab' => 'required',
-            'kualifikasi' => 'required',
-            'benefits' => 'required',
+            'gaji_max' => 'required|integer|min:0|gte:gaji_min',
+            'responsibilities' => 'required|array|min:1', // Sesuai nama di form
+            'responsibilities.*' => 'required|string',
+            'requirements' => 'required|array|min:1', // Sesuai nama di form
+            'requirements.*' => 'required|string',
+            'benefits' => 'required|array|min:1',
+            'benefits.*' => 'required|string',
             'deadline' => 'required|date|after:today',
         ]);
 
-        $data = $loker->update([
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'lokasi' => $request->lokasi,
-            'jenis_kerja' => $request->jenis_kerja,
-            'tipe_kerja' => $request->tipe_kerja,
-            'gaji_min' => $request->gaji_min,
-            'gaji_max' => $request->gaji_max,
-            'tanggung_jawab' => $request->responsibilities, // akan otomatis di-cast ke JSON
-            'kualifikasi' => $request->requirements,
-            'benefits' => $request->benefits,
-            'deadline' => $request->deadline,
+            $loker->update([
+            'title' => $validated['title'],
+            'deskripsi' => $validated['deskripsi'],
+            'lokasi' => $validated['lokasi'],
+            'jenis_kerja' => $validated['jenis_kerja'],
+            'tipe_kerja' => $validated['tipe_kerja'],
+            'gaji_min' => $validated['gaji_min'],
+            'gaji_max' => $validated['gaji_max'],
+            'tanggung_jawab' => $validated['responsibilities'], // Array otomatis jadi JSON
+            'kualifikasi' => $validated['requirements'],
+            'benefits' => $validated['benefits'],
+            'deadline' => $validated['deadline'],
         ]);
+
 
 
         return redirect()->route('mitra.loker.kelola')->with('success', 'Loker berhasil diperbarui');
@@ -164,6 +168,6 @@ class LokerController extends Controller
      */
     public function destroy(Loker $loker)
     {
-        //
+
     }
 }
