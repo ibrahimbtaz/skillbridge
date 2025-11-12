@@ -34,9 +34,22 @@ Route::middleware(['auth', 'mitra'])->group(function () {
     Route::get('/loker/edit/{loker}', [LokerController::class, 'edit'])->name('mitra.loker.edit');
     Route::get('/loker/show/{loker}', [LokerController::class, 'show'])->name('mitra.loker.show');
     Route::put('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
+    Route::get('/loker/list', [LokerController::class, 'mitra_loker_list'])->name('mitra.loker.list');
     });
 });
 
 Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitra.public');
 
+//bikin route mahasiswa
+Route::get('/mahasiswa/profile', [PageController::class, 'mahasiwa_profile'])->name('mahasiswa.profile');
+Route::get('/mahasiswa/edit', [PageController::class, 'mahasiwa_edit'])->name('mahasiswa.edit');
+Route::get('/mahasiswa/status_loker', [PageController::class, 'mahasiswa_status_loker'])->name('mahasiswa.status_loker');
+
+Route::get('/pelatihan', [PageController::class, 'pelatihan_list'])->name('pelatihan.list');
+Route::get('/pelatihan', [PageController::class, 'rating_pelatihan'])->name('rating.pelatihan');
+
+
+
+
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+

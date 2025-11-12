@@ -99,7 +99,7 @@
             <div class="user-info">
                 @php $u = Auth::user(); @endphp
                 @if ($u->role === '3')
-                    Halo, <strong>{{ $u->mahasiswa->nama ?? 'Data mahasiswa tidak ditemukan'  }}</strong>
+                    Halo, <strong><a href="{{ route('mahasiswa.profile', $u->mahasiswa->id) }}">{{ $u->mahasiswa->nama ?? 'Data mahasiswa tidak ditemukan'  }}</a></strong>
                 @endif
                 @if ($u->role === '2')
                     Halo, <strong><a href="{{ route('mitra.show', $u->mitra->id) }}">{{ $u->mitra->nama_mitra ?? 'Data mitra tidak ditemukan' }}</a></strong>

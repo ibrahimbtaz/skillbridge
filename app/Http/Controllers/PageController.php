@@ -28,4 +28,30 @@ class PageController extends Controller
 
         abort(403, 'Kamu ngapain di sini?');
     }
+
+    public function mahasiwa_profile()
+    {
+        return view('page.mahasiswa.profile');
+    }
+    public function mahasiwa_edit()
+    {
+        return view('page.mahasiswa.edit');
+    }
+    public function mahasiswa_status_loker()
+    {
+        return view('page.mahasiswa.status_loker');
+    }
+    public function pelatihan_list()
+    {
+        return view('page.pelatihan.list');
+    }
+    public function mitra_loker_list()
+    {
+        return view('mitra.loker.list');
+    }
+    public function rating_pelatihan()
+    {
+        return view('rating_pelatihan');
+    }
+
 }
