@@ -127,7 +127,7 @@
         </div>
 
         <div class="training-grid">
-            <a href="detail_pelatihan.html" class="training-card">
+            <a href="{{ route('pelatihan.show')}}" class="training-card">
                 <div class="card-image"></div>
                 <div class="card-content">
                     <h3 class="card-title">Full-Stack Web Development Bootcamp</h3>
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </a>
-            <a href="detail_pelatihan.html" class="training-card">
+            <a href="{{ route('pelatihan.show')}}" class="training-card">
                 <div class="card-image" style="background-image: url('https://via.placeholder.com/300x150?text=Data+Science')"></div>
                 <div class="card-content">
                     <h3 class="card-title">Data Science Fundamentals with Python</h3>
@@ -149,7 +149,7 @@
                     </div>
                 </div>
             </a>
-            <a href="detail_pelatihan.html" class="training-card">
+            <a href="{{ route('pelatihan.show')}}" class="training-card">
                 <div class="card-image" style="background-image: url('https://via.placeholder.com/300x150?text=UI/UX+Design')"></div>
                 <div class="card-content">
                     <h3 class="card-title">UI/UX Design for Mobile Apps</h3>

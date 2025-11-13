@@ -452,10 +452,10 @@
                     </div>
 
                     <div style="margin-top: 10px; padding: 10px 10px;">
-                        <button class="btn btn-primary" id="applyBtn">
+                        <a href="{{route('mahasiswa.status_loker')}}" class="btn btn-primary" id="applyBtn">
                             <i class="fas fa-paper-plane"></i>
-                            Lamar Sekarang
-                        </button>
+                            Lamar Sekarang        
+                        </a>
                     </div>
                 </div>
             </div>

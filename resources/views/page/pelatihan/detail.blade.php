@@ -319,13 +319,15 @@
             <!-- Static default content (pelatihan id=1) -->
             <div class="training-detail">
                 <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800" alt="Full Stack Web Development dengan React & Node.js" class="training-image">
-
+                <a href="{{ route('pelatihan.edit', ['id' => 1]) }}">edit pelatihan</a>
                 <div class="training-header">
                     <h1>Full Stack Web Development dengan React & Node.js</h1>
                     <div class="training-meta">
                         <div class="meta-item">
                             <span class="icon">⭐</span>
+                            <a href="{{route('pelatihan.rating')}}">
                             <span class="rating">4.8 (1.245 rating)</span>
+                            </a>
                         </div>
                         <div class="meta-item">
                             <span class="icon">👥</span>

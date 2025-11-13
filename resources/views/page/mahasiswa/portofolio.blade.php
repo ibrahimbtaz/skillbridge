@@ -206,7 +206,7 @@
         <div class="cv-header">
             <div class="cv-photo"></div>
             <div>
-                <h1 class="cv-name">Ahmad Syahputra</h1>
+                <h1 class="cv-name">{{ $mahasiswa->nama }}</h1>
                 <h2 class="cv-title">Full Stack Developer</h2>
                 <div class="cv-contact">
                     <span><i class="fas fa-envelope"></i> ahmad.syahputra@email.com</span>

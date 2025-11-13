@@ -20,7 +20,7 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        //
+        return view('auth.mahasiswa.register');
     }
 
     /**
@@ -36,7 +36,8 @@ class MahasiswaController extends Controller
      */
     public function show(Mahasiswa $mahasiswa)
     {
-        return view('page.mahasiswa.profile');
+        $mahasiswa = auth()->user()->mahasiswa;
+        return view('page.mahasiswa.profile', compact('mahasiswa'));
     }
 
     public function status_loker()
@@ -46,7 +47,8 @@ class MahasiswaController extends Controller
 
     public function portofolio()
     {
-        return view('page.mahasiswa.portofolio');
+        $mahasiswa = auth()->user()->mahasiswa;
+        return view('page.mahasiswa.portofolio', compact('mahasiswa'));
     }
 
     /**

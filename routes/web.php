@@ -18,6 +18,8 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/register/mahasiswa', [MahasiswaController::class, 'create'])->name('mahasiswa.register');
+    Route::get('/register/mitra', [MitraController::class, 'create'])->name('mitra.register');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -28,10 +30,8 @@ Route::get('/loker', [LokerController::class, 'index'])->name('loker.index');
 Route::get('/loker/{loker}', [LokerController::class, 'show'])->name('loker.show');
 
 Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
-Route::get('/pelatihan/rating', [PelatihanController::class, 'rating'])->name('pelatihan.rating');
-
-//sementara gini dulu lahya
 Route::get('/pelatihan/detail', [PelatihanController::class, 'show'])->name('pelatihan.show');
+Route::get('/pelatihan/rating', [PelatihanController::class, 'rating'])->name('pelatihan.rating');
 Route::get('/pelatihan/edit', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
 
 //sementara gini dulu lahya
@@ -40,6 +40,11 @@ Route::get('/mahasiswa/edit', [MahasiswaController::class, 'edit'])->name('mahas
 Route::get('/mahasiswa/status_loker', [MahasiswaController::class, 'status_loker'])->name('mahasiswa.status_loker');
 Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])->name('mahasiswa.portofolio');
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::prefix('/admin')->group(function () {
+        Route::get('/dashboard', [PageController::class, 'dashboard'])->name('admin.dashboard');
+    });
+});
 
 Route::middleware(['auth', 'mitra'])->group(function () {
     Route::prefix('/mitra')->group(function () {

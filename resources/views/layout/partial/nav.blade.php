@@ -106,7 +106,7 @@
                     Halo, <strong><a href="{{ route('mitra.show', $u->mitra->id) }}">{{ $u->mitra->nama_mitra ?? 'Data mitra tidak ditemukan' }}</a></strong>
                 @endif
                 @if ($u->role === '1')
-                    Halo, <strong>{{ $u->kampus->nama }}</strong>
+                    Halo, <strong>{{ $u->name }}</strong>
                 @endif
             </div>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">

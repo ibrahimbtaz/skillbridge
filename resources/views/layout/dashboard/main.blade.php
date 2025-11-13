@@ -218,9 +218,9 @@
                     </li>
                     @auth
                         @if (auth()->user()->role == 1)
-                            <li><a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fas fa-users"></i> Manajemen User</a></li>
+                            {{-- <li><a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fas fa-users"></i> Manajemen User</a></li>
                             <li><a href="{{ route('admin.pelatihan.index') }}" class="nav-link"><i class="fas fa-book"></i> Manajemen Pelatihan</a></li>
-                            <li><a href="{{ route('admin.mitra.verify') }}" class="nav-link"><i class="fas fa-check-circle"></i> Verifikasi Mitra</a></li>
+                            <li><a href="{{ route('admin.mitra.verify') }}" class="nav-link"><i class="fas fa-check-circle"></i> Verifikasi Mitra</a></li> --}}
                         @endif
 
                         @if (auth()->user()->role == 2)

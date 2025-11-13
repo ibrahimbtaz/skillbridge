@@ -159,7 +159,7 @@
         .card h2 {
             color: #333;
             margin-bottom: 20px;
-            font-size: 22px; 
+            font-size: 22px;
             font-weight: 600;
             /* Border dan padding bawah dihilangkan agar mirip JobStreet */
             /* padding-bottom: 10px; */
@@ -227,7 +227,7 @@
             margin-bottom: 15px;
             color: #666;
         }
-        
+
         /* Hilangkan margin-bottom di item kontak terakhir */
         .contact-item:last-child {
             margin-bottom: 0;
@@ -246,7 +246,7 @@
         }
 
         /* Kelas .sidebar tidak diperlukan lagi karena semua jadi satu */
-        
+
         @media (max-width: 768px) {
             .profile-header {
                 flex-direction: column;
@@ -263,10 +263,10 @@
 
             .profile-actions {
                 flex-direction: column;
-                width: 100%; 
+                width: 100%;
             }
             .btn {
-                width: 100%; 
+                width: 100%;
             }
         }
     </style>
@@ -276,7 +276,7 @@
         <div class="profile-header">
             <div class="profile-picture">AS</div>
             <div class="profile-info">
-                <h1>Ahmad Syahputra</h1>
+                <h1>{{ $mahasiswa->nama }}</h1>
                 <div class="job-title">Full Stack Developer</div>
                 <div class="location">📍 Jakarta, Indonesia</div>
                 <div class="profile-stats">
@@ -295,8 +295,8 @@
                 </div>
             </div>
             <div class="profile-actions">
-                <button class="btn btn-primary">Edit Profil</button>
-                <button class="btn btn-secondary">Unduh CV</button>
+                <a href="{{route('mahasiswa.edit')}}" class="btn btn-primary">Edit Profil</a>
+                <a href="{{route('mahasiswa.portofolio')}}" class="btn btn-secondary">Unduh CV</a>
             </div>
         </div>
 
@@ -305,8 +305,8 @@
                 <div class="card-section">
                     <h2>Tentang Saya</h2>
                     <p class="about-text">
-                        Seorang Full Stack Developer dengan pengalaman 5 tahun dalam mengembangkan aplikasi web modern. 
-                        Memiliki keahlian dalam JavaScript, React, Node.js, dan berbagai teknologi web terkini. 
+                        Seorang Full Stack Developer dengan pengalaman 5 tahun dalam mengembangkan aplikasi web modern.
+                        Memiliki keahlian dalam JavaScript, React, Node.js, dan berbagai teknologi web terkini.
                         Passionate dalam menciptakan solusi digital yang inovatif dan user-friendly.
                     </p>
                 </div>
@@ -318,7 +318,7 @@
                         <div class="item-company">PT Tech Innovation</div>
                         <div class="item-date">Jan 2022 - Sekarang</div>
                         <div class="item-description">
-                            Memimpin tim pengembangan untuk membuat aplikasi e-commerce skala besar. 
+                            Memimpin tim pengembangan untuk membuat aplikasi e-commerce skala besar.
                             Bertanggung jawab dalam arsitektur sistem dan code review.
                         </div>
                     </div>
@@ -327,7 +327,7 @@
                         <div class="item-company">CV Digital Solutions</div>
                         <div class="item-date">Mar 2020 - Des 2021</div>
                         <div class="item-description">
-                            Mengembangkan berbagai aplikasi web untuk klien dari berbagai industri. 
+                            Mengembangkan berbagai aplikasi web untuk klien dari berbagai industri.
                             Fokus pada pengembangan frontend dan backend menggunakan MERN stack.
                         </div>
                     </div>
@@ -336,7 +336,7 @@
                         <div class="item-company">Start-up Indonesia</div>
                         <div class="item-date">Jul 2019 - Feb 2020</div>
                         <div class="item-description">
-                            Membantu pengembangan fitur-fitur baru pada platform web perusahaan. 
+                            Membantu pengembangan fitur-fitur baru pada platform web perusahaan.
                             Belajar best practices dalam software development.
                         </div>
                     </div>
@@ -351,7 +351,7 @@
                         <div class="item-description">IPK: 3.75 - Fokus pada Web Development dan Software Engineering</div>
                     </div>
                 </div>
-            
+
                 <div class="card-section">
                     <h2>Keahlian</h2>
                     <div class="skills-container">

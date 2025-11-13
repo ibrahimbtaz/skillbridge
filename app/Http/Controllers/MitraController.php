@@ -20,7 +20,7 @@ class MitraController extends Controller
      */
     public function create()
     {
-        //
+        return (view('auth.mitra.register'));
     }
 
     /**

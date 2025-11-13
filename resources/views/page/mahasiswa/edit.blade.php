@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profil Mahasiswa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --primary: #5A67D8; --primary-dark: #4C51BF;
@@ -54,7 +54,7 @@
             font-size: 18px; font-weight: 600; color: var(--secondary);
             display: flex; align-items: center; gap: 8px;
         }
-        
+
         /* Form Layout */
         .form-row {
             display: grid;
@@ -63,7 +63,7 @@
         }
         .form-group { margin-bottom: 20px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        
+
         .form-label {
             display: block; font-weight: 600; margin-bottom: 6px;
             color: var(--secondary); font-size: 14px;
@@ -136,7 +136,7 @@
     <div class="header">
         <div class="header-content">
             <h1><i class="fas fa-user-edit"></i> Edit Profil Mahasiswa</h1>
-            <a href="profil_mahasiswa.html" class="back-btn">
+            <a href="{{ url()->previous() }}" class="back-btn">
                 <i class="fas fa-arrow-left"></i> Kembali ke Profil
             </a>
         </div>
@@ -144,17 +144,17 @@
 
     <div class="container">
         <form method="POST" action="" id="editProfileForm">
-            
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-id-card"></i> Biodata</h2>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
                     <input type="text" name="full_name" class="form-input" value="Ahmad Syahputra">
                 </div>
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Email</label>
@@ -171,12 +171,12 @@
                     <textarea name="bio" class="form-textarea" placeholder="Tulis bio singkat Anda...">Full Stack Developer dengan pengalaman 5 tahun...</textarea>
                 </div>
             </div>
-            
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-graduation-cap"></i> Riwayat Pendidikan</h2>
                 </div>
-                
+
                 <div id="educationList" class="dynamic-list">
                     <div class="dynamic-item-group">
                         <div class="dynamic-item-header">
@@ -201,7 +201,7 @@
                         </div>
                     </div>
                     </div>
-                
+
                 <button type="button" class="btn-add" onclick="addEducation()">
                     <i class="fas fa-plus"></i> Tambah Riwayat Pendidikan
                 </button>
@@ -211,7 +211,7 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-briefcase"></i> Pengalaman (Kerja/Organisasi)</h2>
                 </div>
-                
+
                 <div id="experienceList" class="dynamic-list">
                     <div class="dynamic-item-group">
                         <div class="dynamic-item-header">
@@ -258,7 +258,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <button type="button" class="btn-add" onclick="addExperience()">
                     <i class="fas fa-plus"></i> Tambah Pengalaman
                 </button>
@@ -268,7 +268,7 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-laptop-code"></i> Skill</h2>
                 </div>
-                
+
                 <div id="skillList" class="dynamic-list">
                     <div class="dynamic-item">
                         <input type="text" name="skills[]" class="form-input" value="JavaScript">
@@ -289,7 +289,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <button type="button" class="btn-add" onclick="addSkill()">
                     <i class="fas fa-plus"></i> Tambah Skill
                 </button>
@@ -308,7 +308,7 @@
         function removeItem(button) {
             const item = button.closest('.dynamic-item, .dynamic-item-group');
             const list = item.parentElement;
-            
+
             // Cek agar tidak menghapus item terakhir (opsional)
             // if (list.children.length > 1) {
                 item.remove();
