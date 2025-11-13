@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mahasiswa;
+use App\Models\Pelatihan;
 use Illuminate\Http\Request;
 
-class MahasiswaController extends Controller
+class PelatihanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return view('page.pelatihan.home');
     }
 
+    public function rating()
+    {
+        return view('page.pelatihan.rating');
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -34,33 +38,23 @@ class MahasiswaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Mahasiswa $mahasiswa)
+    public function show(Pelatihan $pelatihan)
     {
-        return view('page.mahasiswa.profile');
-    }
-
-    public function status_loker()
-    {
-        return view('page.mahasiswa.status_loker');
-    }
-
-    public function portofolio()
-    {
-        return view('page.mahasiswa.portofolio');
+        return view('page.pelatihan.detail', compact('pelatihan'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Mahasiswa $mahasiswa)
+    public function edit(Pelatihan $pelatihan)
     {
-        return view('page.mahasiswa.edit');
+        return view('page.pelatihan.edit', compact('pelatihan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Mahasiswa $mahasiswa)
+    public function update(Request $request, Pelatihan $pelatihan)
     {
         //
     }
@@ -68,7 +62,7 @@ class MahasiswaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Mahasiswa $mahasiswa)
+    public function destroy(Pelatihan $pelatihan)
     {
         //
     }

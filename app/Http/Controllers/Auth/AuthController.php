@@ -38,6 +38,11 @@ class AuthController extends Controller
         return back()->with('error', 'Login gagal');
     }
 
+    public function register()
+    {
+        return view('auth.register');
+    }
+
     public function logout()
     {
         Auth::logout();

@@ -1,4 +1,4 @@
-@extends(layout.main)
+@extends('layout.main')
 @section('content')
 <!DOCTYPE html>
 <html lang="id">
@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Pelatihan - Skill Bridge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --primary: #5A67D8; --secondary: #4A5568;

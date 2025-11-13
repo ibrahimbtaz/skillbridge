@@ -95,6 +95,7 @@
     <div class="navbar-menu">
         <a href="{{ route('home') }}">Beranda</a>
         <a href="{{ route('loker.index') }}">Lowongan Kerja</a>
+        <a href="{{ route('pelatihan.index') }}">Pelatihan</a>
         @auth
             <div class="user-info">
                 @php $u = Auth::user(); @endphp
