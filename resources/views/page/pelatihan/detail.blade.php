@@ -298,17 +298,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">🎓 Skill Bridge</div>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="list_pelatihan.html">Pelatihan</a>
-                <a href="list_pekerjaan.php">Loker</a>
-                <a href="profil.html">Profil</a>
-            </nav>
-        </div>
-    </header>
 
     <div class="container">
         <div class="breadcrumb">
@@ -318,49 +307,48 @@
         <div class="content-wrapper" id="contentWrapper">
             <!-- Static default content (pelatihan id=1) -->
             <div class="training-detail">
-                <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800" alt="Full Stack Web Development dengan React & Node.js" class="training-image">
-                <a href="{{ route('pelatihan.edit', ['id' => 1]) }}">edit pelatihan</a>
+                <img src="{{ asset($pelatihan->thumbnail) }}" alt="{{ $pelatihan->nama_pelatihan }}" class="training-image">
+                {{-- <a href="{{ route('pelatihan.edit', ['id' => 1]) }}">edit pelatihan</a> --}}
                 <div class="training-header">
-                    <h1>Full Stack Web Development dengan React & Node.js</h1>
+                    <h1>{{ $pelatihan->nama_pelatihan }}</h1>
                     <div class="training-meta">
                         <div class="meta-item">
                             <span class="icon">⭐</span>
                             <a href="{{route('pelatihan.rating')}}">
-                            <span class="rating">4.8 (1.245 rating)</span>
+                            <span class="rating">{{ $pelatihan->rating }}</span>
                             </a>
                         </div>
-                        <div class="meta-item">
+                        {{-- <div class="meta-item">
                             <span class="icon">👥</span>
                             <span>3.890 Peserta</span>
-                        </div>
+                        </div> --}}
                         <div class="meta-item">
                             <span class="icon">📅</span>
-                            <span>Update: Nov 2025</span>
+                            <span>{{ $pelatihan->updated_at->format('M Y') }}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="section">
                     <h2>📖 Deskripsi Pelatihan</h2>
-                    <p>Pelatihan komprehensif yang dirancang untuk membawa Anda dari pemula hingga menjadi Full Stack Developer yang handal. Dalam pelatihan ini, Anda akan mempelajari pengembangan aplikasi web modern menggunakan teknologi terkini seperti React.js untuk frontend dan Node.js dengan Express untuk backend. Materi disusun secara sistematis dengan project-based learning yang akan membantu Anda membangun portfolio yang kuat.</p>
-                    <p style="margin-top: 1rem;">Setiap modul dilengkapi dengan studi kasus nyata dari industri, latihan praktikal, dan quiz untuk menguji pemahaman Anda. Di akhir pelatihan, Anda akan membangun aplikasi web lengkap dari nol yang siap untuk di-deploy.</p>
+                    <p>{{ $pelatihan->deskripsi }}</p>
                 </div>
 
                 <div class="section">
                     <h2>🎯 Yang Akan Anda Pelajari</h2>
                     <div class="skills-list">
-                        <span class="skill-tag">HTML5 & CSS3</span><span class="skill-tag">JavaScript ES6+</span><span class="skill-tag">React.js</span><span class="skill-tag">Node.js</span><span class="skill-tag">Express.js</span><span class="skill-tag">MongoDB</span><span class="skill-tag">REST API</span><span class="skill-tag">Authentication</span><span class="skill-tag">Git & GitHub</span><span class="skill-tag">Deployment</span>
+                        @foreach (json_decode($pelatihan->tags) as $tag)
+                            <div class="skill-tag">{{ $tag }}</div>
+                        @endforeach
                     </div>
                 </div>
 
                 <div class="section">
                     <h2>📋 Persyaratan</h2>
                     <ul class="requirements-list">
-                        <li>Memiliki komputer/laptop dengan spesifikasi minimal RAM 4GB</li>
-                        <li>Koneksi internet yang stabil</li>
-                        <li>Motivasi belajar yang tinggi dan konsisten</li>
-                        <li>Pengetahuan dasar pemrograman (diutamakan tapi tidak wajib)</li>
-                        <li>Kemauan untuk mengerjakan project dan latihan</li>
+                        @foreach (json_decode($pelatihan->persyaratan) as $persyaratan)
+                            <li>{{ $persyaratan }}</li>
+                        @endforeach
                     </ul>
                 </div>
 

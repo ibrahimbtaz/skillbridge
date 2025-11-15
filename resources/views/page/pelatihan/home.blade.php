@@ -75,8 +75,9 @@
         }
         .card-image {
             width: 100%; height: 150px;
-            background: #ccc url('https://via.placeholder.com/300x150?text=Gambar+Pelatihan') no-repeat center center;
+            background: #ccc no-repeat center center;
             background-size: cover;
+
         }
         .card-content { padding: 20px; }
         .card-title {
@@ -127,39 +128,19 @@
         </div>
 
         <div class="training-grid">
-            <a href="{{ route('pelatihan.show')}}" class="training-card">
-                <div class="card-image"></div>
-                <div class="card-content">
-                    <h3 class="card-title">Full-Stack Web Development Bootcamp</h3>
-                    <div class="card-instructor">oleh Tech Innovators Academy</div>
-                    <div class="card-meta">
-                        <span><i class="fas fa-layer-group"></i> Web Development</span>
-                        <span class="rating"><i class="fas fa-star"></i> 4.8 (120)</span>
+            @foreach ($pelatihans as $pelatihan)
+                <a href="{{ route('pelatihan.show', $pelatihan->id)}}" class="training-card">
+                    <div class="card-image" style="background-image: url('{{ asset($pelatihan->thumbnail) }}');"></div>
+                    <div class="card-content">
+                        <h3 class="card-title">{{ $pelatihan->nama_pelatihan }}</h3>
+                        <div class="card-instructor">oleh {{ $pelatihan->mitra->nama_mitra }}</div>
+                        <div class="card-meta">
+                            <span><i class="fas fa-layer-group"></i> {{ $pelatihan->kategori }}</span>
+                            <span class="rating"><i class="fas fa-star"></i> {{ $pelatihan->rating }} </span>
+                        </div>
                     </div>
-                </div>
-            </a>
-            <a href="{{ route('pelatihan.show')}}" class="training-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x150?text=Data+Science')"></div>
-                <div class="card-content">
-                    <h3 class="card-title">Data Science Fundamentals with Python</h3>
-                    <div class="card-instructor">oleh DataMind Analytics</div>
-                    <div class="card-meta">
-                        <span><i class="fas fa-database"></i> Data Science</span>
-                        <span class="rating"><i class="fas fa-star"></i> 4.7 (95)</span>
-                    </div>
-                </div>
-            </a>
-            <a href="{{ route('pelatihan.show')}}" class="training-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x150?text=UI/UX+Design')"></div>
-                <div class="card-content">
-                    <h3 class="card-title">UI/UX Design for Mobile Apps</h3>
-                    <div class="card-instructor">oleh CreativeHub Studio</div>
-                    <div class="card-meta">
-                        <span><i class="fas fa-paint-brush"></i> Desain</span>
-                        <span class="rating"><i class="fas fa-star"></i> 4.9 (210)</span>
-                    </div>
-                </div>
-            </a>
+                </a>
+            @endforeach
         </div>
     </div>
 </body>

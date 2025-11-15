@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('pelatihans', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_pelatihan'); // Nama Pelatihan
+            $table->text('deskripsi'); // Deskripsi Pelatihan
+            $table->string('kategori'); // Kategori (Programming, Design, Business, etc)
+            $table->string('thumbnail')->nullable(); // Gambar Thumbnail
+            $table->decimal('rating', 3, 2)->default(0); // Rating (0-5)
+            $table->json('tags')->nullable(); // Tags (JSON Array)
+            $table->json('persyaratan')->nullable(); // Persyaratan Peserta
+            $table->foreignId('mitra_id')->constrained()->onDelete('cascade');
+            $table->softDeletes(); // Soft Delete
             $table->timestamps();
         });
     }

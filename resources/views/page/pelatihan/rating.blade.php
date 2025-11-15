@@ -491,23 +491,11 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <div class="logo">🎓 Skill Bridge</div>
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="list_pelatihan.html">Pelatihan</a>
-                <a href="list_pekerjaan.php">Loker</a>
-                <a href="profil.html">Profil</a>
-            </nav>
-        </div>
-    </header>
-
     <div class="container">
         <div class="breadcrumb">
-            <a href="index.html">Home</a> / 
-            <a href="list_pelatihan.html">Pelatihan</a> / 
-            <a href="detail_pelatihan.html?id=1">Full Stack Web Development</a> / 
+            <a href="index.html">Home</a> /
+            <a href="list_pelatihan.html">Pelatihan</a> /
+            <a href="detail_pelatihan.html?id=1">Full Stack Web Development</a> /
             Rating &amp; Review
         </div>
 
@@ -649,7 +637,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -679,7 +667,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -709,7 +697,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -739,7 +727,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -769,7 +757,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -799,7 +787,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -829,7 +817,7 @@
                         </button>
                     </div>
                 </div>
-            
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -1009,7 +997,7 @@
         // Render reviews
         function renderReviews(reviews) {
             const container = document.getElementById('reviewsContainer');
-            
+
             if (reviews.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
@@ -1122,7 +1110,7 @@
             star.addEventListener('click', function() {
                 selectedRating = parseInt(this.dataset.rating);
                 document.getElementById('ratingValue').value = selectedRating;
-                
+
                 // Update visual
                 document.querySelectorAll('.star-input').forEach((s, index) => {
                     if (index < selectedRating) {
@@ -1158,7 +1146,7 @@
         // Submit review
         function submitReview(event) {
             event.preventDefault();
-            
+
             const rating = document.getElementById('ratingValue').value;
             const title = document.getElementById('reviewTitle').value;
             const text = document.getElementById('reviewText').value;

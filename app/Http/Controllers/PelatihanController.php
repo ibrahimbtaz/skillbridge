@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelatihan;
+use App\Models\Mitra;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class PelatihanController extends Controller
 {
@@ -12,7 +15,8 @@ class PelatihanController extends Controller
      */
     public function index()
     {
-        return view('page.pelatihan.home');
+        $pelatihans = Pelatihan::with('mitra.user')->get();
+        return view('page.pelatihan.home', compact('pelatihans'));
     }
 
     public function rating()
@@ -40,6 +44,7 @@ class PelatihanController extends Controller
      */
     public function show(Pelatihan $pelatihan)
     {
+        $pelatihan = Pelatihan::with('mitra.user')->findOrFail($pelatihan->id);
         return view('page.pelatihan.detail', compact('pelatihan'));
     }
 

@@ -30,7 +30,7 @@ Route::get('/loker', [LokerController::class, 'index'])->name('loker.index');
 Route::get('/loker/{loker}', [LokerController::class, 'show'])->name('loker.show');
 
 Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
-Route::get('/pelatihan/detail', [PelatihanController::class, 'show'])->name('pelatihan.show');
+Route::get('/pelatihan/{pelatihan}', [PelatihanController::class, 'show'])->name('pelatihan.show');
 Route::get('/pelatihan/rating', [PelatihanController::class, 'rating'])->name('pelatihan.rating');
 Route::get('/pelatihan/edit', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
 

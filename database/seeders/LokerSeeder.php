@@ -49,7 +49,6 @@ class LokerSeeder extends Seeder
                         fake()->sentence(),
                         fake()->sentence(),
                     ],
-
                     'status' => fake()->randomElement(['draft', 'published', 'closed', 'filled']),
                     'deadline' => fake()->dateTimeBetween('now', '+3 months'),
                     'mitra_id' => $id,
