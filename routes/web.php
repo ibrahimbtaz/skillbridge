@@ -19,7 +19,7 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::get('/register/{type?}', [AuthController::class, 'register'])->name('register');
     Route::post('/register/mahasiswa', [AuthController::class, 'register_mahasiswa'])->name('mahasiswa.register');
-    // Route::post('/register/mitra', [AuthController::class, 'register_mitra'])->name('mitra.register');
+    Route::post('/register/mitra', [AuthController::class, 'register_mitra'])->name('mitra.register');
 });
 
 Route::middleware(['auth'])->group(function () {

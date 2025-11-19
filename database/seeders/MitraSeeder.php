@@ -8,6 +8,8 @@ use App\Models\Mitra;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 
 
 class MitraSeeder extends Seeder
@@ -27,13 +29,36 @@ class MitraSeeder extends Seeder
             'Jawa Timur' => ['Surabaya', 'Malang', 'Kediri', 'Madiun'],
             'DKI Jakarta' => ['Jakarta Pusat', 'Jakarta Selatan', 'Jakarta Utara'],
         ];
-        $logos = collect(File::files(public_path('assets/mitra/logo')))
-        ->map(fn($file) => 'assets/mitra/logo/' . $file->getFilename())
-        ->shuffle();
-        foreach ($userIds as $id) {
+        // Ambil semua file logo dari assets/mitra/logo/
+        $logoFiles = collect(File::files(public_path('assets/mitra/logo')))
+            ->filter(function ($file) {
+                // Filter hanya file gambar
+                return in_array(strtolower($file->getExtension()), ['jpg', 'jpeg', 'png', 'gif']);
+            })
+            ->shuffle();
+
+        // Pastikan folder storage/app/public/logos/mitra/ ada
+        if (!Storage::disk('public')->exists('logos/mitra')) {
+            Storage::disk('public')->makeDirectory('logos/mitra');
+        }
+        foreach ($userIds as $index => $id) {
             $provinsi = fake()->randomElement(array_keys($lokasi));
             $kota = fake()->randomElement($lokasi[$provinsi]);
-            $logo = $logos->shift();
+            // Ambil logo dari assets (cycling jika user lebih banyak dari logo)
+            $logoFile = $logoFiles[$index % $logoFiles->count()];
+            $logoPath = null;
+
+            if ($logoFile) {
+                // Generate nama file unik
+                $newFileName = time() . '_' . $index . '_' . $logoFile->getFilename();
+                $storagePath = 'logos/mitra/' . $newFileName;
+
+                // Copy file dari assets ke storage
+                $sourceFile = $logoFile->getPathname();
+                Storage::disk('public')->put($storagePath, File::get($sourceFile));
+
+                $logoPath = $storagePath;
+            }
             Mitra::create([
                 'nama_mitra' => fake()->company(),
                 'deskripsi' => fake()->paragraph(),
@@ -44,7 +69,7 @@ class MitraSeeder extends Seeder
                 'alamat' => fake()->address(),
                 'provinsi' => $provinsi,
                 'kota' => $kota,
-                'logo' => $logo,
+                'logo' => $logoPath,
                 'user_id' => $id,
             ]);
         }

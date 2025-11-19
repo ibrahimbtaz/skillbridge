@@ -342,7 +342,7 @@
                 <div class="job-card-main">
                     <div class="job-header-section" style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div class="job-header">
-                            <img src="{{ asset($loker->mitra->logo) }}" alt="Company Logo" class="company-logo">
+                            <img src="{{ $loker->mitra->logo_url }}" alt="Company Logo" class="company-logo">
                             <div style="flex: 1;">
                                 <h1 class="job-title">{{ $loker->title }}</h1>
                                 <a href="{{ route('mitra.public',  ['id' => $loker->mitra->id, 'loker' => $loker->id]) }}" class="company-name-link">{{ $loker->mitra->nama_mitra }}</a>
@@ -454,7 +454,7 @@
                     <div style="margin-top: 10px; padding: 10px 10px;">
                         <a href="{{route('mahasiswa.status_loker')}}" class="btn btn-primary" id="applyBtn">
                             <i class="fas fa-paper-plane"></i>
-                            Lamar Sekarang        
+                            Lamar Sekarang
                         </a>
                     </div>
                 </div>

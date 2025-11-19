@@ -149,7 +149,7 @@
     <div class="container">
         <div class="card">
             <div class="profile-header">
-                <img src="{{asset($mitra->logo)}}" alt="Logo Perusahaan" class="company-logo">
+                <img src="{{ $mitra->logo_url }}" alt="Logo Perusahaan" class="company-logo">
                 <div class="company-title">
                     <h1>{{ $mitra->nama_mitra }}</h1>
                     <p>{{ $mitra->kota }}, {{ $mitra->provinsi }}</p>

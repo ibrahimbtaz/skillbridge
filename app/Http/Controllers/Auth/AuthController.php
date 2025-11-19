@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Mahasiswa;
+use App\Models\Mitra;
 
 
 class AuthController extends Controller
@@ -58,7 +59,7 @@ class AuthController extends Controller
 
     }
 
-        // Proses Register
+    // Proses Register
     public function register_mahasiswa(Request $request)
     {
         // 1. Validasi Input
@@ -103,6 +104,76 @@ class AuthController extends Controller
         // 3. Redirect jika sukses
         return redirect()->route('home')->with('success', 'Registrasi Berhasil!');
     }
+
+    public function register_mitra(Request $request)
+    {
+        // 1. Validasi Input
+        $validated = $request->validate([
+            'nama_mitra'    => 'required|string|max:255',
+            'deskripsi'     => 'nullable|string',
+            'industri'      => 'required|string',
+            'email'         => 'required|email|unique:mitras,email|unique:users,email',
+            'password'      => 'required|min:6|confirmed',
+            'telepon'       => 'nullable|string|max:20',
+            'website'       => 'nullable|url|max:255',
+            'alamat'        => 'nullable|string',
+            'provinsi'      => 'nullable|string',
+            'kota'          => 'nullable|string',
+            'logo'          => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+        ], [
+            'nama_mitra.required'   => 'Nama perusahaan wajib diisi.',
+            'industri.required'     => 'Bidang industri wajib dipilih.',
+            'email.required'        => 'Email perusahaan wajib diisi.',
+            'email.unique'          => 'Email sudah terdaftar.',
+            'password.required'     => 'Password wajib diisi.',
+            'password.min'          => 'Password minimal 6 karakter.',
+            'password.confirmed'    => 'Konfirmasi password tidak cocok.',
+            'logo.image'            => 'File harus berupa gambar.',
+            'logo.mimes'            => 'Format logo harus JPG, PNG.',
+            'logo.max'              => 'Ukuran logo maksimal 2MB.',
+            'website.url'           => 'Format website tidak valid.',
+        ]);
+
+        // 2. Handle Upload Logo
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos/mitra', 'public');
+        }
+
+        // 3. Gunakan Transaction untuk simpan ke 2 tabel
+        DB::transaction(function () use ($request, $logoPath) {
+
+            // A. Buat Akun User (untuk Login)
+            $user = User::create([
+                'name'      => $request->nama_mitra,
+                'email'     => $request->email,
+                'password'  => Hash::make($request->password),
+                'role'      => '2', // Tambahkan role mitra
+            ]);
+
+            // B. Buat Data Mitra (Link ke User ID)
+            Mitra::create([
+                'user_id'       => $user->id,
+                'nama_mitra'    => $request->nama_mitra,
+                'deskripsi'     => $request->deskripsi,
+                'industri'      => $request->industri,
+                'email'         => $request->email,
+                'telepon'       => $request->telepon,
+                'website'       => $request->website,
+                'alamat'        => $request->alamat,
+                'provinsi'      => $request->provinsi,
+                'kota'          => $request->kota,
+                'logo'          => $logoPath,
+            ]);
+
+            // C. Opsional: Otomatis Login setelah register
+            Auth::login($user);
+        });
+
+        // 4. Redirect dengan pesan sukses
+        return redirect()->route('home')->with('success', 'Registrasi mitra berhasil! Tim kami akan melakukan verifikasi dalam 1-2 hari kerja.');
+    }
+
 
 
     public function logout()
