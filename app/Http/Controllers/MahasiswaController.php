@@ -20,7 +20,7 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('auth.mahasiswa.register');
+        //
     }
 
     /**
@@ -28,15 +28,7 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nim' => 'required|string|unique:mahasiswas,nim',
-            'jurusan' => 'required|string|max:255',
-            'semester' => 'required|string|max:255',
-            'alamat' => 'required|string|max:500',
-            'no_telp' => 'required|string|max:15',
-            'tanggal_lahir' => 'required|date',
-        ]);
-        
+        //
     }
 
     /**

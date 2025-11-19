@@ -9,11 +9,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mahasiswa extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $table = "mahasiswas";
     protected $guarded = ['id'];
+
+    protected $fillable = [
+        'nim',
+        'nama',
+        'jurusan',
+        'semester',
+        'alamat',
+        'no_telp',
+        'tanggal_lahir',
+        'user_id', // Penting agar bisa disambungkan
+    ];
 
     protected $hidden = [
         'created_at',

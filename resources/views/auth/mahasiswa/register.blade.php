@@ -60,11 +60,35 @@
                         <p class="mb-0">Bergabunglah dengan platform pencari kerja terbaik</p>
                     </div>
                     <div class="card-body p-4">
-                        <form id="registrationForm" novalidate>
+                        <form id="registrationForm" method="POST" action="{{ route('mahasiswa.register') }}" novalidate>
+                            @csrf
+
+                            <div class="form-floating">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="name@example.com" required>
+                                <label for="email">Email <span class="required">*</span></label>
+                                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
+                                        <label for="password">Password <span class="required">*</span></label>
+                                        @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password" required>
+                                        <label for="password_confirmation">Ulangi Password <span class="required">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="nim" name="nim" placeholder="NIM" required>
+                                    <input type="text" class="form-control @error('nim') is-invalid @enderror" id="nim" name="nim" value="{{ old('nim') }}" placeholder="NIM" required>
                                         <label for="nim">NIM <span class="required">*</span></label>
                                         <div class="invalid-feedback">
                                             NIM wajib diisi.
@@ -76,7 +100,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama Lengkap" required>
+                                <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama" value="{{ old('nama') }}" placeholder="Nama Lengkap" required>
                                         <label for="nama">Nama Lengkap <span class="required">*</span></label>
                                         <div class="invalid-feedback">
                                             Nama lengkap wajib diisi.
@@ -88,16 +112,11 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <select class="form-select" id="jurusan" name="jurusan" required>
+                                        <select class="form-select @error('jurusan') is-invalid @enderror" id="jurusan" name="jurusan" required>
                                             <option value="">Pilih Jurusan</option>
-                                            <option value="Teknik Informatika">Teknik Informatika</option>
-                                            <option value="Sistem Informasi">Sistem Informasi</option>
-                                            <option value="Teknik Komputer">Teknik Komputer</option>
-                                            <option value="Manajemen">Manajemen</option>
-                                            <option value="Akuntansi">Akuntansi</option>
-                                            <option value="Teknik Elektro">Teknik Elektro</option>
-                                            <option value="Teknik Mesin">Teknik Mesin</option>
-                                            <option value="Teknik Sipil">Teknik Sipil</option>
+                                            @foreach(['Teknik Informatika', 'Sistem Informasi', 'Manajemen', 'Akuntansi'] as $j)
+                                                <option value="{{ $j }}" {{ old('jurusan') == $j ? 'selected' : '' }}>{{ $j }}</option>
+                                            @endforeach
                                         </select>
                                         <label for="jurusan">Jurusan</label>
                                         <div class="invalid-feedback">
@@ -111,16 +130,12 @@
                                 <div class="col-12">
                                     <div class="form-floating">
                                         <select class="form-select" id="semester" name="semester">
-                                            <option value="">Pilih Semester</option>
-                                            <option value="1">Semester 1</option>
-                                            <option value="2">Semester 2</option>
-                                            <option value="3">Semester 3</option>
-                                            <option value="4">Semester 4</option>
-                                            <option value="5">Semester 5</option>
-                                            <option value="6">Semester 6</option>
-                                            <option value="7">Semester 7</option>
-                                            <option value="8">Semester 8</option>
+                                            <option value="">Sem.</option>
+                                            @for($i=1; $i<=8; $i++)
+                                                <option value="{{ $i }}" {{ old('semester') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                            @endfor
                                         </select>
+
                                         <label for="semester">Semester</label>
                                     </div>
                                 </div>
@@ -129,7 +144,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control" id="alamat" name="alamat" style="height: 100px" placeholder="Alamat Lengkap"></textarea>
+                                <textarea class="form-control" id="alamat" name="alamat" style="height: 100px" placeholder="Alamat">{{ old('alamat') }}</textarea>
                                         <label for="alamat">Alamat Lengkap</label>
                                     </div>
                                 </div>
@@ -138,7 +153,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="tel" class="form-control" id="no_telp" name="no_telp" placeholder="Nomor Telepon">
+                                <input type="tel" class="form-control" id="no_telp" name="no_telp" value="{{ old('no_telp') }}" placeholder="Nomor Telepon">
                                         <label for="no_telp">Nomor Telepon</label>
                                     </div>
                                 </div>
@@ -147,7 +162,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="Tanggal Lahir">
+                                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" placeholder="Tanggal Lahir">
                                         <label for="tanggal_lahir">Tanggal Lahir</label>
                                     </div>
                                 </div>
@@ -161,15 +176,18 @@
                         </form>
 
                         <div class="text-center mt-4">
-                            <p class="mb-0">Sudah punya akun? <a href="../page registrasi/registrasiuser.html" class="text-decoration-none">Login di sini</a></p>
+                            <p class="mb-0">Sudah punya akun? <a href="{{ route('login')}}" class="text-decoration-none">Login di sini</a></p>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Success Modal -->
+        @if(session('success'))
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -185,28 +203,26 @@
                     <p>Akun mahasiswa Anda berhasil didaftarkan. Silakan login untuk melanjutkan.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                    <button type="submit" class="btn btn-success" data-bs-dismiss="modal">
                         <i class="fas fa-sign-in-alt me-2"></i>Login Sekarang
                     </button>
                 </div>
             </div>
         </div>
     </div>
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
+
         // Form validation
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (this.checkValidity()) {
-                // Simulate registration process
-                setTimeout(function() {
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
-                }, 1000);
+            // Hanya tambahkan class validasi
+            if (!this.checkValidity()) {
+                e.preventDefault(); // Cuma prevent kalau form invalid
+                e.stopPropagation();
             }
-
             this.classList.add('was-validated');
         });
 

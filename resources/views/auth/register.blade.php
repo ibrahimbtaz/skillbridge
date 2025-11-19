@@ -256,7 +256,7 @@
                             <li>Konsultasi karir dengan mentor</li>
                         </ul>
 
-                        <a href="{{ route('mahasiswa.register') }}" class="btn-register">
+                        <a href="{{ route('register', ['type' => 'mhs']) }}" class="btn-register">
                             <i class="fas fa-graduation-cap me-2"></i>Daftar Mahasiswa
                         </a>
                     </div>
@@ -282,7 +282,7 @@
                             <li>Branding perusahaan di platform</li>
                         </ul>
 
-                        <a href="{{ route('mitra.register') }}" class="btn-register">
+                        <a href="{{ route('register', ['type' => 'mtr']) }}" class="btn-register">
                             <i class="fas fa-handshake me-2"></i>Daftar Mitra
                         </a>
                     </div>
@@ -297,8 +297,7 @@
 
         <!-- Login Section -->
         <div class="login-section">
-            <p><i class="fas fa-sign-in-alt me-2"></i>Sudah memiliki akun?</p>
-            <a href="registrasiuser.html" class="btn-login">
+            <a href="{{route('login')}}" class="btn-login">
                 <i class="fas fa-sign-in-alt me-2"></i>Login Sekarang
             </a>
         </div>

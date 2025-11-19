@@ -202,7 +202,7 @@ body {
             <div class="footer-links">
                 <a href="#">Lupa Password?</a>
                 <span>|</span>
-                <a href="#">Daftar Akun Baru</a>
+                <a href="{{route('register')}}">Daftar Akun Baru</a>
             </div>
         </form>
     </div>

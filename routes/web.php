@@ -17,9 +17,9 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::get('/register', [AuthController::class, 'register'])->name('register');
-    Route::get('/register/mahasiswa', [MahasiswaController::class, 'create'])->name('mahasiswa.register');
-    Route::get('/register/mitra', [MitraController::class, 'create'])->name('mitra.register');
+    Route::get('/register/{type?}', [AuthController::class, 'register'])->name('register');
+    Route::post('/register/mahasiswa', [AuthController::class, 'register_mahasiswa'])->name('mahasiswa.register');
+    // Route::post('/register/mitra', [AuthController::class, 'register_mitra'])->name('mitra.register');
 });
 
 Route::middleware(['auth'])->group(function () {
