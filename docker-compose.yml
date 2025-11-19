@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: skillbridge-app
+    container_name: skillbridge-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - skillbridge-network
+    depends_on:
+      - db
+
+  # Nginx Service
+  nginx:
+    image: nginx:alpine
+    container_name: skillbridge-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d
+    networks:
+      - skillbridge-network
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    container_name: skillbridge-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skillbridge
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: password
+      MYSQL_USER: laravel
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - skillbridge-network
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: skillbridge-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - skillbridge-network
+    depends_on:
+      - db
+
+networks:
+  skillbridge-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
