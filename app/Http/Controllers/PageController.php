@@ -16,9 +16,10 @@ class PageController extends Controller
         $user = auth()->user();
         $mitra = auth()->user()->mitra;
 
-
+        // When jago ya
         if ($user->role == 1) { // admin
             return view('page.admin.dashboard');
+            return view('page.admin.auditpelatihan');
         }
 
         if ($user->role == 2) { // mitra

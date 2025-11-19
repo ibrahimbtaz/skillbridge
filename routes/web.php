@@ -43,7 +43,9 @@ Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])-
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('/admin')->group(function () {
         Route::get('/dashboard', [PageController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/auditpelatihan', [LokerController::class, 'admin_index'])->name('admin.auditpelatihan'); // ini nih
     });
+
 });
 
 Route::middleware(['auth', 'mitra'])->group(function () {
