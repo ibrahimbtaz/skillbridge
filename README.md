@@ -10,6 +10,7 @@ Platform berbasis web yang menghubungkan mahasiswa dengan perusahaan mitra untuk
 - [Instalasi](#instalasi)
 - [Konfigurasi](#konfigurasi)
 - [Menjalankan Aplikasi](#menjalankan-aplikasi)
+- [Docker Installation](#docker-installation) ⬅️ **BARU**
 - [Database Seeding](#database-seeding)
 - [Akun Default](#akun-default)
 - [Struktur Project](#struktur-project)
@@ -35,17 +36,22 @@ Platform berbasis web yang menghubungkan mahasiswa dengan perusahaan mitra untuk
 - **Database**: MySQL
 - **Icons**: Font Awesome 6.4.0
 - **PHP**: >= 8.2
+- **Docker**: Docker & Docker Compose (opsional)
 
 ---
 
 ## 📦 Persyaratan Sistem
 
-Pastikan sistem Anda telah terinstall:
-
+### Instalasi Manual
 - PHP >= 8.2
 - Composer
 - MySQL >= 8.0
 - Node.js & NPM (opsional, untuk asset compilation)
+- Git
+
+### Instalasi Docker
+- Docker Desktop >= 20.10
+- Docker Compose >= 2.0
 - Git
 
 ---
@@ -116,35 +122,6 @@ php artisan storage:link
 
 ---
 
-## 🎯 Database Seeding
-
-### Seed Data Default
-
-```bash
-php artisan db:seed
-```
-
-### Seed Spesifik
-
-```bash
-# Seed Users
-php artisan db:seed --class=UserSeeder
-
-# Seed Mahasiswa
-php artisan db:seed --class=MahasiswaSeeder
-
-# Seed Mitra
-php artisan db:seed --class=MitraSeeder
-
-# Seed Lowongan
-php artisan db:seed --class=LokerSeeder
-
-# Seed Pelatihan
-php artisan db:seed --class=PelatihanSeeder
-```
-
----
-
 ## 🏃 Menjalankan Aplikasi
 
 ### Development Server
@@ -159,6 +136,226 @@ Aplikasi akan berjalan di: **http://localhost:8000**
 
 ```bash
 php artisan serve --port=8080
+```
+
+---
+
+## 🐳 Docker Installation
+
+### Persyaratan Docker
+
+Pastikan Docker Desktop sudah terinstall:
+- **Windows/Mac**: [Download Docker Desktop](https://www.docker.com/products/docker-desktop)
+- **Linux**: Install Docker Engine dan Docker Compose
+
+### 1. Setup File Docker
+
+Pastikan file berikut ada di root project:
+
+```
+skillbridge/
+├── Dockerfile
+├── docker-compose.yml
+└── docker/
+    └── nginx/
+        └── default.conf
+```
+
+### 2. Konfigurasi Environment untuk Docker
+
+Edit file `.env` dan sesuaikan untuk Docker:
+
+```env
+APP_NAME=Skillbridge
+APP_ENV=local
+APP_KEY=base64:+UEwDIuhNrjTo9zrv102sm/ZLH/CXl0/yo7AUwR1VeE=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=db                    # ⬅️ Ganti dengan 'db'
+DB_PORT=3306
+DB_DATABASE=skillbridge
+DB_USERNAME=laravel           # ⬅️ Ganti dengan 'laravel'
+DB_PASSWORD=password          # ⬅️ Ganti dengan 'password'
+```
+
+### 3. Build dan Jalankan Container
+
+```bash
+# Build dan jalankan semua container
+docker-compose up -d --build
+
+# Tunggu beberapa saat hingga semua container running
+docker-compose ps
+```
+
+### 4. Setup Aplikasi di Container
+
+Masuk ke container app dan jalankan setup:
+
+```bash
+# Masuk ke container
+docker exec -it skillbridge-app bash
+
+# Di dalam container, jalankan:
+composer install
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan optimize
+
+# Keluar dari container
+exit
+```
+
+### 5. Akses Aplikasi
+
+Setelah setup selesai, akses:
+
+- **Laravel App**: http://localhost:8000
+- **PhpMyAdmin**: http://localhost:8080
+  - Server: `db`
+  - Username: `laravel`
+  - Password: `password`
+
+### Docker Command Berguna
+
+```bash
+# Lihat status container
+docker-compose ps
+
+# Lihat logs semua service
+docker-compose logs -f
+
+# Lihat logs service tertentu
+docker-compose logs -f app
+docker-compose logs -f nginx
+docker-compose logs -f db
+
+# Restart container
+docker-compose restart
+
+# Stop container
+docker-compose stop
+
+# Start container yang sudah ada
+docker-compose start
+
+# Stop dan hapus container
+docker-compose down
+
+# Stop dan hapus container + volumes
+docker-compose down -v
+
+# Rebuild container tanpa cache
+docker-compose build --no-cache
+docker-compose up -d
+
+# Masuk ke container tertentu
+docker exec -it skillbridge-app bash
+docker exec -it skillbridge-db bash
+docker exec -it skillbridge-nginx sh
+
+# Jalankan artisan command dari luar container
+docker exec skillbridge-app php artisan migrate
+docker exec skillbridge-app php artisan cache:clear
+docker exec skillbridge-app php artisan db:seed
+```
+
+### Docker Compose Services
+
+Project ini menggunakan 4 services:
+
+| Service | Container Name | Port | Keterangan |
+|---------|---------------|------|------------|
+| **app** | skillbridge-app | 9000 | PHP-FPM 8.2 |
+| **nginx** | skillbridge-nginx | 8000 | Web Server |
+| **db** | skillbridge-db | 3307 | MySQL 8.0 |
+| **phpmyadmin** | skillbridge-phpmyadmin | 8080 | Database Manager |
+
+### Troubleshooting Docker
+
+#### Port Sudah Digunakan
+
+Jika port 8000 atau 3307 sudah digunakan, edit `docker-compose.yml`:
+
+```yaml
+nginx:
+  ports:
+    - "8001:80"  # Ganti 8000 dengan port lain
+
+db:
+  ports:
+    - "3308:3306"  # Ganti 3307 dengan port lain
+```
+
+#### Container Gagal Start
+
+```bash
+# Cek logs error
+docker-compose logs
+
+# Hapus dan rebuild
+docker-compose down -v
+docker-compose up -d --build
+```
+
+#### Permission Error di Linux
+
+```bash
+# Berikan permission ke folder
+sudo chown -R $USER:$USER .
+sudo chmod -R 775 storage bootstrap/cache
+```
+
+#### Database Connection Error
+
+Pastikan di `.env`:
+- `DB_HOST=db` (bukan 127.0.0.1)
+- `DB_USERNAME=laravel`
+- `DB_PASSWORD=password`
+
+Lalu restart container:
+
+```bash
+docker-compose restart app
+```
+
+---
+
+## 🎯 Database Seeding
+
+### Seed Data Default
+
+**Manual Installation:**
+```bash
+php artisan db:seed
+```
+
+**Docker Installation:**
+```bash
+docker exec skillbridge-app php artisan db:seed
+```
+
+### Seed Spesifik
+
+**Manual:**
+```bash
+php artisan db:seed --class=UserSeeder
+php artisan db:seed --class=MahasiswaSeeder
+php artisan db:seed --class=MitraSeeder
+php artisan db:seed --class=LokerSeeder
+php artisan db:seed --class=PelatihanSeeder
+```
+
+**Docker:**
+```bash
+docker exec skillbridge-app php artisan db:seed --class=UserSeeder
+docker exec skillbridge-app php artisan db:seed --class=MahasiswaSeeder
+docker exec skillbridge-app php artisan db:seed --class=MitraSeeder
+docker exec skillbridge-app php artisan db:seed --class=LokerSeeder
+docker exec skillbridge-app php artisan db:seed --class=PelatihanSeeder
 ```
 
 ---
@@ -210,6 +407,9 @@ skillbridge/
 │       ├── MitraSeeder.php
 │       ├── LokerSeeder.php
 │       └── PelatihanSeeder.php
+├── docker/
+│   └── nginx/
+│       └── default.conf
 ├── resources/
 │   └── views/
 │       ├── auth/
@@ -239,6 +439,9 @@ skillbridge/
 │   │   └── mitra/
 │   │       └── logo/
 │   └── index.php
+├── Dockerfile
+├── docker-compose.yml
+├── .dockerignore
 ├── .env
 ├── .env.example
 ├── composer.json
@@ -248,6 +451,8 @@ skillbridge/
 ---
 
 ## 🔧 Command Artisan Berguna
+
+### Manual Installation
 
 ```bash
 # Clear cache
@@ -272,14 +477,45 @@ php artisan route:list
 php artisan migrate:status
 ```
 
+### Docker Installation
+
+```bash
+# Clear cache
+docker exec skillbridge-app php artisan cache:clear
+docker exec skillbridge-app php artisan config:clear
+docker exec skillbridge-app php artisan route:clear
+docker exec skillbridge-app php artisan view:clear
+
+# Optimize untuk production
+docker exec skillbridge-app php artisan optimize
+
+# Rollback migration
+docker exec skillbridge-app php artisan migrate:rollback
+
+# Fresh migration dengan seeding
+docker exec skillbridge-app php artisan migrate:fresh --seed
+
+# Lihat routes
+docker exec skillbridge-app php artisan route:list
+
+# Lihat database status
+docker exec skillbridge-app php artisan migrate:status
+```
+
 ---
 
 ## 🐛 Troubleshooting
 
 ### Error: "No application encryption key has been specified"
 
+**Manual:**
 ```bash
 php artisan key:generate
+```
+
+**Docker:**
+```bash
+docker exec skillbridge-app php artisan key:generate
 ```
 
 ### Error: "SQLSTATE[HY000] [1045] Access denied"
@@ -287,23 +523,50 @@ php artisan key:generate
 Periksa konfigurasi database di `.env`:
 - Pastikan username dan password benar
 - Pastikan database sudah dibuat
+- **Untuk Docker**: Pastikan `DB_HOST=db` bukan `127.0.0.1`
 
 ### Error: "Class 'X' not found"
 
+**Manual:**
 ```bash
 composer dump-autoload
 ```
 
+**Docker:**
+```bash
+docker exec skillbridge-app composer dump-autoload
+```
+
 ### Storage Permission Error
 
+**Manual:**
 ```bash
 chmod -R 775 storage
 chmod -R 775 bootstrap/cache
 ```
 
+**Docker (Linux):**
+```bash
+sudo chown -R $USER:$USER storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
+```
+
 ### Logo Mitra Tidak Muncul
 
 Pastikan folder `public/assets/mitra/logo/` ada dan berisi gambar logo.
+
+### Docker Container Tidak Bisa Start
+
+```bash
+# Stop semua container
+docker-compose down
+
+# Hapus volumes
+docker-compose down -v
+
+# Rebuild dan start
+docker-compose up -d --build
+```
 
 ---
 
