@@ -19,7 +19,6 @@ class PageController extends Controller
         // When jago ya
         if ($user->role == 1) { // admin
             return view('page.admin.dashboard');
-            return view('page.admin.auditpelatihan');
         }
 
         if ($user->role == 2) { // mitra
@@ -33,6 +32,31 @@ class PageController extends Controller
     public function notif()
     {
         return view('page.notif');
+    }
+
+    public function audit_pelatihan()
+    {
+        return view('page.admin.audit.pelatihan');
+    }
+
+    public function audit_mitra()
+    {
+        return view('page.admin.audit.mitra');
+    }
+
+    public function audit_loker()
+    {
+        return view('page.admin.audit.loker');
+    }
+
+    public function kelola_user()
+    {
+        return view('page.admin.kelola.user');
+    }
+
+    public function kelola_pelatihan()
+    {
+        return view('page.admin.kelola.pelatihan');
     }
 
 }

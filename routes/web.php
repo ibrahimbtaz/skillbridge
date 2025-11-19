@@ -42,10 +42,12 @@ Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])-
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('/admin')->group(function () {
-        Route::get('/dashboard', [PageController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/auditpelatihan', [LokerController::class, 'admin_index'])->name('admin.auditpelatihan'); // ini nih
+        Route::get('/kelola_user', [PageController::class, 'kelola_user'])->name('admin.kelola.user'); // ini nih
+        Route::get('/audit_loker', [PageController::class, 'audit_loker'])->name('admin.audit.loker'); // ini nih
+        Route::get('/audit_pelatihan', [PageController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan'); // ini nih
+        Route::get('/audit_mitra', [PageController::class, 'audit_mitra'])->name('admin.audit.mitra'); // ini nih
+        Route::get('/kelola_pelatihan', [PageController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan'); // ini nih
     });
-
 });
 
 Route::middleware(['auth', 'mitra'])->group(function () {

@@ -218,9 +218,11 @@
                     </li>
                     @auth
                         @if (auth()->user()->role == 1)
-                            {{-- <li><a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fas fa-users"></i> Manajemen User</a></li>
-                            <li><a href="{{ route('admin.pelatihan.index') }}" class="nav-link"><i class="fas fa-book"></i> Manajemen Pelatihan</a></li>
-                            <li><a href="{{ route('admin.mitra.verify') }}" class="nav-link"><i class="fas fa-check-circle"></i> Verifikasi Mitra</a></li> --}}
+                            <li><a href="{{ route('admin.kelola.user') }}" class="nav-link {{ request()->routeIs('admin.kelola.user') ? 'active' : '' }}"><i class="fas fa-users"></i> Manajemen User</a></li>
+                            <li><a href="{{ route('admin.audit.mitra') }}" class="nav-link {{ request()->routeIs('admin.audit.mitra') ? 'active' : '' }}"><i class="fas fa-check-circle"></i> Verifikasi Mitra</a></li>
+                            <li><a href="{{ route('admin.audit.loker') }}" class="nav-link {{ request()->routeIs('admin.audit.loker') ? 'active' : '' }}"><i class="fas fa-book"></i> Audit Loker</a></li>
+                            <li><a href="{{ route('admin.audit.pelatihan') }}" class="nav-link {{ request()->routeIs('admin.audit.pelatihan') ? 'active' : '' }}"><i class="fas fa-book"></i> Audit Pelatihan</a></li>
+                            <li><a href="{{ route('admin.kelola.pelatihan') }}" class="nav-link {{ request()->routeIs('admin.kelola.pelatihan') ? 'active' : '' }}"><i class="fas fa-book"></i> Kelola Pelatihan</a></li>
                         @endif
 
                         @if (auth()->user()->role == 2)
@@ -232,6 +234,13 @@
 
         <main class="main-content">
             <header class="topbar">
+                @if(auth()->user()->role == 1)
+                    <form action="{{ route('logout') }}" method="POST" style="display: inline; " >
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
+                @endif
+
                 @if(auth()->user()->role == 2)
                     <a href="{{ route('mitra.show') }}" class="btn btn-primary">
                         <i class="fas fa-arrow-left"></i> Balik Ke profile
