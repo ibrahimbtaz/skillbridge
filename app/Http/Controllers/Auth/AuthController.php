@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Mahasiswa;
 use App\Models\Mitra;
+use Illuminate\Validation\Rules\Password;
 
 
 class AuthController extends Controller
@@ -22,11 +23,15 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email',
-            'password' => 'required|min:6'
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:6|max:255'
         ], [
             'email.required' => 'Email wajib diisi',
+            'email.email' => 'Format email tidak valid',
+            'email.max' => 'Email maksimal 255 karakter',
             'password.required' => 'Password wajib diisi',
+            'password.min' => 'Password minimal 6 karakter',
+            'password.max' => 'Password maksimal 255 karakter',
         ]);
 
         $credentials = [
@@ -34,14 +39,19 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
 
-        if (Auth::attempt($credentials)) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
             $user = Auth::user();
             if ($user->role === '1') {
-                return redirect('/dashboard')->with('success', 'Berhasil Login');
+                return redirect()->intended('/dashboard')->with('success', 'Selamat datang, ' . $user->name);
             }
-            return redirect(route('home'))->with('success', 'Berhasil Login');
+            return redirect()->intended(route('home'))->with('success', 'Selamat datang, ' . $user->name);
         }
-        return back()->with('error', 'Login gagal');
+        return back()->withInput($request->only('email'))->withErrors([
+            'email' => 'Email atau password yang Anda masukkan salah.',
+        ])->with('error', 'Login gagal! Silakan coba lagi.');
     }
 
     public function register($type = null)
@@ -174,7 +184,27 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Registrasi mitra berhasil! Tim kami akan melakukan verifikasi dalam 1-2 hari kerja.');
     }
 
+    public function change_password_form()
+    {
+        return view('auth.change_password');
+    }
 
+    public function change_password(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ], [
+            'current_password.current_password' => 'Password lama tidak sesuai.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->back()->with('success', 'Password berhasil diubah!');
+    }
 
     public function logout()
     {

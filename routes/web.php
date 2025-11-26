@@ -24,6 +24,9 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/change-password', [AuthController::class, 'change_password_form'])->name('password.change');
+    Route::post('/change-password', [AuthController::class, 'change_password'])->name('password.update');
+
 });
 
 Route::get('/loker', [LokerController::class, 'index'])->name('loker.index');
