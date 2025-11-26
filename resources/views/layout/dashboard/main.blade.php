@@ -223,6 +223,7 @@
                             <li><a href="{{ route('admin.audit.loker') }}" class="nav-link {{ request()->routeIs('admin.audit.loker') ? 'active' : '' }}"><i class="fas fa-book"></i> Audit Loker</a></li>
                             <li><a href="{{ route('admin.audit.pelatihan') }}" class="nav-link {{ request()->routeIs('admin.audit.pelatihan') ? 'active' : '' }}"><i class="fas fa-book"></i> Audit Pelatihan</a></li>
                             <li><a href="{{ route('admin.kelola.pelatihan') }}" class="nav-link {{ request()->routeIs('admin.kelola.pelatihan') ? 'active' : '' }}"><i class="fas fa-book"></i> Kelola Pelatihan</a></li>
+                            <li><a href="{{ route('admin.backup.index') }}" class="nav-link {{ request()->routeIs('admin.backup.*') ? 'active' : '' }}"><i class="fas fa-database"></i> Backup Data</a></li>
                         @endif
 
                         @if (auth()->user()->role == 2)
