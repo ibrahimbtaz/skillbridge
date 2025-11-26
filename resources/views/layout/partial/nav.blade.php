@@ -45,6 +45,18 @@
         color: #87ceeb;
     }
 
+    .password-button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.95em;
+        font-weight: 600;
+        transition: background-color 0.3s;
+    }
+
     .logout-button {
         background-color: #ff6b6b;
         color: white;
@@ -109,6 +121,7 @@
                     Halo, <strong>{{ $u->name }}</strong>
                 @endif
             </div>
+            <a href="{{ route('password.change') }}" style="color: white;" class="password-button">Ubah Password</a>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
                 <button type="submit" class="logout-button">Logout</button>

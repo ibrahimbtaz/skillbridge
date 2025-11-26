@@ -22,6 +22,22 @@ body {
     color: black;
 }
 
+.alert{
+    font-size: 0.8em;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.error {
+    color: red;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
 /* Container utama untuk form */
 .login-container {
     background: #ffffff;
@@ -182,6 +198,10 @@ body {
 </head>
 <body>
     <div class="login-container">
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
         <form action="{{ route('login') }}" method="POST" autocomplete="off" class="login-form">
             @csrf
             <h2>Hallo Selamat Datang</h2>
@@ -189,18 +209,28 @@ body {
 
             <div class="input-group">
                 <label for="email">Email</label>
-                <input type="text" id="email" name="email" required>
+                <input type="text" id="email" name="email" value="{{ old('email') }}" required>
+                @error('email')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="input-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" value="{{ old('password') }}" required>
+                @error('password')
+                    <span class="error">{{ $message }}</span>
+                @enderror
             </div>
+
+                <label>
+                    <input type="checkbox" name="remember"> Ingat Saya
+                </label>
 
             <button type="submit" class="login-button">Masuk</button>
 
             <div class="footer-links">
-                <a href="#">Lupa Password?</a>
+                <a href="{{ route('password.request') }}">Lupa Password</a>
                 <span>|</span>
                 <a href="{{route('register')}}">Daftar Akun Baru</a>
             </div>

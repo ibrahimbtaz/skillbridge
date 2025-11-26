@@ -23,8 +23,15 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/register/mitra', [AuthController::class, 'register_mitra'])->name('mitra.register');
 });
 
+Route::get('/forgot-password', [AuthController::class, 'forgot_password_form'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'reset_password_form'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update.token');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/change-password', [AuthController::class, 'change_password_form'])->name('password.change');
+    Route::post('/change-password', [AuthController::class, 'change_password'])->name('password.update');
 });
 
 Route::get('/loker', [LokerController::class, 'index'])->name('loker.index');
