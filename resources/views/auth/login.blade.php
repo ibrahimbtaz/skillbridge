@@ -223,16 +223,14 @@ body {
                 @enderror
             </div>
 
-            <div class="input-group">
                 <label>
                     <input type="checkbox" name="remember"> Ingat Saya
                 </label>
-            </div>
 
             <button type="submit" class="login-button">Masuk</button>
 
             <div class="footer-links">
-                <a href="{{ route('password.change') }}">Lupa Password</a>
+                <a href="{{ route('password.request') }}">Lupa Password</a>
                 <span>|</span>
                 <a href="{{route('register')}}">Daftar Akun Baru</a>
             </div>
