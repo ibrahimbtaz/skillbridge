@@ -13,6 +13,10 @@ use App\Http\Controllers\Admin\BackupController;
 //     return view('welcome');
 // });
 
+Route::get('/php-info', function() {
+    phpinfo();
+});
+
 Route::get('/home', fn() => redirect('/'));
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::middleware(['guest'])->group(function () {
@@ -55,8 +59,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/audit_pelatihan', [PageController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan');
         Route::get('/audit_mitra', [PageController::class, 'audit_mitra'])->name('admin.audit.mitra');
         Route::get('/kelola_pelatihan', [PageController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan');
-        
-        // Backup routes
+
         Route::prefix('backup')->name('admin.backup.')->group(function () {
             Route::get('/', [BackupController::class, 'index'])->name('index');
             Route::post('/create', [BackupController::class, 'create'])->name('create');
@@ -84,3 +87,40 @@ Route::get('/notif', [PageController::class, 'notif'])->name('notif');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Di routes/web.php (temporary, HAPUS setelah selesai!)
+Route::get('/test-backup', function() {
+    try {
+        // Test 1: Cek mysqldump
+        $dumpPath = config('database.connections.mysql.dump.dump_binary_path');
+        $mysqldumpExists = file_exists($dumpPath . '/mysqldump.exe') || file_exists($dumpPath . '/mysqldump');
+
+        // Test 2: Cek disk backups
+        $disk = Storage::disk('backups');
+        $diskExists = $disk->exists('');
+
+        // Test 3: Cek permission
+        $backupPath = storage_path('app/backups');
+        $canWrite = is_writable($backupPath);
+
+        // Test 4: PHP Settings
+        $maxExecution = ini_get('max_execution_time');
+        $memoryLimit = ini_get('memory_limit');
+
+        return response()->json([
+            'mysqldump_path' => $dumpPath,
+            'mysqldump_exists' => $mysqldumpExists,
+            'disk_accessible' => $diskExists,
+            'backup_path' => $backupPath,
+            'can_write' => $canWrite,
+            'max_execution_time' => $maxExecution,
+            'memory_limit' => $memoryLimit,
+            'db_connection' => config('database.default'),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ], 500);
+    }
+})->middleware('auth');
