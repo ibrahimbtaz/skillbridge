@@ -65,6 +65,7 @@ return [
                 'dump_binary_path' => env('MYSQL_DUMP_BINARY_PATH'),
                 'use_single_transaction' => true,
                 'timeout' => 60 * 5,
+                'add_extra_option' => env('MYSQL_DUMP_OPTIONS'),
             ]
         ],
 
