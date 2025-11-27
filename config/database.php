@@ -62,10 +62,10 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
             'dump' => [
-                'dump_binary_path' => env('MYSQL_DUMP_BINARY_PATH'),
+                'dump_binary_path' => 'C:/laragon/bin/mysql/mysql-8.0.30-winx64/bin',
                 'use_single_transaction' => true,
                 'timeout' => 60 * 5,
-                'add_extra_option' => env('MYSQL_DUMP_OPTIONS'),
+                'add_extra_option' => '--set-gtid-purged=OFF --host=127.0.0.1 --protocol=TCP',
             ]
         ],
 
