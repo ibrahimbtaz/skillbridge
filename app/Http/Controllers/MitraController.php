@@ -61,7 +61,8 @@ class MitraController extends Controller
      */
     public function edit(Mitra $mitra)
     {
-        //
+        $mitra = auth()->user()->mitra;
+        return view('page.mitra.edit', compact('mitra'));
     }
 
     /**
@@ -69,7 +70,42 @@ class MitraController extends Controller
      */
     public function update(Request $request, Mitra $mitra)
     {
-        //
+        $mitra = auth()->user()->mitra;
+
+        $validated = $request->validate([
+            'nama_mitra' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'deskripsi' => 'nullable|string',
+            'industri' => 'nullable|string|max:255',
+            'website' => 'nullable|url|max:255',
+            'telepon' => 'nullable|string|max:50',
+            'alamat' => 'nullable|string',
+            'kota' => 'nullable|string|max:100',
+            'provinsi' => 'nullable|string|max:100',
+        ]);
+
+        if ($request->hasFile('logo')) {
+            if ($mitra->logo && \Storage::disk('public')->exists($mitra->logo)) {
+                \Storage::disk('public')->delete($mitra->logo);
+            }
+            $path = $request->file('logo')->store('profile/mitra', 'public');
+            $mitra->logo = $path;
+        }
+
+        $mitra->nama_mitra = $validated['nama_mitra'];
+        $mitra->email = $validated['email'];
+        $mitra->deskripsi = $validated['deskripsi'] ?? null;
+        $mitra->industri = $validated['industri'] ?? null;
+        $mitra->website = $validated['website'] ?? null;
+        $mitra->telepon = $validated['telepon'] ?? null;
+        $mitra->alamat = $validated['alamat'] ?? null;
+        $mitra->kota = $validated['kota'] ?? null;
+        $mitra->provinsi = $validated['provinsi'] ?? null;
+
+        $mitra->save();
+
+        return redirect()->route('mitra.show')->with('success', 'Profil berhasil diperbarui!');
     }
 
     /**

@@ -157,8 +157,11 @@
 
                 @if (auth()->check() && auth()->user()->role == 2)
                     <div class="profile-actions">
-                        <a href="{{ route('dashboard', $mitra->id) }}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i> Dashboard Mitra
+                        <a href="{{ route('mitra.edit', $mitra->id) }}" class="btn btn-primary" style="background-color: white; color: #2563eb; border: 1px solid #2563eb;">
+                            <i class="fas fa-pen"></i> Edit Profil
+                        </a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-chart-line"></i> Dashboard Mitra
                         </a>
                     </div>
                 @endif

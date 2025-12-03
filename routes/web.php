@@ -73,6 +73,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth', 'mitra'])->group(function () {
     Route::prefix('/mitra')->group(function () {
     Route::get('/profile', [MitraController::class, 'show'])->name('mitra.show');
+    Route::get('/edit', [MitraController::class, 'edit'])->name('mitra.edit');
+    Route::put('/update/{mitra}', [MitraController::class, 'update'])->name('mitra.update');
     Route::get('/loker/kelola', [MitraController::class, 'kelola'])->name('mitra.loker.kelola');
     Route::get('/loker/create', [LokerController::class, 'create'])->name('mitra.loker.create');
     Route::post('/loker/store', [LokerController::class, 'store'])->name('mitra.loker.store');
