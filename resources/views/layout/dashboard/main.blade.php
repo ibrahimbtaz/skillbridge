@@ -228,6 +228,7 @@
 
                         @if (auth()->user()->role == 2)
                             <li><a href="{{ route('mitra.loker.kelola') }}" class="nav-link {{ request()->routeIs('mitra.loker.kelola') ? 'active' : '' }}"><i class="fas fa-briefcase"></i> Kelola Lowongan</a></li>
+                            <li><a href="{{ route('mitra.pelamar.index') }}" class="nav-link {{ request()->routeIs('mitra.pelamar.*') ? 'active' : '' }}"><i class="fas fa-users"></i> Kelola Pelamar</a></li>
                         @endif
                     @endauth
                 </ul>

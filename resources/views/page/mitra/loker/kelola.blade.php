@@ -130,10 +130,9 @@
                         <th>Lokasi</th>
                         <th>Tipe</th>
                         <th>Jenis</th>
-                        {{-- <th>Status</th>
-                        <th>Pelamar</th> --}}
+                        <th>Pelamar</th>
                         <th>Terakhir Diperbarui</th>
-                        <th style="width: 160px;">Aksi</th>
+                        <th style="width: 200px;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -145,19 +144,19 @@
                             <td>{{ $loker->lokasi }}</td>
                             <td>{{ $loker->tipe_kerja }}</td>
                             <td>{{ $loker->jenis_kerja }}</td>
-                            {{-- <td><span class="status-badge status-active"><i class="fas fa-circle"></i> Aktif</span></td> --}}
-                            {{-- <td>{{ $loker->jumlah_pelamar }}</td> --}}
-                            {{-- <td>{{ $loker->updated_at }}</td> --}}
+                            <td>
+                                <a href="{{ route('mitra.pelamar.detail', $loker->id) }}" class="badge-count" style="text-decoration: none;">
+                                    {{ $loker->pelamar->count() }} pelamar
+                                </a>
+                            </td>
                             <td>
                             <div class="form-hint">{{ $loker->created_at->diffForHumans() }}</div>
                             </td>
-                            {{-- <td><span class="status-badge status-active"><i class="fas fa-circle"></i> Aktif</span></td>
-                            <td>42</td>
-                            <td>09 Nov 2025</td> --}}
                             <td>
                                 <div class="table-actions">
                                     <a href="{{ route('mitra.loker.edit', $loker->id) }}" class="btn-icon"><i class="fas fa-edit"></i> Edit</a>
                                     <a href="{{ route('mitra.loker.show', $loker->id) }}" class="btn-icon"><i class="fas fa-eye"></i> Detail</a>
+                                    <a href="{{ route('mitra.pelamar.detail', $loker->id) }}" class="btn-icon"><i class="fas fa-users"></i></a>
                                 </div>
                             </td>
                         </tr>

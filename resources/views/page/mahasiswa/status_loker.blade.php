@@ -63,69 +63,83 @@
 </head>
 <body>
     <div class="container">
+        @if(session('success'))
+            <div class="alert" style="background: #d1fae5; color: #065f46; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #10b981;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert" style="background: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #ef4444;">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-header">
                 <h1>Status Lamaran Saya</h1>
             </div>
             <div class="card-body">
-
-                <div class="lamaran-item">
-                    <div>
-                        <div class="job-title">Senior Backend Developer</div>
-                        <div class="company-name">PT Teknologi Maju</div>
-                        <div class="apply-date">Dilamar pada: 07 Nov 2025</div>
+                @forelse($lamaran as $loker)
+                    @php
+                        $statusLabels = [
+                            'pending' => 'Terkirim',
+                            'reviewed' => 'Ditinjau',
+                            'interview' => 'Interview',
+                            'accepted' => 'Diterima',
+                            'rejected' => 'Ditolak',
+                        ];
+                        $statusClass = [
+                            'pending' => 'status-Terkirim',
+                            'reviewed' => 'status-Ditinjau',
+                            'interview' => 'status-Interview',
+                            'accepted' => 'status-Diterima',
+                            'rejected' => 'status-Ditolak',
+                        ];
+                    @endphp
+                    <div class="lamaran-item">
+                        <div>
+                            <a href="{{ route('loker.show', $loker->id) }}" style="text-decoration: none;">
+                                <div class="job-title">{{ $loker->title }}</div>
+                            </a>
+                            <div class="company-name">{{ $loker->mitra->nama_mitra }}</div>
+                            <div class="apply-date">Dilamar pada: {{ $loker->pivot->created_at->format('d M Y') }}</div>
+                            @if($loker->pivot->catatan)
+                                <div style="font-size: 0.85em; color: #666; margin-top: 4px;">
+                                    <i>Catatan: "{{ Str::limit($loker->pivot->catatan, 50) }}"</i>
+                                </div>
+                            @endif
+                            @if($loker->pivot->catatan_mitra)
+                                <div style="font-size: 0.85em; color: #4338ca; margin-top: 4px;">
+                                    <strong>Feedback:</strong> {{ $loker->pivot->catatan_mitra }}
+                                </div>
+                            @endif
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span class="status {{ $statusClass[$loker->pivot->status] ?? 'status-Terkirim' }}">
+                                {{ $statusLabels[$loker->pivot->status] ?? 'Terkirim' }}
+                            </span>
+                            
+                            @if($loker->pivot->status === 'pending')
+                                <form action="{{ route('loker.cancel', $loker->id) }}" method="POST" style="margin-left: 10px;" 
+                                      onsubmit="return confirm('Apakah Anda yakin ingin membatalkan lamaran ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-batal">
+                                        Batalkan
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
-                    <div style="display: flex; align-items: center;">
-                        <span class="status status-Terkirim">
-                            Terkirim
-                        </span>
-                        
-                        <a href="#" class="btn-batal">
-                           Batalkan
-                        </a>
+                @empty
+                    <div class="no-data">
+                        <i class="fas fa-inbox" style="font-size: 48px; color: #ccc; margin-bottom: 16px; display: block;"></i>
+                        <p>Anda belum melamar pekerjaan apapun.</p>
+                        <a href="{{ route('loker.index') }}" style="color: #4338ca; text-decoration: underline;">Cari Lowongan</a>
                     </div>
-                </div>
-
-                <div class="lamaran-item">
-                    <div>
-                        <div class="job-title">Full Stack Developer</div>
-                        <div class="company-name">CV Digital Solutions</div>
-                        <div class="apply-date">Dilamar pada: 05 Nov 2025</div>
-                    </div>
-                    <div style="display: flex; align-items: center;">
-                        <span class="status status-Ditinjau">
-                            Ditinjau
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="lamaran-item">
-                    <div>
-                        <div class="job-title">UI/UX Designer</div>
-                        <div class="company-name">Start-up Inovasi</div>
-                        <div class="apply-date">Dilamar pada: 01 Nov 2025</div>
-                    </div>
-                    <div style="display: flex; align-items: center;">
-                        <span class="status status-Interview">
-                            Interview
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="lamaran-item">
-                    <div>
-                        <div class="job-title">Data Analyst</div>
-                        <div class="company-name">Perusahaan Analitika Data</div>
-                        <div class="apply-date">Dilamar pada: 28 Okt 2025</div>
-                    </div>
-                    <div style="display: flex; align-items: center;">
-                        <span class="status status-Ditolak">
-                            Ditolak
-                        </span>
-                    </div>
-                </div>
-                
-                </div>
+                @endforelse
+            </div>
         </div>
     </div>
 </body>

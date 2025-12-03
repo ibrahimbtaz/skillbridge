@@ -42,7 +42,13 @@ class MahasiswaController extends Controller
 
     public function status_loker()
     {
-        return view('page.mahasiswa.status_loker');
+        $mahasiswa = auth()->user()->mahasiswa;
+        $lamaran = $mahasiswa->lamaran()
+                    ->with(['mitra'])
+                    ->orderBy('loker_mahasiswa.created_at', 'desc')
+                    ->get();
+        
+        return view('page.mahasiswa.status_loker', compact('lamaran'));
     }
 
     public function portofolio()

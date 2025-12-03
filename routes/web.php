@@ -41,6 +41,12 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/loker', [LokerController::class, 'index'])->name('loker.index');
 Route::get('/loker/{loker}', [LokerController::class, 'show'])->name('loker.show');
 
+// Apply loker (untuk mahasiswa yang sudah login)
+Route::middleware(['auth'])->group(function () {
+    Route::post('/loker/{loker}/apply', [LokerController::class, 'apply'])->name('loker.apply');
+    Route::delete('/loker/{loker}/cancel', [LokerController::class, 'cancelApply'])->name('loker.cancel');
+});
+
 Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
 Route::get('/pelatihan/{pelatihan}', [PelatihanController::class, 'show'])->name('pelatihan.show');
 Route::get('/pelatihan/rating', [PelatihanController::class, 'rating'])->name('pelatihan.rating');
@@ -50,7 +56,7 @@ Route::get('/pelatihan/edit', [PelatihanController::class, 'edit'])->name('pelat
 Route::get('/mahasiswa/profile', [MahasiswaController::class, 'show'])->name('mahasiswa.profile');
 Route::get('/mahasiswa/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
 Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
-Route::get('/mahasiswa/status_loker', [MahasiswaController::class, 'status_loker'])->name('mahasiswa.status_loker');
+Route::get('/mahasiswa/status_loker', [MahasiswaController::class, 'status_loker'])->name('mahasiswa.status_loker')->middleware('auth');
 Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])->name('mahasiswa.portofolio');
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -87,6 +93,11 @@ Route::middleware(['auth', 'mitra'])->group(function () {
     Route::get('/loker/edit/{loker}', [LokerController::class, 'edit'])->name('mitra.loker.edit');
     Route::get('/loker/show/{loker}', [LokerController::class, 'show'])->name('mitra.loker.show');
     Route::put('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
+    
+    // Pelamar management
+    Route::get('/pelamar', [MitraController::class, 'pelamar'])->name('mitra.pelamar.index');
+    Route::get('/pelamar/{loker}', [MitraController::class, 'detailPelamar'])->name('mitra.pelamar.detail');
+    Route::put('/pelamar/{loker}/{mahasiswa}', [MitraController::class, 'updateStatusLamaran'])->name('mitra.pelamar.update');
     });
 });
 

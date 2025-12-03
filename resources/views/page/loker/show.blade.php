@@ -444,7 +444,7 @@
                     </div>
                     <div class="info-row">
                         <span class="info-label">Pelamar</span>
-                        <span class="info-value">0 orang</span>
+                        <span class="info-value">{{ $loker->pelamar->count() }} orang</span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Dilihat</span>
@@ -452,21 +452,122 @@
                     </div>
 
                     <div style="margin-top: 10px; padding: 10px 10px;">
-                        <a href="{{route('mahasiswa.status_loker')}}" class="btn btn-primary" id="applyBtn">
-                            <i class="fas fa-paper-plane"></i>
-                            Lamar Sekarang
-                        </a>
+                        @auth
+                            @if(auth()->user()->mahasiswa)
+                                @php
+                                    $hasApplied = $loker->hasApplied(auth()->user()->mahasiswa->id);
+                                @endphp
+
+                                @if($hasApplied)
+                                    <button class="btn btn-success" disabled>
+                                        <i class="fas fa-check"></i>
+                                        Sudah Melamar
+                                    </button>
+                                @elseif($loker->deadline && $loker->deadline < now())
+                                    <button class="btn btn-secondary" disabled>
+                                        <i class="fas fa-times"></i>
+                                        Deadline Berakhir
+                                    </button>
+                                @else
+                                    <button class="btn btn-primary" id="applyBtn" onclick="openApplyModal()">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Lamar Sekarang
+                                    </button>
+                                @endif
+                            @else
+                                <a href="{{ route('mitra.show') }}" class="btn btn-secondary">
+                                    <i class="fas fa-building"></i>
+                                    Anda adalah Mitra
+                                </a>
+                            @endif
+                        @else
+                            <a href="{{ route('login') }}" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Login untuk Melamar
+                            </a>
+                        @endauth
                     </div>
+
+                    @if(session('success'))
+                        <div class="alert alert-success" style="margin: 10px;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-error" style="margin: 10px;">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
     <div class="modal" id="applyModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Lamar Posisi {{ $loker->title }}</h2>
+            <p class="modal-text">Di {{ $loker->mitra->nama_mitra }}</p>
+
+            <form action="{{ route('loker.apply', $loker->id) }}" method="POST">
+                @csrf
+                <div class="form-group">
+                    <label class="form-label">Catatan untuk Perekrut (Opsional)</label>
+                    <textarea
+                        name="catatan"
+                        class="form-textarea"
+                        rows="4"
+                        placeholder="Tulis mengapa Anda cocok untuk posisi ini..."
+                    ></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeApplyModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        Kirim Lamaran
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
 
     <script>
-        // ... (JavaScript tetap sama) ...
+        function openApplyModal() {
+            document.getElementById('applyModal').classList.add('active');
+        }
+
+        function closeApplyModal() {
+            document.getElementById('applyModal').classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('applyModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeApplyModal();
+            }
+        });
+
+        // Save button toggle
+        document.getElementById('saveBtn')?.addEventListener('click', function() {
+            this.classList.toggle('saved');
+            const icon = this.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+        });
+
+        function shareJob() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '{{ $loker->title }}',
+                    text: 'Lowongan kerja di {{ $loker->mitra->nama_mitra }}',
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link berhasil disalin!');
+            }
+        }
     </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Loker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -50,5 +51,17 @@ class Mahasiswa extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relasi ke loker yang dilamar
+    public function lamaran() {
+        return $this->belongsToMany(Loker::class, 'loker_mahasiswa')
+                    ->withPivot('status', 'catatan', 'catatan_mitra')
+                    ->withTimestamps();
+    }
+
+    // Cek apakah sudah melamar loker tertentu
+    public function hasApplied($lokerId) {
+        return $this->lamaran()->where('loker_id', $lokerId)->exists();
     }
 }

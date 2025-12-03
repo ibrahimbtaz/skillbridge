@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Mitra;
+use App\Models\Mahasiswa;
 
 
 class Loker extends Model
@@ -50,6 +51,18 @@ class Loker extends Model
 
     public function mitra() {
         return $this->belongsTo(Mitra::class, 'mitra_id');
+    }
+
+    // Relasi ke mahasiswa yang melamar
+    public function pelamar() {
+        return $this->belongsToMany(Mahasiswa::class, 'loker_mahasiswa')
+                    ->withPivot('status', 'catatan', 'catatan_mitra')
+                    ->withTimestamps();
+    }
+
+    // Cek apakah mahasiswa sudah melamar
+    public function hasApplied($mahasiswaId) {
+        return $this->pelamar()->where('mahasiswa_id', $mahasiswaId)->exists();
     }
 
 }

@@ -182,4 +182,69 @@ class LokerController extends Controller
     {
 
     }
+
+    /**
+     * Apply for a job (Mahasiswa only)
+     */
+    public function apply(Request $request, Loker $loker)
+    {
+        // Pastikan user adalah mahasiswa
+        if (!auth()->check() || !auth()->user()->mahasiswa) {
+            return redirect()->route('login')->with('error', 'Anda harus login sebagai mahasiswa untuk melamar.');
+        }
+
+        $mahasiswa = auth()->user()->mahasiswa;
+
+        // Cek apakah sudah pernah melamar
+        if ($loker->hasApplied($mahasiswa->id)) {
+            return back()->with('error', 'Anda sudah melamar pada lowongan ini.');
+        }
+
+        // Cek apakah deadline sudah lewat
+        if ($loker->deadline && $loker->deadline < now()) {
+            return back()->with('error', 'Maaf, deadline lamaran sudah berakhir.');
+        }
+
+        // Validasi catatan (opsional)
+        $validated = $request->validate([
+            'catatan' => 'nullable|string|max:1000',
+        ]);
+
+        // Simpan lamaran
+        $loker->pelamar()->attach($mahasiswa->id, [
+            'status' => 'pending',
+            'catatan' => $validated['catatan'] ?? null,
+        ]);
+
+        return redirect()->route('mahasiswa.status_loker')->with('success', 'Lamaran berhasil dikirim!');
+    }
+
+    /**
+     * Cancel application (Mahasiswa only)
+     */
+    public function cancelApply(Loker $loker)
+    {
+        // Pastikan user adalah mahasiswa
+        if (!auth()->check() || !auth()->user()->mahasiswa) {
+            return redirect()->route('login')->with('error', 'Anda harus login sebagai mahasiswa.');
+        }
+
+        $mahasiswa = auth()->user()->mahasiswa;
+
+        // Cek apakah sudah melamar
+        if (!$loker->hasApplied($mahasiswa->id)) {
+            return back()->with('error', 'Anda belum melamar pada lowongan ini.');
+        }
+
+        // Cek status lamaran - hanya bisa dibatalkan jika masih pending
+        $lamaran = $mahasiswa->lamaran()->where('loker_id', $loker->id)->first();
+        if ($lamaran && $lamaran->pivot->status !== 'pending') {
+            return back()->with('error', 'Lamaran tidak dapat dibatalkan karena sudah diproses.');
+        }
+
+        // Hapus lamaran
+        $loker->pelamar()->detach($mahasiswa->id);
+
+        return back()->with('success', 'Lamaran berhasil dibatalkan.');
+    }
 }

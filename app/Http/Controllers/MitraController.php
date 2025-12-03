@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mitra;
+use App\Models\Loker;
 use Illuminate\Http\Request;
 
 class MitraController extends Controller
@@ -52,7 +53,7 @@ class MitraController extends Controller
     public function kelola()
     {
         $mitra = auth()->user()->mitra;
-        $lokers = $mitra->loker()->get();
+        $lokers = $mitra->loker()->with('pelamar')->get();
         return view('page.mitra.loker.kelola', compact('lokers'));
     }
 
@@ -114,5 +115,98 @@ class MitraController extends Controller
     public function destroy(Mitra $mitra)
     {
         //
+    }
+
+    /**
+     * Daftar pelamar untuk semua loker mitra
+     */
+    public function pelamar(Request $request)
+    {
+        $mitra = auth()->user()->mitra;
+
+        // Ambil semua loker milik mitra dengan pelamar
+        $query = Loker::where('mitra_id', $mitra->id)
+                      ->withCount('pelamar')
+                      ->with(['pelamar' => function($q) use ($request) {
+                          // Filter by status jika ada
+                          if ($request->status) {
+                              $q->wherePivot('status', $request->status);
+                          }
+                          $q->orderBy('loker_mahasiswa.created_at', 'desc');
+                      }]);
+
+        // Filter by loker tertentu
+        if ($request->loker_id) {
+            $query->where('id', $request->loker_id);
+        }
+
+        $lokers = $query->get();
+
+        // Hitung statistik
+        $totalPelamar = 0;
+        $statusCount = [
+            'pending' => 0,
+            'reviewed' => 0,
+            'interview' => 0,
+            'accepted' => 0,
+            'rejected' => 0,
+        ];
+
+        foreach ($lokers as $loker) {
+            foreach ($loker->pelamar as $pelamar) {
+                $totalPelamar++;
+                $statusCount[$pelamar->pivot->status]++;
+            }
+        }
+
+        // List semua loker untuk dropdown filter
+        $allLokers = Loker::where('mitra_id', $mitra->id)->get();
+
+        return view('page.mitra.pelamar.index', compact('lokers', 'allLokers', 'totalPelamar', 'statusCount'));
+    }
+
+    /**
+     * Detail pelamar untuk loker tertentu
+     */
+    public function detailPelamar(Loker $loker)
+    {
+        $mitra = auth()->user()->mitra;
+
+        // Pastikan loker milik mitra ini
+        if ($loker->mitra_id !== $mitra->id) {
+            abort(403, 'Anda tidak memiliki akses ke loker ini.');
+        }
+
+        $loker->load(['pelamar.user', 'pelamar' => function($q) {
+            $q->orderBy('loker_mahasiswa.created_at', 'desc');
+        }]);
+
+        return view('page.mitra.pelamar.detail', compact('loker'));
+    }
+
+    /**
+     * Update status lamaran
+     */
+    public function updateStatusLamaran(Request $request, Loker $loker, $mahasiswaId)
+    {
+        $mitra = auth()->user()->mitra;
+
+        // Pastikan loker milik mitra ini
+        if ($loker->mitra_id !== $mitra->id) {
+            abort(403, 'Anda tidak memiliki akses ke loker ini.');
+        }
+
+        $validated = $request->validate([
+            'status' => 'required|in:pending,reviewed,interview,accepted,rejected',
+            'catatan_mitra' => 'nullable|string|max:1000',
+        ]);
+
+        // Update status di pivot table
+        $loker->pelamar()->updateExistingPivot($mahasiswaId, [
+            'status' => $validated['status'],
+            'catatan_mitra' => $validated['catatan_mitra'] ?? null,
+        ]);
+
+        return back()->with('success', 'Status lamaran berhasil diperbarui.');
     }
 }
