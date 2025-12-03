@@ -20,7 +20,6 @@ return new class extends Migration
             $table->decimal('rating', 3, 2)->default(0); // Rating (0-5)
             $table->json('tags')->nullable(); // Tags (JSON Array)
             $table->json('persyaratan')->nullable(); // Persyaratan Peserta
-            $table->foreignId('mitra_id')->constrained()->onDelete('cascade');
             $table->softDeletes(); // Soft Delete
             $table->timestamps();
         });

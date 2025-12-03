@@ -15,7 +15,7 @@ class PelatihanController extends Controller
      */
     public function index()
     {
-        $pelatihans = Pelatihan::with('mitra.user')->get();
+        $pelatihans = Pelatihan::all();
         return view('page.pelatihan.home', compact('pelatihans'));
     }
 
@@ -44,7 +44,6 @@ class PelatihanController extends Controller
      */
     public function show(Pelatihan $pelatihan)
     {
-        $pelatihan = Pelatihan::with('mitra.user')->findOrFail($pelatihan->id);
         return view('page.pelatihan.detail', compact('pelatihan'));
     }
 

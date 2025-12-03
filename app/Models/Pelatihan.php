@@ -16,11 +16,6 @@ class Pelatihan extends Model
         'rating',
         'tags',
         'persyaratan',
-        'mitra_id',
     ];
 
-    public function mitra()
-    {
-        return $this->belongsTo(Mitra::class);
-    }
 }

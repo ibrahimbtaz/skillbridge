@@ -133,7 +133,6 @@
                     <div class="card-image" style="background-image: url('{{ asset($pelatihan->thumbnail) }}');"></div>
                     <div class="card-content">
                         <h3 class="card-title">{{ $pelatihan->nama_pelatihan }}</h3>
-                        <div class="card-instructor">oleh {{ $pelatihan->mitra->nama_mitra }}</div>
                         <div class="card-meta">
                             <span><i class="fas fa-layer-group"></i> {{ $pelatihan->kategori }}</span>
                             <span class="rating"><i class="fas fa-star"></i> {{ $pelatihan->rating }} </span>

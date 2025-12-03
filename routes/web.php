@@ -60,6 +60,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/audit_pelatihan', [PageController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan');
         Route::get('/audit_mitra', [PageController::class, 'audit_mitra'])->name('admin.audit.mitra');
         Route::get('/kelola_pelatihan', [PageController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan');
+        Route::get('/kelola_pelatihan/create', [PageController::class, 'create_pelatihan'])->name('admin.kelola.pelatihan.create');
+        Route::post('/kelola_pelatihan', [PageController::class, 'store_pelatihan'])->name('admin.kelola.pelatihan.store');
+        Route::get('/kelola_pelatihan/{id}', [PageController::class, 'detail_pelatihan'])->name('admin.kelola.pelatihan.detail');
+        Route::get('/kelola_pelatihan/{id}/edit', [PageController::class, 'edit_pelatihan'])->name('admin.kelola.pelatihan.edit');
+        Route::put('/kelola_pelatihan/{id}', [PageController::class, 'update_pelatihan'])->name('admin.kelola.pelatihan.update');
+        Route::delete('/kelola_pelatihan/{id}', [PageController::class, 'delete_pelatihan'])->name('admin.kelola.pelatihan.delete');
 
         Route::prefix('backup')->name('admin.backup.')->group(function () {
             Route::get('/', [BackupController::class, 'index'])->name('index');
