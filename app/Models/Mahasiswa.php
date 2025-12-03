@@ -23,6 +23,22 @@ class Mahasiswa extends Model
         'no_telp',
         'tanggal_lahir',
         'user_id', // Penting agar bisa disambungkan
+        // Profile fields
+        'foto_profil',
+        'bio',
+        'pendidikan',
+        'pengalaman',
+        'skills',
+        'kontak_tambahan',
+        'bahasa',
+    ];
+
+    protected $casts = [
+        'pendidikan' => 'array',
+        'pengalaman' => 'array',
+        'skills' => 'array',
+        'kontak_tambahan' => 'array',
+        'bahasa' => 'array',
     ];
 
     protected $hidden = [

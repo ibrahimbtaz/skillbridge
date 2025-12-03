@@ -6,331 +6,298 @@
     <title>Pilih Jenis Registrasi - JobPortal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --primary-color: #2563EB; /* Modern Blue */
+            --primary-dark: #1E40AF;
+            --secondary-color: #64748B;
+            --bg-color: #F8FAFC;
+            --card-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--bg-color);
             min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
             padding: 40px 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
         }
 
         .main-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
+        /* Header Styling */
         .header-section {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 3rem;
         }
 
         .header-section h1 {
-            color: white;
-            font-size: 2.5rem;
+            color: #0f172a;
+            font-size: 2.25rem;
             font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
         }
 
         .header-section p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            margin-bottom: 0;
-        }
-
-        .registration-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .registration-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
-        }
-
-        .card-icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-icon::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            transform: rotate(45deg);
-        }
-
-        .card-icon i {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .card-icon h3 {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 600;
-            position: relative;
-            z-index: 2;
-        }
-
-        .card-body {
-            padding: 30px;
-            text-align: center;
-        }
-
-        .card-body h4 {
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .card-body p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .btn-register {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 30px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-register:hover {
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .features-list {
-            text-align: left;
-            margin: 20px 0;
-        }
-
-        .features-list li {
-            color: #555;
-            margin-bottom: 8px;
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .features-list li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #667eea;
-            position: absolute;
-            left: 0;
-            top: 0;
-        }
-
-        .or-divider {
-            text-align: center;
-            margin: 40px 0;
-            position: relative;
-        }
-
-        .or-divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            opacity: 0.3;
-        }
-
-        .or-divider span {
-            background: white;
-            color: #667eea;
-            padding: 10px 20px;
-            font-weight: 600;
-            border-radius: 50px;
-            position: relative;
-            z-index: 2;
-            border: 2px solid #667eea;
-        }
-
-        .login-section {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .login-section p {
-            color: white;
-            margin-bottom: 15px;
+            color: var(--secondary-color);
             font-size: 1.1rem;
         }
 
-        .btn-login {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-            border-radius: 50px;
-            padding: 10px 25px;
-            font-weight: 600;
-            text-decoration: none;
+        /* Card Styling */
+        .registration-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            padding: 2.5rem;
+            height: 100%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .registration-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: var(--primary-color);
+        }
+
+        /* Icon Circle */
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
             transition: all 0.3s ease;
         }
 
-        .btn-login:hover {
-            background: white;
-            color: #667eea;
+        /* Specific Colors for Cards */
+        .card-student .icon-wrapper {
+            background-color: #EFF6FF; /* Light Blue */
+            color: var(--primary-color);
         }
 
-        @media (max-width: 768px) {
-            .header-section h1 {
-                font-size: 2rem;
-            }
+        .card-company .icon-wrapper {
+            background-color: #F0FDF4; /* Light Green */
+            color: #16A34A;
+        }
 
-            .card-icon {
-                padding: 30px;
-            }
+        .registration-card:hover .icon-wrapper {
+            transform: scale(1.1);
+        }
 
-            .card-icon i {
-                font-size: 3rem;
-            }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
 
-            .card-body {
-                padding: 20px;
+        .card-desc {
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Features List */
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .features-list li {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li i {
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .card-student .features-list li i { color: var(--primary-color); }
+        .card-company .features-list li i { color: #16A34A; }
+
+        /* Buttons */
+        .btn-register {
+            margin-top: auto;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-student {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-student:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-company {
+            background-color: #16A34A;
+            color: white;
+        }
+        .btn-company:hover {
+            background-color: #15803d;
+            color: white;
+        }
+
+        /* Divider */
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 3rem 0;
+            color: #94a3b8;
+        }
+        .or-divider::before, .or-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #cbd5e1;
+        }
+        .or-divider span {
+            padding: 0 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Login Section */
+        .login-section {
+            text-align: center;
+        }
+        .login-text {
+            color: var(--secondary-color);
+        }
+        .login-link {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Animasi Masuk */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-up {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
     </style>
 </head>
 <body>
-    <div class="container main-container">
-        <!-- Header Section -->
+
+    <div class="container main-container animate-fade-up">
         <div class="header-section">
-            <h1><i class="fas fa-user-plus me-3"></i>Daftar Akun Baru</h1>
-            <p>Pilih jenis akun yang sesuai dengan kebutuhan Anda</p>
+            <h1>Selamat Datang di JobPortal</h1>
+            <p>Mulailah perjalanan karir atau temukan talenta terbaik hari ini.</p>
         </div>
 
-        <!-- Registration Options -->
-        <div class="row g-4">
-            <!-- Mahasiswa Registration -->
-            <div class="col-md-6">
-                <div class="registration-card" onclick="window.location.href='registrasimahasiswa.html'">
-                    <div class="card-icon">
+        <div class="row g-4 justify-content-center">
+
+            <div class="col-md-5">
+                <div class="registration-card card-student" onclick="window.location.href='{{ route('register', ['type' => 'mhs']) }}'"> <div class="icon-wrapper">
                         <i class="fas fa-user-graduate"></i>
-                        <h3>Mahasiswa</h3>
                     </div>
-                    <div class="card-body">
-                        <h4>Daftar sebagai Mahasiswa</h4>
-                        <p>Temukan peluang magang, part-time, dan pekerjaan fresh graduate yang sesuai dengan jurusan Anda.</p>
+                    <h3 class="card-title">Untuk Mahasiswa</h3>
+                    <p class="card-desc">Bangun karirmu sejak dini. Temukan magang, part-time, dan pekerjaan impian.</p>
 
-                        <ul class="features-list">
-                            <li>Cari lowongan berdasarkan jurusan</li>
-                            <li>Akses pelatihan dan workshop gratis</li>
-                            <li>Portfolio online untuk CV</li>
-                            <li>Notifikasi lowongan terbaru</li>
-                            <li>Konsultasi karir dengan mentor</li>
-                        </ul>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check-circle"></i> Rekomendasi lowongan sesuai jurusan</li>
+                        <li><i class="fas fa-check-circle"></i> Bangun CV & Portofolio online</li>
+                        <li><i class="fas fa-check-circle"></i> Akses event karir eksklusif</li>
+                    </ul>
 
-                        <a href="{{ route('register', ['type' => 'mhs']) }}" class="btn-register">
-                            <i class="fas fa-graduation-cap me-2"></i>Daftar Mahasiswa
-                        </a>
-                    </div>
+                    <a href="{{ route('register', ['type' => 'mhs']) }}" class="btn-register btn-student">
+                        Daftar Sebagai Mahasiswa <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
 
-            <!-- Mitra Registration -->
-            <div class="col-md-6">
-                <div class="registration-card" onclick="window.location.href='registrasimitra.html'">
-                    <div class="card-icon">
+            <div class="col-md-5">
+                <div class="registration-card card-company" onclick="window.location.href='{{ route('register', ['type' => 'mtr']) }}'"> <div class="icon-wrapper">
                         <i class="fas fa-building"></i>
-                        <h3>Perusahaan</h3>
                     </div>
-                    <div class="card-body">
-                        <h4>Daftar sebagai Mitra</h4>
-                        <p>Rekrut talenta terbaik dari berbagai universitas dan temukan kandidat yang tepat untuk perusahaan Anda.</p>
+                    <h3 class="card-title">Untuk Perusahaan</h3>
+                    <p class="card-desc">Percepat pertumbuhan bisnis Anda dengan merekrut talenta muda berkualitas.</p>
 
-                        <ul class="features-list">
-                            <li>Posting lowongan kerja unlimited</li>
-                            <li>Database mahasiswa terverifikasi</li>
-                            <li>Sistem tracking kandidat</li>
-                            <li>Analytics dan laporan rekrutmen</li>
-                            <li>Branding perusahaan di platform</li>
-                        </ul>
+                    <ul class="features-list">
+                        <li><i class="fas fa-check-circle"></i> Posting lowongan tanpa batas</li>
+                        <li><i class="fas fa-check-circle"></i> Akses database lulusan terbaik</li>
+                        <li><i class="fas fa-check-circle"></i> Dashboard manajemen pelamar</li>
+                    </ul>
 
-                        <a href="{{ route('register', ['type' => 'mtr']) }}" class="btn-register">
-                            <i class="fas fa-handshake me-2"></i>Daftar Mitra
-                        </a>
-                    </div>
+                    <a href="{{ route('register', ['type' => 'mtr']) }}" class="btn-register btn-company">
+                        Daftar Sebagai Mitra <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- OR Divider -->
-        <div class="or-divider">
-            <span>ATAU</span>
-        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="or-divider">
+                    <span>Sudah punya akun?</span>
+                </div>
 
-        <!-- Login Section -->
-        <div class="login-section">
-            <a href="{{route('login')}}" class="btn-login">
-                <i class="fas fa-sign-in-alt me-2"></i>Login Sekarang
-            </a>
+                <div class="login-section">
+                    <span class="login-text">Masuk kembali untuk melanjutkan aktivitas Anda.</span>
+                    <a href="{{ route('login') }}" class="login-link ms-2">Login disini</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Add click animations
-        document.querySelectorAll('.registration-card').forEach(card => {
-            card.addEventListener('mousedown', function() {
-                this.style.transform = 'translateY(-5px) scale(0.98)';
-            });
-
-            card.addEventListener('mouseup', function() {
-                this.style.transform = 'translateY(-10px) scale(1)';
-            });
-
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Smooth scroll animation on page load
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '0';
-            document.body.style.transform = 'translateY(20px)';
-            document.body.style.transition = 'all 0.6s ease';
-
-            setTimeout(function() {
-                document.body.style.opacity = '1';
-                document.body.style.transform = 'translateY(0)';
-            }, 100);
-        });
+        // Optional: Add hover effect via JS for extra smoothness if needed,
+        // but CSS hover is usually sufficient and more performant.
     </script>
 </body>
 </html>

@@ -1,413 +1,462 @@
 @extends('layout.main')
 
 @section('content')
-
-<html lang="id"><head>
+<!DOCTYPE html>
+<html lang="id">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil Pengguna - JobSeeker</title>
+    <title>Profil Mahasiswa - {{ $mahasiswa->nama }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .profile-header {
+        /* Header */
+        .header {
             background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: flex;
             align-items: center;
-            gap: 30px;
         }
+        .back-btn {
+            display: flex;
+            align-items: center;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-btn:hover { color: #2563eb; }
 
+        .container { max-width: 1000px; margin: 24px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; overflow: hidden; }
+
+        /* Profil Header */
+        .profile-header {
+            display: flex;
+            gap: 24px;
+            padding: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
         .profile-picture {
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            object-fit: cover;
+            border: 3px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        .profile-picture-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 60px;
+            font-size: 40px;
             color: white;
             font-weight: bold;
             flex-shrink: 0;
         }
-
         .profile-info {
             flex: 1;
         }
-
         .profile-info h1 {
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 32px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
         }
-
         .profile-info .job-title {
-            color: #667eea;
-            font-size: 18px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 8px;
         }
-
         .profile-info .location {
-            color: #666;
-            margin-bottom: 15px;
+            color: #6b7280;
+            font-size: 15px;
+            margin-bottom: 12px;
         }
-
         .profile-stats {
             display: flex;
-            gap: 30px;
-            margin-top: 15px;
+            gap: 24px;
+            margin-top: 12px;
         }
-
         .stat-item {
-            text-align: center;
+            text-align: left;
         }
-
         .stat-number {
             font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
+            font-weight: 700;
+            color: #2563eb;
         }
-
         .stat-label {
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #6b7280;
         }
-
         .profile-actions {
+            margin-left: auto;
             display: flex;
             gap: 10px;
         }
-
         .btn {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             transition: all 0.3s;
         }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-secondary { background: white; color: #2563eb; border: 2px solid #2563eb; }
+        .btn-secondary:hover { background: #eff6ff; }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .content-grid {
+        /* Detail Info Grid */
+        .student-details {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            padding: 24px;
+            border-top: 1px solid #e5e7eb;
         }
-
-        /* CARD UTAMA YANG BARU (GABUNGAN) */
-        .card {
-            background: white;
-            border-radius: 15px;
-            /* Padding dihilangkan dari sini agar bagian dalam bisa menempel */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            /* margin-bottom dihilangkan */
-            overflow: hidden; /* Penting agar border-radius memotong konten di dalamnya */
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #4b5563;
         }
-
-        /* BAGIAN BARU DI DALAM CARD */
-        .card-section {
-            padding: 25px; /* Padding dipindahkan ke sini */
-            border-bottom: 1px solid #eee; /* Garis pemisah antar bagian */
+        .detail-item i {
+            width: 30px;
+            text-align: center;
+            color: #2563eb;
+            font-size: 16px;
         }
-
-        /* Hilangkan garis pemisah di bagian terakhir */
-        .card .card-section:last-child {
-            border-bottom: none;
+        .detail-item .label {
+            color: #6b7280;
         }
-
-
-        /* JUDUL BAGIAN (H2) DIBUAT LEBIH SIMPLE */
-        .card h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 22px;
+        .detail-item .value {
             font-weight: 600;
-            /* Border dan padding bawah dihilangkan agar mirip JobStreet */
-            /* padding-bottom: 10px; */
-            /* border-bottom: 2px solid #667eea; */
+            word-break: break-all;
+        }
+        .detail-item .value a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .detail-item .value a:hover {
+            text-decoration: underline;
         }
 
-        .about-text {
-            color: #666;
+        /* Card Content Sections */
+        .card-content {
+            padding: 24px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        .about-text, .description {
+            color: #4b5563;
             line-height: 1.8;
         }
 
         .experience-item, .education-item {
             margin-bottom: 20px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e5e7eb;
         }
-
         .experience-item:last-child, .education-item:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-
         .item-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
         }
-
         .item-company {
-            color: #667eea;
-            margin-bottom: 5px;
+            color: #2563eb;
+            font-size: 15px;
+            margin-bottom: 6px;
         }
-
         .item-date {
-            color: #999;
+            color: #6b7280;
             font-size: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
         .item-description {
-            color: #666;
-            line-height: 1.6;
+            color: #4b5563;
+            line-height: 1.7;
         }
 
+        /* Skills */
         .skills-container {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .skill-tag {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            background: #eff6ff;
+            color: #2563eb;
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 14px;
+            font-weight: 500;
+            border: 1px solid #bfdbfe;
         }
 
-        .contact-item {
+        /* Language Items */
+        .language-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            color: #666;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
         }
-
-        /* Hilangkan margin-bottom di item kontak terakhir */
-        .contact-item:last-child {
-            margin-bottom: 0;
+        .language-item:last-child {
+            border-bottom: none;
         }
-
-        .contact-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+        .language-name {
+            font-weight: 600;
+            color: #1f2937;
         }
-
-        /* Kelas .sidebar tidak diperlukan lagi karena semua jadi satu */
+        .language-level {
+            color: #6b7280;
+            font-size: 14px;
+        }
 
         @media (max-width: 768px) {
             .profile-header {
                 flex-direction: column;
                 text-align: center;
             }
-
+            .profile-info h1 {
+                font-size: 24px;
+            }
             .profile-stats {
                 justify-content: center;
+                gap: 16px;
             }
-
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
             .profile-actions {
-                flex-direction: column;
+                margin-left: 0;
                 width: 100%;
+                flex-direction: column;
             }
             .btn {
                 width: 100%;
+                justify-content: center;
+            }
+            .student-details {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="profile-header">
-            <div class="profile-picture">AS</div>
-            <div class="profile-info">
-                <h1>{{ $mahasiswa->nama }}</h1>
-                <div class="job-title">Full Stack Developer</div>
-                <div class="location">📍 Jakarta, Indonesia</div>
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">45</div>
-                        <div class="stat-label">Lamaran</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">12</div>
-                        <div class="stat-label">Interview</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">3</div>
-                        <div class="stat-label">Penawaran</div>
-                    </div>
-                </div>
-            </div>
-            <div class="profile-actions">
-                <a href="{{route('mahasiswa.edit')}}" class="btn btn-primary">Edit Profil</a>
-                <a href="{{route('mahasiswa.portofolio')}}" class="btn btn-secondary">Unduh CV</a>
-            </div>
-        </div>
-
-        <div class="content-grid">
-            <div class="card">
-                <div class="card-section">
-                    <h2>Tentang Saya</h2>
-                    <p class="about-text">
-                        Seorang Full Stack Developer dengan pengalaman 5 tahun dalam mengembangkan aplikasi web modern.
-                        Memiliki keahlian dalam JavaScript, React, Node.js, dan berbagai teknologi web terkini.
-                        Passionate dalam menciptakan solusi digital yang inovatif dan user-friendly.
-                    </p>
-                </div>
-
-                <div class="card-section">
-                    <h2>Pengalaman Kerja</h2>
-                    <div class="experience-item">
-                        <div class="item-title">Senior Full Stack Developer</div>
-                        <div class="item-company">PT Tech Innovation</div>
-                        <div class="item-date">Jan 2022 - Sekarang</div>
-                        <div class="item-description">
-                            Memimpin tim pengembangan untuk membuat aplikasi e-commerce skala besar.
-                            Bertanggung jawab dalam arsitektur sistem dan code review.
-                        </div>
-                    </div>
-                    <div class="experience-item">
-                        <div class="item-title">Full Stack Developer</div>
-                        <div class="item-company">CV Digital Solutions</div>
-                        <div class="item-date">Mar 2020 - Des 2021</div>
-                        <div class="item-description">
-                            Mengembangkan berbagai aplikasi web untuk klien dari berbagai industri.
-                            Fokus pada pengembangan frontend dan backend menggunakan MERN stack.
-                        </div>
-                    </div>
-                    <div class="experience-item">
-                        <div class="item-title">Junior Web Developer</div>
-                        <div class="item-company">Start-up Indonesia</div>
-                        <div class="item-date">Jul 2019 - Feb 2020</div>
-                        <div class="item-description">
-                            Membantu pengembangan fitur-fitur baru pada platform web perusahaan.
-                            Belajar best practices dalam software development.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <h2>Pendidikan</h2>
-                    <div class="education-item">
-                        <div class="item-title">S1 Teknik Informatika</div>
-                        <div class="item-company">Universitas Muria Kudus</div>
-                        <div class="item-date">2015 - 2019</div>
-                        <div class="item-description">IPK: 3.75 - Fokus pada Web Development dan Software Engineering</div>
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <h2>Keahlian</h2>
-                    <div class="skills-container">
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">HTML/CSS</span>
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">AWS</span>
-                        <span class="skill-tag">REST API</span>
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <h2>Informasi Kontak</h2>
-                    <div class="contact-item">
-                        <div class="contact-icon">📧</div>
-                        <div>ahmad.syahputra@email.com</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">📱</div>
-                        <div>+62 812-3456-7890</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">🔗</div>
-                        <div>linkedin.com/in/ahmadsyahputra</div>
-                    </div>
-                    <div class="contact-item">
-                        <div class="contact-icon">💻</div>
-                        <div>github.com/ahmadsyahputra</div>
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <h2>Bahasa</h2>
-                    <div class="contact-item">
-                        <div style="flex: 1;">
-                            <strong>Indonesia</strong><br>
-                            <span style="color: #999;">Native</span>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <div style="flex: 1;">
-                            <strong>Inggris</strong><br>
-                            <span style="color: #999;">Professional</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ route('home') }}" class="back-btn">
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i>
+                Kembali
+            </a>
         </div>
     </div>
 
-</body></html>
+    <div class="container">
+        <div class="card">
+            <div class="profile-header">
+                @if($mahasiswa->foto_profil)
+                    <img src="{{ asset('storage/' . $mahasiswa->foto_profil) }}" alt="Profile" class="profile-picture">
+                @else
+                    <div class="profile-picture-placeholder">{{ strtoupper(substr($mahasiswa->nama, 0, 2)) }}</div>
+                @endif
+                <div class="profile-info">
+                    <h1>{{ $mahasiswa->nama }}</h1>
+                    <p class="job-title">{{ $mahasiswa->jurusan ?? 'Mahasiswa' }} - Semester {{ $mahasiswa->semester ?? '-' }}</p>
+                    <p class="location"><i class="fas fa-map-marker-alt"></i> {{ $mahasiswa->alamat ?? 'Indonesia' }}</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ $mahasiswa->total_lamaran ?? 0 }}</div>
+                            <div class="stat-label">Lamaran</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ $mahasiswa->total_interview ?? 0 }}</div>
+                            <div class="stat-label">Interview</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ $mahasiswa->total_penawaran ?? 0 }}</div>
+                            <div class="stat-label">Penawaran</div>
+                        </div>
+                    </div>
+                </div>
+                @if(auth()->check() && auth()->user()->id === $mahasiswa->user_id)
+                <div class="profile-actions">
+                    <a href="{{route('mahasiswa.edit')}}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit Profil
+                    </a>
+                    <a href="{{route('mahasiswa.portofolio')}}" class="btn btn-secondary">
+                        <i class="fas fa-download"></i> Unduh CV
+                    </a>
+                </div>
+                @endif
+            </div>
 
+            <div class="student-details">
+                <div class="detail-item">
+                    <i class="fas fa-id-card"></i>
+                    <div>
+                        <div class="label">NIM</div>
+                        <div class="value">{{ $mahasiswa->nim ?? '-' }}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <div class="label">Email</div>
+                        <div class="value"><a href="mailto:{{ $mahasiswa->user->email }}">{{ $mahasiswa->user->email }}</a></div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <div class="label">No. Telepon</div>
+                        <div class="value">{{ $mahasiswa->no_telp ?? '-' }}</div>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar"></i>
+                    <div>
+                        <div class="label">Tanggal Lahir</div>
+                        <div class="value">{{ $mahasiswa->tanggal_lahir ? \Carbon\Carbon::parse($mahasiswa->tanggal_lahir)->format('d F Y') : '-' }}</div>
+                    </div>
+                </div>
+                @if($mahasiswa->kontak_tambahan && isset($mahasiswa->kontak_tambahan['linkedin']))
+                <div class="detail-item">
+                    <i class="fab fa-linkedin"></i>
+                    <div>
+                        <div class="label">LinkedIn</div>
+                        <div class="value"><a href="{{ $mahasiswa->kontak_tambahan['linkedin'] }}" target="_blank">Lihat Profil</a></div>
+                    </div>
+                </div>
+                @endif
+                @if($mahasiswa->kontak_tambahan && isset($mahasiswa->kontak_tambahan['github']))
+                <div class="detail-item">
+                    <i class="fab fa-github"></i>
+                    <div>
+                        <div class="label">GitHub</div>
+                        <div class="value"><a href="{{ $mahasiswa->kontak_tambahan['github'] }}" target="_blank">Lihat Profil</a></div>
+                    </div>
+                </div>
+                @endif
+                @if($mahasiswa->kontak_tambahan && isset($mahasiswa->kontak_tambahan['portfolio']))
+                <div class="detail-item">
+                    <i class="fas fa-globe"></i>
+                    <div>
+                        <div class="label">Portfolio</div>
+                        <div class="value"><a href="{{ $mahasiswa->kontak_tambahan['portfolio'] }}" target="_blank">Kunjungi Website</a></div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
 
+        <div class="card card-content">
+            <h2 class="section-title">Tentang Saya</h2>
+            <p class="description">
+                {{ $mahasiswa->bio ?? 'Belum ada bio. Klik Edit Profil untuk menambahkan informasi tentang diri Anda.' }}
+            </p>
+        </div>
+
+        <div class="card card-content">
+            <h2 class="section-title">Pengalaman Kerja</h2>
+            @if($mahasiswa->pengalaman && count($mahasiswa->pengalaman) > 0)
+                @foreach($mahasiswa->pengalaman as $exp)
+                <div class="experience-item">
+                    <div class="item-title">{{ $exp['title'] ?? '' }}</div>
+                    <div class="item-company">{{ $exp['company'] ?? '' }}</div>
+                    <div class="item-date">
+                        <i class="far fa-calendar"></i> {{ $exp['dates'] ?? '' }}
+                    </div>
+                    @if(isset($exp['description']))
+                    <div class="item-description">{{ $exp['description'] }}</div>
+                    @endif
+                </div>
+                @endforeach
+            @else
+                <p class="description">Belum ada pengalaman kerja. Klik Edit Profil untuk menambahkan.</p>
+            @endif
+        </div>
+
+        <div class="card card-content">
+            <h2 class="section-title">Pendidikan</h2>
+            @if($mahasiswa->pendidikan && count($mahasiswa->pendidikan) > 0)
+                @foreach($mahasiswa->pendidikan as $edu)
+                <div class="education-item">
+                    <div class="item-title">{{ $edu['degree'] ?? '' }}</div>
+                    <div class="item-company">{{ $edu['institution'] ?? '' }}</div>
+                    <div class="item-date">
+                        <i class="far fa-calendar"></i> {{ $edu['years'] ?? '' }}
+                    </div>
+                    @if(isset($edu['description']))
+                    <div class="item-description">{{ $edu['description'] }}</div>
+                    @endif
+                </div>
+                @endforeach
+            @else
+                <p class="description">Belum ada riwayat pendidikan. Klik Edit Profil untuk menambahkan.</p>
+            @endif
+        </div>
+
+        <div class="card card-content">
+            <h2 class="section-title">Keahlian</h2>
+            @if($mahasiswa->skills && count($mahasiswa->skills) > 0)
+                <div class="skills-container">
+                    @foreach($mahasiswa->skills as $skill)
+                        <span class="skill-tag">{{ $skill }}</span>
+                    @endforeach
+                </div>
+            @else
+                <p class="description">Belum ada skill. Klik Edit Profil untuk menambahkan.</p>
+            @endif
+        </div>
+
+        <div class="card card-content">
+            <h2 class="section-title">Kemampuan Bahasa</h2>
+            @if($mahasiswa->bahasa && count($mahasiswa->bahasa) > 0)
+                @foreach($mahasiswa->bahasa as $lang)
+                <div class="language-item">
+                    <span class="language-name">{{ $lang['nama'] ?? '' }}</span>
+                    <span class="language-level">{{ $lang['level'] ?? '' }}</span>
+                </div>
+                @endforeach
+            @else
+                <p class="description">Belum ada informasi bahasa. Klik Edit Profil untuk menambahkan.</p>
+            @endif
+        </div>
+    </div>
+
+</body>
+</html>
 @endsection

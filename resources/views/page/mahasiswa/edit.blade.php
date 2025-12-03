@@ -5,54 +5,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profil Mahasiswa</title>
+    <title>Edit Profil Mahasiswa - Skill Bridge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        :root {
-            --primary: #5A67D8; --primary-dark: #4C51BF;
-            --secondary: #4A5568; --background: #F7FAFC;
-            --card-bg: #FFFFFF; --border: #E2E8F0;
-            --error: #E53E3E;
-        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: var(--background); color: var(--secondary);
-            line-height: 1.6; padding-bottom: 60px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
         }
-        /* Header Bar */
+        /* Header */
         .header {
-            background: var(--primary); color: white;
-            padding: 25px 20px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            margin-bottom: 24px;
         }
         .header-content {
-            max-width: 900px; margin: 0 auto; display: flex;
-            justify-content: space-between; align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .header h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header h1 i {
+            color: #2563eb;
+        }
         .back-btn {
-            padding: 8px 15px; background: rgba(255, 255, 255, 0.2);
-            color: white; text-decoration: none; border-radius: 6px;
-            font-size: 14px; transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s;
         }
-        .back-btn:hover { background: rgba(255, 255, 255, 0.3); }
+        .back-btn:hover {
+            color: #2563eb;
+            background: #eff6ff;
+        }
 
         /* Container & Card */
-        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px 40px 20px;
+        }
         .card {
-            background: var(--card-bg); border-radius: 10px;
-            padding: 30px; box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px; border: 1px solid var(--border);
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
         }
         .card-header {
-            margin-bottom: 25px; padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
         }
         .card-title {
-            font-size: 18px; font-weight: 600; color: var(--secondary);
-            display: flex; align-items: center; gap: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title i {
+            color: #2563eb;
+            font-size: 18px;
         }
 
         /* Form Layout */
@@ -65,71 +98,150 @@
         .form-group.full-width { grid-column: 1 / -1; }
 
         .form-label {
-            display: block; font-weight: 600; margin-bottom: 6px;
-            color: var(--secondary); font-size: 14px;
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+            font-size: 14px;
         }
         .form-input, .form-select, .form-textarea {
-            width: 100%; padding: 10px 15px; border: 1px solid var(--border);
-            border-radius: 6px; font-size: 15px; font-family: inherit;
-            color: #2D3748; transition: all 0.2s;
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #1f2937;
+            transition: all 0.2s;
+            background: white;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none; border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-        .form-textarea { min-height: 100px; resize: vertical; }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: #9ca3af;
+        }
 
         /* Dynamic List Styling */
-        .dynamic-list { margin-top: 15px; }
+        .dynamic-list { margin-top: 16px; }
         .dynamic-item {
-            display: flex; gap: 10px; margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
             align-items: center;
         }
         .dynamic-item-group {
-            border: 1px dashed var(--border);
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: #f9fafb;
         }
         .dynamic-item-group .form-row { margin-bottom: 0; }
         .dynamic-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
         }
-        .dynamic-item-title { font-weight: 600; }
+        .dynamic-item-title {
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 14px;
+        }
 
         .btn-remove {
-            padding: 8px 12px; background: #FFEDED; color: var(--error);
-            border: 1px solid #FC8181; border-radius: 6px;
-            cursor: pointer; transition: all 0.2s; font-size: 13px;
+            padding: 8px 14px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        .btn-remove:hover { background: #FC8181; color: white; }
+        .btn-remove:hover {
+            background: #dc2626;
+            color: white;
+        }
 
         .btn-add {
-            padding: 10px 20px; background: #EDF2F7; color: var(--secondary);
-            border: 1px dashed var(--border); border-radius: 6px;
-            cursor: pointer; transition: all 0.2s; font-size: 14px;
-            display: inline-flex; align-items: center; gap: 8px;
-            margin-top: 10px;
+            padding: 10px 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
         }
-        .btn-add:hover { background: #E2E8F0; }
+        .btn-add:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
 
         /* Form Actions */
         .form-actions {
-            display: flex; gap: 12px; justify-content: flex-end;
-            margin-top: 30px; padding-top: 20px;
-            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #e5e7eb;
         }
         .btn {
-            padding: 12px 25px; border: none; border-radius: 6px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
 
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            .back-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -143,7 +255,9 @@
     </div>
 
     <div class="container">
-        <form method="POST" action="" id="editProfileForm">
+        <form method="POST" action="{{ route('mahasiswa.update', $mahasiswa->id) }}" id="editProfileForm" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
             <div class="card">
                 <div class="card-header">
@@ -152,23 +266,30 @@
 
                 <div class="form-group">
                     <label class="form-label">Nama Lengkap</label>
-                    <input type="text" name="full_name" class="form-input" value="Ahmad Syahputra">
+                    <input type="text" name="nama" class="form-input" value="{{ old('nama', $mahasiswa->nama) }}" required>
+                    @error('nama') <span style="color: var(--error); font-size: 13px;">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" value="ahmad.syahputra@email.com">
+                        <input type="email" name="email" class="form-input" value="{{ old('email', $mahasiswa->user->email) }}" required>
+                        @error('email') <span style="color: var(--error); font-size: 13px;">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Foto Profil (URL)</label>
-                        <input type="text" name="photo_url" class="form-input" placeholder="https://... (link ke foto)">
+                        <label class="form-label">Foto Profil</label>
+                        <input type="file" name="foto_profil" class="form-input" accept="image/*">
+                        @if($mahasiswa->foto_profil)
+                            <small style="color: #666;">Foto saat ini: {{ basename($mahasiswa->foto_profil) }}</small>
+                        @endif
+                        @error('foto_profil') <span style="color: var(--error); font-size: 13px;">{{ $message }}</span> @enderror
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Bio Singkat</label>
-                    <textarea name="bio" class="form-textarea" placeholder="Tulis bio singkat Anda...">Full Stack Developer dengan pengalaman 5 tahun...</textarea>
+                    <textarea name="bio" class="form-textarea" placeholder="Tulis bio singkat Anda...">{{ old('bio', $mahasiswa->bio) }}</textarea>
+                    @error('bio') <span style="color: var(--error); font-size: 13px;">{{ $message }}</span> @enderror
                 </div>
             </div>
 
@@ -178,29 +299,56 @@
                 </div>
 
                 <div id="educationList" class="dynamic-list">
-                    <div class="dynamic-item-group">
-                        <div class="dynamic-item-header">
-                            <span class="dynamic-item-title">Item 1</span>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nama Institusi</label>
-                            <input type="text" name="edu_institution[]" class="form-input" value="Universitas Muria Kudus">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Jenjang</label>
-                                <input type="text" name="edu_degree[]" class="form-input" value="S1 Teknik Informatika">
+                    @if($mahasiswa->pendidikan && count($mahasiswa->pendidikan) > 0)
+                        @foreach($mahasiswa->pendidikan as $edu)
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item {{ $loop->iteration }}</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Tahun (Contoh: 2015 - 2019)</label>
-                                <input type="text" name="edu_years[]" class="form-input" value="2015 - 2019">
+                                <label class="form-label">Nama Institusi</label>
+                                <input type="text" name="edu_institution[]" class="form-input" value="{{ $edu['institution'] ?? '' }}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Jenjang</label>
+                                    <input type="text" name="edu_degree[]" class="form-input" value="{{ $edu['degree'] ?? '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tahun (Contoh: 2015 - 2019)</label>
+                                    <input type="text" name="edu_years[]" class="form-input" value="{{ $edu['years'] ?? '' }}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item 1</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nama Institusi</label>
+                                <input type="text" name="edu_institution[]" class="form-input" placeholder="Contoh: Universitas Indonesia">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Jenjang</label>
+                                    <input type="text" name="edu_degree[]" class="form-input" placeholder="Contoh: S1 Ilmu Komputer">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tahun</label>
+                                    <input type="text" name="edu_years[]" class="form-input" placeholder="Contoh: 2020 - 2024">
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
 
                 <button type="button" class="btn-add" onclick="addEducation()">
                     <i class="fas fa-plus"></i> Tambah Riwayat Pendidikan
@@ -213,50 +361,55 @@
                 </div>
 
                 <div id="experienceList" class="dynamic-list">
-                    <div class="dynamic-item-group">
-                        <div class="dynamic-item-header">
-                            <span class="dynamic-item-title">Item 1</span>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Posisi/Jabatan</label>
-                            <input type="text" name="exp_title[]" class="form-input" value="Senior Full Stack Developer">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Nama Perusahaan/Organisasi</label>
-                                <input type="text" name="exp_company[]" class="form-input" value="PT Tech Innovation">
+                    @if($mahasiswa->pengalaman && count($mahasiswa->pengalaman) > 0)
+                        @foreach($mahasiswa->pengalaman as $exp)
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item {{ $loop->iteration }}</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Waktu (Contoh: Jan 2022 - Sekarang)</label>
-                                <input type="text" name="exp_dates[]" class="form-input" value="Jan 2022 - Sekarang">
+                                <label class="form-label">Posisi/Jabatan</label>
+                                <input type="text" name="exp_title[]" class="form-input" value="{{ $exp['title'] ?? '' }}">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nama Perusahaan/Organisasi</label>
+                                    <input type="text" name="exp_company[]" class="form-input" value="{{ $exp['company'] ?? '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Waktu (Contoh: Jan 2022 - Sekarang)</label>
+                                    <input type="text" name="exp_dates[]" class="form-input" value="{{ $exp['dates'] ?? '' }}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="dynamic-item-group">
-                        <div class="dynamic-item-header">
-                            <span class="dynamic-item-title">Item 2</span>
-                            <button type="button" class="btn-remove" onclick="removeItem(this)">
-                                <i class="fas fa-trash"></i> Hapus
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Posisi/Jabatan</label>
-                            <input type="text" name="exp_title[]" class="form-input" value="Full Stack Developer">
-                        </div>
-                        <div class="form-row">
+                        @endforeach
+                    @else
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item 1</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
                             <div class="form-group">
-                                <label class="form-label">Nama Perusahaan/Organisasi</label>
-                                <input type="text" name="exp_company[]" class="form-input" value="CV Digital Solutions">
+                                <label class="form-label">Posisi/Jabatan</label>
+                                <input type="text" name="exp_title[]" class="form-input" placeholder="Contoh: Software Engineer Intern">
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Waktu (Contoh: Mar 2020 - Des 2021)</label>
-                                <input type="text" name="exp_dates[]" class="form-input" value="Mar 2020 - Des 2021">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nama Perusahaan/Organisasi</label>
+                                    <input type="text" name="exp_company[]" class="form-input" placeholder="Contoh: PT. ABC">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Waktu</label>
+                                    <input type="text" name="exp_dates[]" class="form-input" placeholder="Contoh: Jan 2023 - Jun 2023">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
 
                 <button type="button" class="btn-add" onclick="addExperience()">
@@ -270,28 +423,112 @@
                 </div>
 
                 <div id="skillList" class="dynamic-list">
-                    <div class="dynamic-item">
-                        <input type="text" name="skills[]" class="form-input" value="JavaScript">
-                        <button type="button" class="btn-remove" onclick="removeItem(this)">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="dynamic-item">
-                        <input type="text" name="skills[]" class="form-input" value="React">
-                        <button type="button" class="btn-remove" onclick="removeItem(this)">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="dynamic-item">
-                        <input type="text" name="skills[]" class="form-input" value="Node.js">
-                        <button type="button" class="btn-remove" onclick="removeItem(this)">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    @if($mahasiswa->skills && count($mahasiswa->skills) > 0)
+                        @foreach($mahasiswa->skills as $skill)
+                        <div class="dynamic-item">
+                            <input type="text" name="skills[]" class="form-input" value="{{ $skill }}">
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        @endforeach
+                    @else
+                        <div class="dynamic-item">
+                            <input type="text" name="skills[]" class="form-input" placeholder="Contoh: JavaScript">
+                            <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    @endif
                 </div>
 
                 <button type="button" class="btn-add" onclick="addSkill()">
                     <i class="fas fa-plus"></i> Tambah Skill
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-link"></i> Kontak Tambahan</h2>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">GitHub</label>
+                        <input type="text" name="github" class="form-input" value="{{ old('github', $mahasiswa->kontak_tambahan['github'] ?? '') }}" placeholder="https://github.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="text" name="linkedin" class="form-input" value="{{ old('linkedin', $mahasiswa->kontak_tambahan['linkedin'] ?? '') }}" placeholder="https://linkedin.com/in/username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Portfolio</label>
+                    <input type="text" name="portfolio" class="form-input" value="{{ old('portfolio', $mahasiswa->kontak_tambahan['portfolio'] ?? '') }}" placeholder="https://myportfolio.com">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-language"></i> Bahasa</h2>
+                </div>
+
+                <div id="bahasaList" class="dynamic-list">
+                    @if($mahasiswa->bahasa && count($mahasiswa->bahasa) > 0)
+                        @foreach($mahasiswa->bahasa as $lang)
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item {{ $loop->iteration }}</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nama Bahasa</label>
+                                    <input type="text" name="bahasa_nama[]" class="form-input" value="{{ $lang['nama'] ?? '' }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Level</label>
+                                    <select name="bahasa_level[]" class="form-select">
+                                        <option value="Native" {{ ($lang['level'] ?? '') == 'Native' ? 'selected' : '' }}>Native</option>
+                                        <option value="Professional" {{ ($lang['level'] ?? '') == 'Professional' ? 'selected' : '' }}>Professional</option>
+                                        <option value="Intermediate" {{ ($lang['level'] ?? '') == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                        <option value="Basic" {{ ($lang['level'] ?? '') == 'Basic' ? 'selected' : '' }}>Basic</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @else
+                        <div class="dynamic-item-group">
+                            <div class="dynamic-item-header">
+                                <span class="dynamic-item-title">Item 1</span>
+                                <button type="button" class="btn-remove" onclick="removeItem(this)">
+                                    <i class="fas fa-trash"></i> Hapus
+                                </button>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Nama Bahasa</label>
+                                    <input type="text" name="bahasa_nama[]" class="form-input" placeholder="Contoh: Indonesia">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Level</label>
+                                    <select name="bahasa_level[]" class="form-select">
+                                        <option value="Native">Native</option>
+                                        <option value="Professional">Professional</option>
+                                        <option value="Intermediate">Intermediate</option>
+                                        <option value="Basic">Basic</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <button type="button" class="btn-add" onclick="addBahasa()">
+                    <i class="fas fa-plus"></i> Tambah Bahasa
                 </button>
             </div>
 
@@ -405,12 +642,44 @@
             list.appendChild(item);
         }
 
+        // Fungsi tambah Bahasa
+        function addBahasa() {
+            const list = document.getElementById('bahasaList');
+            const item = document.createElement('div');
+            item.className = 'dynamic-item-group';
+            item.innerHTML = `
+                <div class="dynamic-item-header">
+                    <span class="dynamic-item-title">Item Baru</span>
+                    <button type="button" class="btn-remove" onclick="removeItem(this)">
+                        <i class="fas fa-trash"></i> Hapus
+                    </button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nama Bahasa</label>
+                        <input type="text" name="bahasa_nama[]" class="form-input" placeholder="Contoh: Inggris">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Level</label>
+                        <select name="bahasa_level[]" class="form-select">
+                            <option value="Native">Native</option>
+                            <option value="Professional">Professional</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Basic">Basic</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            list.appendChild(item);
+            updateItemTitles(list);
+        }
+
         // Update judul saat halaman pertama kali dimuat
         document.addEventListener('DOMContentLoaded', () => {
             updateItemTitles(document.getElementById('educationList'));
             updateItemTitles(document.getElementById('experienceList'));
+            updateItemTitles(document.getElementById('bahasaList'));
         });
     </script>
 </body>
-</html>
 @endsection
