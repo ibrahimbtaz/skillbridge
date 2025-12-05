@@ -73,6 +73,37 @@
         background-color: #ee5a52;
     }
 
+    /* Notification Bell */
+    .notification-bell {
+        position: relative;
+        display: inline-block;
+    }
+
+    .notification-bell a {
+        color: white;
+        font-size: 1.2em;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .notification-bell a:hover {
+        color: #87ceeb;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ff6b6b;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 10px;
+        min-width: 18px;
+        text-align: center;
+    }
+
     @media (max-width: 768px) {
         .navbar {
             flex-direction: column;
@@ -109,6 +140,19 @@
         <a href="{{ route('loker.index') }}">Lowongan Kerja</a>
         <a href="{{ route('pelatihan.index') }}">Pelatihan</a>
         @auth
+            <!-- Notification Bell -->
+            <div class="notification-bell">
+                <a href="{{ route('notifications.index') }}" title="Notifikasi">
+                    <i class="fas fa-bell"></i>
+                </a>
+                @php
+                    $unreadCount = Auth::user()->unreadNotificationsCount();
+                @endphp
+                @if($unreadCount > 0)
+                    <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                @endif
+            </div>
+
             <div class="user-info">
                 @php $u = Auth::user(); @endphp
                 @if ($u->role === '3')
@@ -132,3 +176,5 @@
         @endauth
     </div>
 </div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

@@ -40,6 +40,16 @@ class MahasiswaController extends Controller
         return view('page.mahasiswa.profile', compact('mahasiswa'));
     }
 
+    /**
+     * Display mahasiswa profile for public view (by Mitra)
+     */
+    public function showPublic(Mahasiswa $mahasiswa)
+    {
+        // Load relasi user jika diperlukan
+        $mahasiswa->load('user');
+        return view('page.mahasiswa.profile', compact('mahasiswa'));
+    }
+
     public function status_loker()
     {
         $mahasiswa = auth()->user()->mahasiswa;
@@ -47,7 +57,7 @@ class MahasiswaController extends Controller
                     ->with(['mitra'])
                     ->orderBy('loker_mahasiswa.created_at', 'desc')
                     ->get();
-        
+
         return view('page.mahasiswa.status_loker', compact('lamaran'));
     }
 

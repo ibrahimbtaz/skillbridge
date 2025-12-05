@@ -56,4 +56,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(Mitra::class, 'user_id');
     }
+
+    /**
+     * Relasi ke Notifications
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
+     * Get unread notifications count
+     */
+    public function unreadNotificationsCount(): int
+    {
+        return $this->notifications()->unread()->count();
+    }
 }

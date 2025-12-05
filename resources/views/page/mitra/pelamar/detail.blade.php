@@ -169,10 +169,10 @@
                 </div>
 
                 <div class="pelamar-actions">
-                    <a href="{{ route('mahasiswa.profile') }}?id={{ $pelamar->id }}" class="btn-icon" target="_blank">
+                    <a href="{{ route('mahasiswa.public', $pelamar->id) }}" class="btn-icon" target="_blank">
                         <i class="fas fa-user"></i> Lihat Profil Lengkap
                     </a>
-                    
+
                     <!-- Quick Action Buttons -->
                     @if($pelamar->pivot->status === 'pending')
                         <form action="{{ route('mitra.pelamar.update', [$loker->id, $pelamar->id]) }}" method="POST" style="display: inline;">

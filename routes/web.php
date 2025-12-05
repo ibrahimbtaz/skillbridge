@@ -55,9 +55,11 @@ Route::get('/pelatihan/edit', [PelatihanController::class, 'edit'])->name('pelat
 //sementara gini dulu lahya
 Route::get('/mahasiswa/profile', [MahasiswaController::class, 'show'])->name('mahasiswa.profile');
 Route::get('/mahasiswa/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
-Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
 Route::get('/mahasiswa/status_loker', [MahasiswaController::class, 'status_loker'])->name('mahasiswa.status_loker')->middleware('auth');
 Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])->name('mahasiswa.portofolio');
+Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+// Route untuk melihat profil mahasiswa publik (oleh mitra) - letakkan di bawah route statis
+Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'showPublic'])->name('mahasiswa.public');
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('/admin')->group(function () {
@@ -103,7 +105,19 @@ Route::middleware(['auth', 'mitra'])->group(function () {
 
 Route::get('/mitra/{id}', [MitraController::class, 'show'])->name('mitra.public');
 
-Route::get('/notif', [PageController::class, 'notif'])->name('notif');
+// Notification Routes
+Route::middleware(['auth'])->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
+    Route::get('/unread-count', [\App\Http\Controllers\NotificationController::class, 'unreadCount'])->name('unread-count');
+    Route::get('/latest', [\App\Http\Controllers\NotificationController::class, 'latest'])->name('latest');
+    Route::post('/{notification}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('read');
+    Route::post('/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+    Route::delete('/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('destroy');
+    Route::delete('/', [\App\Http\Controllers\NotificationController::class, 'destroyAll'])->name('destroy-all');
+});
+
+// Legacy route (redirect to new notification page)
+Route::get('/notif', fn() => redirect()->route('notifications.index'))->name('notif');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

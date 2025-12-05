@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Loker;
 use App\Models\Mitra;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 
@@ -215,6 +216,12 @@ class LokerController extends Controller
             'status' => 'pending',
             'catatan' => $validated['catatan'] ?? null,
         ]);
+
+        // Kirim notification ke Mitra
+        $mitra = $loker->mitra;
+        if ($mitra && $mitra->user_id) {
+            Notification::createLamaranBaru($mitra->user_id, $mahasiswa, $loker);
+        }
 
         return redirect()->route('mahasiswa.status_loker')->with('success', 'Lamaran berhasil dikirim!');
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Mitra;
 use App\Models\Loker;
+use App\Models\Mahasiswa;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class MitraController extends Controller
@@ -201,11 +203,27 @@ class MitraController extends Controller
             'catatan_mitra' => 'nullable|string|max:1000',
         ]);
 
+        // Ambil status lama untuk perbandingan
+        $currentStatus = $loker->pelamar()->where('mahasiswa_id', $mahasiswaId)->first()?->pivot?->status;
+
         // Update status di pivot table
         $loker->pelamar()->updateExistingPivot($mahasiswaId, [
             'status' => $validated['status'],
             'catatan_mitra' => $validated['catatan_mitra'] ?? null,
         ]);
+
+        // Kirim notification ke Mahasiswa jika status berubah
+        if ($currentStatus !== $validated['status']) {
+            $mahasiswa = Mahasiswa::find($mahasiswaId);
+            if ($mahasiswa && $mahasiswa->user_id) {
+                Notification::createStatusLamaran(
+                    $mahasiswa->user_id,
+                    $loker,
+                    $validated['status'],
+                    $mitra->nama_mitra
+                );
+            }
+        }
 
         return back()->with('success', 'Status lamaran berhasil diperbarui.');
     }
