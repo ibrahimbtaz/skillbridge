@@ -6,23 +6,30 @@
         <i class="fas fa-briefcase"></i> Audit Lowongan Kerja
     </h1>
 
+    @if(session('success'))
+    <div class="alert alert-success" style="background: #dcfce7; color: #16a34a; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-check-circle"></i>
+        {{ session('success') }}
+    </div>
+    @endif
+
     <!-- Statistics Cards -->
     <div class="stat-grid">
         <div class="stat-card">
             <div class="label">Total Lowongan</div>
-            <div class="value">156</div>
+            <div class="value">{{ $totalLoker }}</div>
         </div>
         <div class="stat-card">
             <div class="label">Pending Review</div>
-            <div class="value" style="color: #f59e0b;">12</div>
+            <div class="value" style="color: #f59e0b;">{{ $pendingCount }}</div>
         </div>
         <div class="stat-card">
             <div class="label">Approved</div>
-            <div class="value" style="color: var(--green);">138</div>
+            <div class="value" style="color: var(--green);">{{ $approvedCount }}</div>
         </div>
         <div class="stat-card">
             <div class="label">Rejected</div>
-            <div class="value" style="color: var(--red);">6</div>
+            <div class="value" style="color: var(--red);">{{ $rejectedCount }}</div>
         </div>
     </div>
 
@@ -31,53 +38,56 @@
         <h3 class="card-title" style="margin-bottom: 20px;">
             <i class="fas fa-filter"></i> Filter Lowongan
         </h3>
-        <form>
+        <form method="GET" action="{{ route('admin.audit.loker') }}">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-light);">
                         Cari Lowongan
                     </label>
-                    <input type="text" placeholder="Perusahaan atau posisi..." style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Perusahaan atau posisi..." style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-light);">
                         Status
                     </label>
-                    <select style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                    <select name="status" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
                         <option value="">Semua Status</option>
-                        <option value="pending">Pending Review</option>
-                        <option value="approved">Approved</option>
-                        <option value="rejected">Rejected</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending Review</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                     </select>
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-light);">
                         Tipe Pekerjaan
                     </label>
-                    <select style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                    <select name="jenis_kerja" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
                         <option value="">Semua Tipe</option>
-                        <option value="fulltime">Full Time</option>
-                        <option value="parttime">Part Time</option>
-                        <option value="intern">Magang</option>
-                        <option value="freelance">Freelance</option>
+                        <option value="fulltime" {{ request('jenis_kerja') == 'fulltime' ? 'selected' : '' }}>Full Time</option>
+                        <option value="parttime" {{ request('jenis_kerja') == 'parttime' ? 'selected' : '' }}>Part Time</option>
+                        <option value="freelance" {{ request('jenis_kerja') == 'freelance' ? 'selected' : '' }}>Freelance</option>
+                        <option value="contract" {{ request('jenis_kerja') == 'contract' ? 'selected' : '' }}>Contract</option>
                     </select>
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-light);">
                         Dari Tanggal
                     </label>
-                    <input type="date" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                    <input type="date" name="from_date" value="{{ request('from_date') }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
                 </div>
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-light);">
                         Sampai Tanggal
                     </label>
-                    <input type="date" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
+                    <input type="date" name="to_date" value="{{ request('to_date') }}" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px;">
                 </div>
-                <div style="display: flex; align-items: flex-end;">
-                    <button type="button" class="btn btn-primary" style="width: 100%;" onclick="alert('Filter diterapkan')">
+                <div style="display: flex; align-items: flex-end; gap: 10px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">
                         <i class="fas fa-search"></i> Filter
                     </button>
+                    <a href="{{ route('admin.audit.loker') }}" class="btn btn-secondary" style="padding: 10px 15px;">
+                        <i class="fas fa-undo"></i>
+                    </a>
                 </div>
             </div>
         </form>
@@ -94,177 +104,106 @@
                     <tr>
                         <th width="5%">ID</th>
                         <th width="20%">Perusahaan</th>
-                        <th width="20%">Posisi</th>
-                        <th width="12%">Tipe</th>
+                        <th width="18%">Posisi</th>
+                        <th width="10%">Tipe</th>
                         <th width="12%">Gaji</th>
                         <th width="10%">Lokasi</th>
                         <th width="10%">Status</th>
-                        <th width="11%">Aksi</th>
+                        <th width="15%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($lokers as $loker)
                     <tr>
-                        <td>#1</td>
+                        <td>#{{ $loker->id }}</td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #dbeafe; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2563eb;">TM</div>
+                                @php
+                                    $initials = strtoupper(substr($loker->mitra->nama_mitra ?? 'NA', 0, 2));
+                                    $colors = ['#dbeafe', '#dcfce7', '#fef3c7', '#fee2e2', '#e0e7ff'];
+                                    $textColors = ['#2563eb', '#16a34a', '#92400e', '#dc2626', '#4338ca'];
+                                    $colorIndex = $loker->id % count($colors);
+                                @endphp
+                                <div style="width: 40px; height: 40px; background: {{ $colors[$colorIndex] }}; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: {{ $textColors[$colorIndex] }};">
+                                    {{ $initials }}
+                                </div>
                                 <div>
-                                    <div style="font-weight: 600;">PT Teknologi Maju</div>
-                                    <div style="font-size: 12px; color: var(--text-light);">IT Consultant</div>
+                                    <div style="font-weight: 600;">{{ $loker->mitra->nama_mitra ?? 'N/A' }}</div>
+                                    <div style="font-size: 12px; color: var(--text-light);">{{ $loker->mitra->bidang ?? 'Mitra' }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>Frontend Developer</td>
-                        <td><span style="background: #dbeafe; color: #2563eb; padding: 4px 10px; border-radius: 4px; font-size: 12px;">Magang</span></td>
-                        <td>Rp 2.500.000</td>
-                        <td>Jakarta Selatan</td>
-                        <td><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 12px;"><i class="fas fa-clock"></i> Pending</span></td>
+                        <td>{{ $loker->title }}</td>
+                        <td>
+                            @php
+                                $jenisKerjaStyles = [
+                                    'fulltime' => ['bg' => '#dcfce7', 'color' => '#16a34a', 'label' => 'Full Time'],
+                                    'parttime' => ['bg' => '#e0e7ff', 'color' => '#4338ca', 'label' => 'Part Time'],
+                                    'freelance' => ['bg' => '#fef3c7', 'color' => '#92400e', 'label' => 'Freelance'],
+                                    'contract' => ['bg' => '#dbeafe', 'color' => '#2563eb', 'label' => 'Contract'],
+                                ];
+                                $style = $jenisKerjaStyles[$loker->jenis_kerja] ?? ['bg' => '#f3f4f6', 'color' => '#374151', 'label' => ucfirst($loker->jenis_kerja)];
+                            @endphp
+                            <span style="background: {{ $style['bg'] }}; color: {{ $style['color'] }}; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
+                                {{ $style['label'] }}
+                            </span>
+                        </td>
+                        <td>
+                            @if($loker->gaji_min && $loker->gaji_max)
+                                Rp {{ number_format($loker->gaji_min, 0, ',', '.') }} - {{ number_format($loker->gaji_max, 0, ',', '.') }}
+                            @elseif($loker->gaji_min)
+                                Rp {{ number_format($loker->gaji_min, 0, ',', '.') }}
+                            @else
+                                <span style="color: var(--text-light);">Tidak disebutkan</span>
+                            @endif
+                        </td>
+                        <td>{{ $loker->lokasi }}</td>
+                        <td>
+                            @php
+                                $statusStyles = [
+                                    'pending' => ['bg' => '#fef3c7', 'color' => '#92400e', 'icon' => 'fa-clock', 'label' => 'Pending'],
+                                    'approved' => ['bg' => '#dcfce7', 'color' => '#16a34a', 'icon' => 'fa-check-circle', 'label' => 'Approved'],
+                                    'rejected' => ['bg' => '#fee2e2', 'color' => '#dc2626', 'icon' => 'fa-times-circle', 'label' => 'Rejected'],
+                                ];
+                                $statusStyle = $statusStyles[$loker->status] ?? ['bg' => '#f3f4f6', 'color' => '#374151', 'icon' => 'fa-question', 'label' => ucfirst($loker->status)];
+                            @endphp
+                            <span style="background: {{ $statusStyle['bg'] }}; color: {{ $statusStyle['color'] }}; padding: 4px 10px; border-radius: 4px; font-size: 12px;">
+                                <i class="fas {{ $statusStyle['icon'] }}"></i> {{ $statusStyle['label'] }}
+                            </span>
+                        </td>
                         <td>
                             <div class="action-buttons">
-                                <a href="#" class="btn-icon view" onclick="reviewLoker(1); return false;">
+                                <a href="{{ route('loker.show', $loker->id) }}" class="btn-icon view" target="_blank" title="Lihat Detail">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="#" class="btn-icon" style="color: var(--green); border-color: var(--green);" onclick="approveLoker(1); return false;">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                                <a href="#" class="btn-icon" style="color: var(--red); border-color: var(--red);" onclick="rejectLoker(1); return false;">
-                                    <i class="fas fa-times"></i>
-                                </a>
+                                @if($loker->status == 'pending')
+                                <form action="{{ route('admin.loker.approve', $loker->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menyetujui lowongan ini?')">
+                                    @csrf
+                                    <button type="submit" class="btn-icon" style="color: var(--green); border-color: var(--green); background: transparent; cursor: pointer;" title="Approve">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </form>
+                                <form action="{{ route('admin.loker.reject', $loker->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menolak lowongan ini?')">
+                                    @csrf
+                                    <button type="submit" class="btn-icon" style="color: var(--red); border-color: var(--red); background: transparent; cursor: pointer;" title="Reject">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                                @endif
                             </div>
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td>#2</td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #dcfce7; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #16a34a;">CD</div>
-                                <div>
-                                    <div style="font-weight: 600;">CV Digital Kreatif</div>
-                                    <div style="font-size: 12px; color: var(--text-light);">Agency</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Social Media Admin</td>
-                        <td><span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 4px; font-size: 12px;">Full Time</span></td>
-                        <td>Rp 4.000.000</td>
-                        <td>Bandung</td>
-                        <td><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 12px;"><i class="fas fa-clock"></i> Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="#" class="btn-icon view" onclick="reviewLoker(2); return false;">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="#" class="btn-icon" style="color: var(--green); border-color: var(--green);" onclick="approveLoker(2); return false;">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                                <a href="#" class="btn-icon" style="color: var(--red); border-color: var(--red);" onclick="rejectLoker(2); return false;">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </div>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-light);">
+                            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+                            Tidak ada data lowongan kerja
                         </td>
                     </tr>
-                    <tr>
-                        <td>#3</td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #fef3c7; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #92400e;">SI</div>
-                                <div>
-                                    <div style="font-weight: 600;">PT Solusi Indonesia</div>
-                                    <div style="font-size: 12px; color: var(--text-light);">Software House</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Backend Developer</td>
-                        <td><span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 4px; font-size: 12px;">Full Time</span></td>
-                        <td>Rp 6.000.000</td>
-                        <td>Surabaya</td>
-                        <td><span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 4px; font-size: 12px;"><i class="fas fa-check-circle"></i> Approved</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="#" class="btn-icon view" onclick="reviewLoker(3); return false;">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#4</td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #fee2e2; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #dc2626;">MI</div>
-                                <div>
-                                    <div style="font-weight: 600;">PT Media Indonesia</div>
-                                    <div style="font-size: 12px; color: var(--text-light);">Media</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>Content Writer</td>
-                        <td><span style="background: #e0e7ff; color: #4338ca; padding: 4px 10px; border-radius: 4px; font-size: 12px;">Part Time</span></td>
-                        <td>Rp 3.500.000</td>
-                        <td>Jakarta Pusat</td>
-                        <td><span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 4px; font-size: 12px;"><i class="fas fa-times-circle"></i> Rejected</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="#" class="btn-icon view" onclick="reviewLoker(4); return false;">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>#5</td>
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: #dbeafe; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2563eb;">GI</div>
-                                <div>
-                                    <div style="font-weight: 600;">PT Global Inovasi</div>
-                                    <div style="font-size: 12px; color: var(--text-light);">Startup</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>UI/UX Designer</td>
-                        <td><span style="background: #dbeafe; color: #2563eb; padding: 4px 10px; border-radius: 4px; font-size: 12px;">Magang</span></td>
-                        <td>Rp 2.000.000</td>
-                        <td>Yogyakarta</td>
-                        <td><span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px; font-size: 12px;"><i class="fas fa-clock"></i> Pending</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="#" class="btn-icon view" onclick="reviewLoker(5); return false;">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="#" class="btn-icon" style="color: var(--green); border-color: var(--green);" onclick="approveLoker(5); return false;">
-                                    <i class="fas fa-check"></i>
-                                </a>
-                                <a href="#" class="btn-icon" style="color: var(--red); border-color: var(--red);" onclick="rejectLoker(5); return false;">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
-<script>
-    function reviewLoker(id) {
-        alert('Review Detail Lowongan ID: ' + id + '\n\nFitur detail review akan ditambahkan.');
-    }
-
-    function approveLoker(id) {
-        if (confirm('Apakah Anda yakin ingin menyetujui lowongan ini?')) {
-            alert('Lowongan ID: ' + id + ' telah disetujui!');
-            // Di sini tambahkan logic untuk update status
-        }
-    }
-
-    function rejectLoker(id) {
-        const reason = prompt('Masukkan alasan penolakan:');
-        if (reason) {
-            alert('Lowongan ID: ' + id + ' ditolak.\nAlasan: ' + reason);
-            // Di sini tambahkan logic untuk update status
-        }
-    }
-</script>
 @endsection

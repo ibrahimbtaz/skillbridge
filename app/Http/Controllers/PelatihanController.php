@@ -15,7 +15,7 @@ class PelatihanController extends Controller
      */
     public function index()
     {
-        $pelatihans = Pelatihan::all();
+        $pelatihans = Pelatihan::approved()->get(); // Hanya tampilkan pelatihan yang sudah approved
         return view('page.pelatihan.home', compact('pelatihans'));
     }
 

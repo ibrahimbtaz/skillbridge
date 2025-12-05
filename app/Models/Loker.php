@@ -48,6 +48,24 @@ class Loker extends Model
         'gaji_max' => 'integer',
     ];
 
+    // Scope untuk loker yang approved
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
+    }
+
+    // Scope untuk loker yang pending
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    // Scope untuk loker yang rejected
+    public function scopeRejected($query)
+    {
+        return $query->where('status', 'rejected');
+    }
+
 
     public function mitra() {
         return $this->belongsTo(Mitra::class, 'mitra_id');

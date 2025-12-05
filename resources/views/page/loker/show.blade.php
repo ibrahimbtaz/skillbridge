@@ -474,10 +474,15 @@
                                         Lamar Sekarang
                                     </button>
                                 @endif
-                            @else
+                            @elseif(auth()->user()->mitra)
                                 <a href="{{ route('mitra.show') }}" class="btn btn-secondary">
                                     <i class="fas fa-building"></i>
                                     Anda adalah Mitra
+                                </a>
+                            @elseif(auth()->user()->role == 1)
+                                <a href="{{ route('dashboard') }}" class="btn btn-secondary">
+                                    <i class="fas fa-building"></i>
+                                    Anda adalah admin
                                 </a>
                             @endif
                         @else

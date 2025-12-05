@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pelatihan;
+use App\Models\Loker;
 
 class PageController extends Controller
 {
@@ -35,9 +36,66 @@ class PageController extends Controller
         return view('page.notif');
     }
 
-    public function audit_pelatihan()
+    public function audit_pelatihan(Request $request)
     {
-        return view('page.admin.pelatihan.audit');
+        $query = Pelatihan::query();
+
+        // Filter by search
+        if ($request->filled('search')) {
+            $query->where('nama_pelatihan', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by kategori
+        if ($request->filled('kategori')) {
+            $query->where('kategori', $request->kategori);
+        }
+
+        // Filter by date range
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $pelatihans = $query->latest()->get();
+
+        // Statistics
+        $totalPelatihan = Pelatihan::count();
+        $pendingCount = Pelatihan::pending()->count();
+        $approvedCount = Pelatihan::approved()->count();
+        $rejectedCount = Pelatihan::rejected()->count();
+        $kategoris = Pelatihan::distinct()->pluck('kategori')->filter();
+
+        return view('page.admin.pelatihan.audit', compact(
+            'pelatihans',
+            'totalPelatihan',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount',
+            'kategoris'
+        ));
+    }
+
+    public function approve_pelatihan($id)
+    {
+        $pelatihan = Pelatihan::findOrFail($id);
+        $pelatihan->update(['status' => 'approved']);
+
+        return redirect()->back()->with('success', 'Pelatihan berhasil diapprove!');
+    }
+
+    public function reject_pelatihan($id)
+    {
+        $pelatihan = Pelatihan::findOrFail($id);
+        $pelatihan->update(['status' => 'rejected']);
+
+        return redirect()->back()->with('success', 'Pelatihan berhasil direject!');
     }
 
     public function audit_mitra()
@@ -45,9 +103,70 @@ class PageController extends Controller
         return view('page.admin.mitra.audit');
     }
 
-    public function audit_loker()
+    public function audit_loker(Request $request)
     {
-        return view('page.admin.loker.audit');
+        $query = Loker::with('mitra');
+
+        // Filter by search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', '%' . $search . '%')
+                  ->orWhereHas('mitra', function($q2) use ($search) {
+                      $q2->where('nama_perusahaan', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by jenis kerja
+        if ($request->filled('jenis_kerja')) {
+            $query->where('jenis_kerja', $request->jenis_kerja);
+        }
+
+        // Filter by date range
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
+        $lokers = $query->latest()->get();
+
+        // Statistics
+        $totalLoker = Loker::count();
+        $pendingCount = Loker::pending()->count();
+        $approvedCount = Loker::approved()->count();
+        $rejectedCount = Loker::rejected()->count();
+
+        return view('page.admin.loker.audit', compact(
+            'lokers',
+            'totalLoker',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount'
+        ));
+    }
+
+    public function approve_loker($id)
+    {
+        $loker = Loker::findOrFail($id);
+        $loker->update(['status' => 'approved']);
+
+        return redirect()->back()->with('success', 'Loker berhasil diapprove!');
+    }
+
+    public function reject_loker($id)
+    {
+        $loker = Loker::findOrFail($id);
+        $loker->update(['status' => 'rejected']);
+
+        return redirect()->back()->with('success', 'Loker berhasil direject!');
     }
 
     public function kelola_user()
@@ -214,6 +333,7 @@ class PageController extends Controller
             'deskripsi' => $request->deskripsi,
             'kategori' => $request->kategori,
             'rating' => $request->rating ?? 0,
+            'status' => 'pending', // Status pending untuk menunggu approval
         ];
 
         // Handle tags - convert comma separated to JSON array

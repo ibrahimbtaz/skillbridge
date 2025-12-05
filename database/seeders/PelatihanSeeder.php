@@ -45,6 +45,7 @@ class PelatihanSeeder extends Seeder
                     fake()->sentence(),
                     fake()->sentence()
                 ]),
+                'status' => fake()->randomElement(['pending', 'approved', 'rejected']),
                 // 'mitra_id' => $id, // BAGIAN INI SUDAH DIHAPUS
             ]);
         }

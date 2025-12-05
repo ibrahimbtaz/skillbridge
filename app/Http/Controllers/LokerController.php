@@ -15,7 +15,7 @@ class LokerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Loker::with(['mitra.user']);
+        $query = Loker::with(['mitra.user'])->approved(); // Hanya tampilkan loker yang sudah approved
         // SEARCH
         if ($request->search) {
             $query->where(function ($q) use ($request) {
@@ -46,8 +46,8 @@ class LokerController extends Controller
         }
         $lokers = $query->paginate(10)->appends(request()->query());
 
-        $total_loker = Loker::count();
-        $total_perusahaan = Loker::distinct('mitra_id')->count('mitra_id');
+        $total_loker = Loker::approved()->count(); // Hitung hanya loker yang approved
+        $total_perusahaan = Loker::approved()->distinct('mitra_id')->count('mitra_id');
 
 
         // DATA DROPDOWN OTOMATIS SESUAI DB
@@ -109,12 +109,12 @@ class LokerController extends Controller
             'kualifikasi' => $requirements ?: null,
             'benefits' => $benefits ?: null,
             'deadline' => $validated['deadline_date'],
-            'status' => 'draft', // Default status
+            'status' => 'pending', // Status pending untuk menunggu approval admin
             'mitra_id' => $mitra->id,
         ]);
 
         return redirect()->route('mitra.loker.kelola')
-            ->with('success', 'Lowongan berhasil ditambahkan');
+            ->with('success', 'Lowongan berhasil ditambahkan dan menunggu approval admin');
     }
 
     /**

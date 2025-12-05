@@ -67,6 +67,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/audit_loker', [PageController::class, 'audit_loker'])->name('admin.audit.loker');
         Route::get('/audit_pelatihan', [PageController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan');
         Route::get('/audit_mitra', [PageController::class, 'audit_mitra'])->name('admin.audit.mitra');
+
+        // Loker approval routes
+        Route::post('/loker/{id}/approve', [PageController::class, 'approve_loker'])->name('admin.loker.approve');
+        Route::post('/loker/{id}/reject', [PageController::class, 'reject_loker'])->name('admin.loker.reject');
+
+        // Pelatihan approval routes
+        Route::post('/pelatihan/{id}/approve', [PageController::class, 'approve_pelatihan'])->name('admin.pelatihan.approve');
+        Route::post('/pelatihan/{id}/reject', [PageController::class, 'reject_pelatihan'])->name('admin.pelatihan.reject');
+
         Route::get('/kelola_pelatihan', [PageController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan');
         Route::get('/kelola_pelatihan/create', [PageController::class, 'create_pelatihan'])->name('admin.kelola.pelatihan.create');
         Route::post('/kelola_pelatihan', [PageController::class, 'store_pelatihan'])->name('admin.kelola.pelatihan.store');
@@ -95,7 +104,7 @@ Route::middleware(['auth', 'mitra'])->group(function () {
     Route::get('/loker/edit/{loker}', [LokerController::class, 'edit'])->name('mitra.loker.edit');
     Route::get('/loker/show/{loker}', [LokerController::class, 'show'])->name('mitra.loker.show');
     Route::put('/loker/update/{loker}', [LokerController::class, 'update'])->name('mitra.loker.update');
-    
+
     // Pelamar management
     Route::get('/pelamar', [MitraController::class, 'pelamar'])->name('mitra.pelamar.index');
     Route::get('/pelamar/{loker}', [MitraController::class, 'detailPelamar'])->name('mitra.pelamar.detail');

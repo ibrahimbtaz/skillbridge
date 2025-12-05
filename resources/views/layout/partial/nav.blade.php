@@ -162,7 +162,7 @@
                     Halo, <strong><a href="{{ route('mitra.show', $u->mitra->id) }}">{{ $u->mitra->nama_mitra ?? 'Data mitra tidak ditemukan' }}</a></strong>
                 @endif
                 @if ($u->role === '1')
-                    Halo, <strong>{{ $u->name }}</strong>
+                    Halo, <strong><a href="{{route('dashboard')}}">{{ $u->name }}</a></strong>
                 @endif
             </div>
             <a href="{{ route('password.change') }}" style="color: white;" class="password-button">Ubah Password</a>

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->json('tanggung_jawab')->nullable();
             $table->json('kualifikasi')->nullable();
             $table->json('benefits')->nullable();
-            $table->enum('status', ['draft', 'published', 'closed', 'filled'])->default('draft');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamp('deadline')->nullable(); // Batas Waktu Lamaran
             $table->foreignId('mitra_id')->constrained()->onDelete('cascade');
             $table->softDeletes(); // Soft Delete
