@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MahasiswaController extends Controller
 {
@@ -214,5 +215,21 @@ class MahasiswaController extends Controller
     public function destroy(Mahasiswa $mahasiswa)
     {
         //
+    }
+
+    /**
+     * Generate and download CV as PDF
+     */
+    public function downloadCV()
+    {
+        $mahasiswa = auth()->user()->mahasiswa;
+        $mahasiswa->load('user');
+
+        $pdf = Pdf::loadView('page.mahasiswa.cv-pdf', compact('mahasiswa'));
+        $pdf->setPaper('a4', 'portrait');
+
+        $filename = 'CV_' . str_replace(' ', '_', $mahasiswa->nama) . '_' . date('Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 }

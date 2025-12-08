@@ -57,6 +57,7 @@ Route::get('/mahasiswa/profile', [MahasiswaController::class, 'show'])->name('ma
 Route::get('/mahasiswa/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
 Route::get('/mahasiswa/status_loker', [MahasiswaController::class, 'status_loker'])->name('mahasiswa.status_loker')->middleware('auth');
 Route::get('/mahasiswa/portofolio', [MahasiswaController::class, 'portofolio'])->name('mahasiswa.portofolio');
+Route::get('/mahasiswa/download-cv', [MahasiswaController::class, 'downloadCV'])->name('mahasiswa.download-cv')->middleware('auth');
 Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
 // Route untuk melihat profil mahasiswa publik (oleh mitra) - letakkan di bawah route statis
 Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'showPublic'])->name('mahasiswa.public');
@@ -129,41 +130,3 @@ Route::middleware(['auth'])->prefix('notifications')->name('notifications.')->gr
 Route::get('/notif', fn() => redirect()->route('notifications.index'))->name('notif');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Di routes/web.php (temporary, HAPUS setelah selesai!)
-Route::get('/test-backup', function() {
-    try {
-        // Test 1: Cek mysqldump
-        $dumpPath = config('database.connections.mysql.dump.dump_binary_path');
-        $mysqldumpExists = file_exists($dumpPath . '/mysqldump.exe') || file_exists($dumpPath . '/mysqldump');
-
-        // Test 2: Cek disk backups
-        $disk = Storage::disk('backups');
-        $diskExists = $disk->exists('');
-
-        // Test 3: Cek permission
-        $backupPath = storage_path('app/backups');
-        $canWrite = is_writable($backupPath);
-
-        // Test 4: PHP Settings
-        $maxExecution = ini_get('max_execution_time');
-        $memoryLimit = ini_get('memory_limit');
-
-        return response()->json([
-            'mysqldump_path' => $dumpPath,
-            'mysqldump_exists' => $mysqldumpExists,
-            'disk_accessible' => $diskExists,
-            'backup_path' => $backupPath,
-            'can_write' => $canWrite,
-            'max_execution_time' => $maxExecution,
-            'memory_limit' => $memoryLimit,
-            'db_connection' => config('database.default'),
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ], 500);
-    }
-})->middleware('auth');

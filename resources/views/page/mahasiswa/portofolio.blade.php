@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV & Portofolio - Ahmad Syahputra</title>
+    <title>CV & Portofolio - {{ $mahasiswa->nama ?? 'Mahasiswa' }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -84,8 +84,23 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: #ccc url('https://via.placeholder.com/100') no-repeat center center;
+            background-color: #ccc;
             background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            border: 3px solid var(--border);
+        }
+        .cv-photo-placeholder {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5A67D8, #4C51BF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: bold;
             flex-shrink: 0;
             border: 3px solid var(--border);
         }
@@ -109,6 +124,8 @@
             color: var(--text-light);
         }
         .cv-contact span { display: flex; align-items: center; gap: 6px; }
+        .cv-contact a { color: var(--text-light); text-decoration: none; }
+        .cv-contact a:hover { color: var(--primary); }
 
         /* Section CV (Tentang, Pengalaman, dll) */
         .cv-section {
@@ -173,6 +190,34 @@
             font-weight: 500;
         }
 
+        /* Language list */
+        .language-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .language-item {
+            background: #f3f4f6;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .language-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .language-level {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            color: var(--text-light);
+            font-style: italic;
+            font-size: 14px;
+        }
+
         /* Untuk cetak/PDF */
         @media print {
             body {
@@ -196,93 +241,126 @@
         <div class="action-content">
             <h1>CV & Portofolio</h1>
             <div>
-                <a href="edit_profil_mahasiswa.html" class="btn btn-light"><i class="fas fa-edit"></i> Edit Profil</a>
-                <a href="javascript:window.print()" class="btn btn-primary" style="margin-left: 10px;"><i class="fas fa-download"></i> Unduh PDF</a>
+                <a href="{{ route('mahasiswa.edit') }}" class="btn btn-light"><i class="fas fa-edit"></i> Edit Profil</a>
+                <a href="{{ route('mahasiswa.download-cv') }}" class="btn btn-primary" style="margin-left: 10px;"><i class="fas fa-download"></i> Unduh PDF</a>
             </div>
         </div>
     </div>
 
     <div class="cv-container">
+        {{-- Header CV --}}
         <div class="cv-header">
-            <div class="cv-photo"></div>
+            @if($mahasiswa->foto_profil)
+                <div class="cv-photo" style="background-image: url('{{ asset('storage/' . $mahasiswa->foto_profil) }}');"></div>
+            @else
+                <div class="cv-photo-placeholder">{{ strtoupper(substr($mahasiswa->nama ?? 'M', 0, 1)) }}</div>
+            @endif
             <div>
-                <h1 class="cv-name">{{ $mahasiswa->nama }}</h1>
-                <h2 class="cv-title">Full Stack Developer</h2>
+                <h1 class="cv-name">{{ $mahasiswa->nama ?? 'Nama Mahasiswa' }}</h1>
+                <h2 class="cv-title">{{ $mahasiswa->jurusan ?? 'Jurusan' }} - Semester {{ $mahasiswa->semester ?? '-' }}</h2>
                 <div class="cv-contact">
-                    <span><i class="fas fa-envelope"></i> ahmad.syahputra@email.com</span>
-                    <span><i class="fab fa-linkedin"></i> linkedin.com/in/ahmadsyahputra</span>
+                    @if($mahasiswa->user && $mahasiswa->user->email)
+                        <span><i class="fas fa-envelope"></i> {{ $mahasiswa->user->email }}</span>
+                    @endif
+                    @if($mahasiswa->no_telp)
+                        <span><i class="fas fa-phone"></i> {{ $mahasiswa->no_telp }}</span>
+                    @endif
+                    @if($mahasiswa->alamat)
+                        <span><i class="fas fa-map-marker-alt"></i> {{ $mahasiswa->alamat }}</span>
+                    @endif
                 </div>
+                @if($mahasiswa->kontak_tambahan)
+                    <div class="cv-contact" style="margin-top: 8px;">
+                        @if(isset($mahasiswa->kontak_tambahan['linkedin']))
+                            <span><i class="fab fa-linkedin"></i> <a href="{{ $mahasiswa->kontak_tambahan['linkedin'] }}" target="_blank">LinkedIn</a></span>
+                        @endif
+                        @if(isset($mahasiswa->kontak_tambahan['github']))
+                            <span><i class="fab fa-github"></i> <a href="{{ $mahasiswa->kontak_tambahan['github'] }}" target="_blank">GitHub</a></span>
+                        @endif
+                        @if(isset($mahasiswa->kontak_tambahan['portfolio']))
+                            <span><i class="fas fa-globe"></i> <a href="{{ $mahasiswa->kontak_tambahan['portfolio'] }}" target="_blank">Portfolio</a></span>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
 
+        {{-- Tentang Saya --}}
         <div class="cv-section">
             <h3 class="cv-section-title">Tentang Saya</h3>
-            <p class="cv-bio">
-                Seorang Full Stack Developer dengan pengalaman 5 tahun dalam mengembangkan aplikasi web modern. Memiliki keahlian dalam JavaScript, React, Node.js, dan berbagai teknologi web terkini. Passionate dalam menciptakan solusi digital yang inovatif dan user-friendly.
-            </p>
+            @if($mahasiswa->bio)
+                <p class="cv-bio">{{ $mahasiswa->bio }}</p>
+            @else
+                <p class="empty-state">Belum ada deskripsi tentang diri. Silakan lengkapi profil Anda.</p>
+            @endif
         </div>
 
-        <div class="cv-section">
-            <h3 class="cv-section-title">Pengalaman Kerja</h3>
-            <div class="cv-item">
-                <div class="item-header">
-                    <span class="item-title">Senior Full Stack Developer</span>
-                    <span class="item-date">Jan 2022 - Sekarang</span>
-                </div>
-                <div class="item-subtitle">PT Tech Innovation</div>
-            </div>
-            <div class="cv-item">
-                <div class="item-header">
-                    <span class="item-title">Full Stack Developer</span>
-                    <span class="item-date">Mar 2020 - Des 2021</span>
-                </div>
-                <div class="item-subtitle">CV Digital Solutions</div>
-            </div>
-        </div>
-
+        {{-- Pendidikan --}}
         <div class="cv-section">
             <h3 class="cv-section-title">Pendidikan</h3>
-            <div class="cv-item">
-                <div class="item-header">
-                    <span class="item-title">S1 Teknik Informatika</span>
-                    <span class="item-date">2015 - 2019</span>
-                </div>
-                <div class="item-subtitle">Universitas Muria Kudus</div>
-            </div>
+            @if($mahasiswa->pendidikan && count($mahasiswa->pendidikan) > 0)
+                @foreach($mahasiswa->pendidikan as $edu)
+                    <div class="cv-item">
+                        <div class="item-header">
+                            <span class="item-title">{{ $edu['degree'] ?? '-' }}</span>
+                            <span class="item-date">{{ $edu['years'] ?? '' }}</span>
+                        </div>
+                        <div class="item-subtitle">{{ $edu['institution'] ?? '-' }}</div>
+                    </div>
+                @endforeach
+            @else
+                <p class="empty-state">Belum ada data pendidikan. Silakan lengkapi profil Anda.</p>
+            @endif
         </div>
 
+        {{-- Pengalaman --}}
+        <div class="cv-section">
+            <h3 class="cv-section-title">Pengalaman</h3>
+            @if($mahasiswa->pengalaman && count($mahasiswa->pengalaman) > 0)
+                @foreach($mahasiswa->pengalaman as $exp)
+                    <div class="cv-item">
+                        <div class="item-header">
+                            <span class="item-title">{{ $exp['title'] ?? '-' }}</span>
+                            <span class="item-date">{{ $exp['dates'] ?? '' }}</span>
+                        </div>
+                        <div class="item-subtitle">{{ $exp['company'] ?? '-' }}</div>
+                    </div>
+                @endforeach
+            @else
+                <p class="empty-state">Belum ada data pengalaman. Silakan lengkapi profil Anda.</p>
+            @endif
+        </div>
+
+        {{-- Keahlian --}}
         <div class="cv-section">
             <h3 class="cv-section-title">Keahlian</h3>
-            <div class="skill-list">
-                <span class="skill-tag">JavaScript</span>
-                <span class="skill-tag">React</span>
-                <span class="skill-tag">Node.js</span>
-                <span class="skill-tag">HTML/CSS</span>
-                <span class="skill-tag">MongoDB</span>
-                <span class="skill-tag">PostgreSQL</span>
-                <span class="skill-tag">Git</span>
-                <span class="skill-tag">Docker</span>
-                <span class="skill-tag">REST API</span>
-            </div>
+            @if($mahasiswa->skills && count($mahasiswa->skills) > 0)
+                <div class="skill-list">
+                    @foreach($mahasiswa->skills as $skill)
+                        <span class="skill-tag">{{ $skill }}</span>
+                    @endforeach
+                </div>
+            @else
+                <p class="empty-state">Belum ada data keahlian. Silakan lengkapi profil Anda.</p>
+            @endif
         </div>
 
-        <div class="cv-section">
-            <h3 class="cv-section-title">Pelatihan & Sertifikat</h3>
-            <div class="cv-item">
-                <div class="item-header">
-                    <span class="item-title">Full-Stack Web Development Bootcamp</span>
-                    <span class="item-date">2023</span>
+        {{-- Bahasa --}}
+        @if($mahasiswa->bahasa && count($mahasiswa->bahasa) > 0)
+            <div class="cv-section">
+                <h3 class="cv-section-title">Bahasa</h3>
+                <div class="language-list">
+                    @foreach($mahasiswa->bahasa as $lang)
+                        <div class="language-item">
+                            <span class="language-name">{{ $lang['nama'] ?? '-' }}</span>
+                            @if(isset($lang['level']))
+                                <span class="language-level"> - {{ $lang['level'] }}</span>
+                            @endif
+                        </div>
+                    @endforeach
                 </div>
-                <div class="item-subtitle">Tech Innovators Academy</div>
             </div>
-            <div class="cv-item">
-                <div class="item-header">
-                    <span class="item-title">Data Science Fundamentals</span>
-                    <span class="item-date">2022</span>
-                </div>
-                <div class="item-subtitle">DataMind Analytics</div>
-            </div>
-        </div>
+        @endif
 
     </div>
 </body>
