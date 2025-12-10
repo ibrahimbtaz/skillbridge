@@ -8,6 +8,7 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\Admin\BackupController;
+use App\Http\Controllers\AdminController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -64,26 +65,31 @@ Route::get('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'showPublic'])
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::prefix('/admin')->group(function () {
-        Route::get('/kelola_user', [PageController::class, 'kelola_user'])->name('admin.kelola.user');
-        Route::get('/audit_loker', [PageController::class, 'audit_loker'])->name('admin.audit.loker');
-        Route::get('/audit_pelatihan', [PageController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan');
-        Route::get('/audit_mitra', [PageController::class, 'audit_mitra'])->name('admin.audit.mitra');
+        Route::get('/kelola_user', [AdminController::class, 'kelola_user'])->name('admin.kelola.user');
+        Route::post('/kelola_user', [AdminController::class, 'store_user'])->name('admin.kelola.user.store');
+        Route::get('/kelola_user/{id}/edit', [AdminController::class, 'edit_user'])->name('admin.kelola.user.edit');
+        Route::put('/kelola_user/{id}', [AdminController::class, 'update_user'])->name('admin.kelola.user.update');
+        Route::delete('/kelola_user/{id}', [AdminController::class, 'delete_user'])->name('admin.kelola.user.delete');
+
+        Route::get('/audit_loker', [AdminController::class, 'audit_loker'])->name('admin.audit.loker');
+        Route::get('/audit_pelatihan', [AdminController::class, 'audit_pelatihan'])->name('admin.audit.pelatihan');
+        Route::get('/audit_mitra', [AdminController::class, 'audit_mitra'])->name('admin.audit.mitra');
 
         // Loker approval routes
-        Route::post('/loker/{id}/approve', [PageController::class, 'approve_loker'])->name('admin.loker.approve');
-        Route::post('/loker/{id}/reject', [PageController::class, 'reject_loker'])->name('admin.loker.reject');
+        Route::post('/loker/{id}/approve', [AdminController::class, 'approve_loker'])->name('admin.loker.approve');
+        Route::post('/loker/{id}/reject', [AdminController::class, 'reject_loker'])->name('admin.loker.reject');
 
         // Pelatihan approval routes
-        Route::post('/pelatihan/{id}/approve', [PageController::class, 'approve_pelatihan'])->name('admin.pelatihan.approve');
-        Route::post('/pelatihan/{id}/reject', [PageController::class, 'reject_pelatihan'])->name('admin.pelatihan.reject');
+        Route::post('/pelatihan/{id}/approve', [AdminController::class, 'approve_pelatihan'])->name('admin.pelatihan.approve');
+        Route::post('/pelatihan/{id}/reject', [AdminController::class, 'reject_pelatihan'])->name('admin.pelatihan.reject');
 
-        Route::get('/kelola_pelatihan', [PageController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan');
-        Route::get('/kelola_pelatihan/create', [PageController::class, 'create_pelatihan'])->name('admin.kelola.pelatihan.create');
-        Route::post('/kelola_pelatihan', [PageController::class, 'store_pelatihan'])->name('admin.kelola.pelatihan.store');
-        Route::get('/kelola_pelatihan/{id}', [PageController::class, 'detail_pelatihan'])->name('admin.kelola.pelatihan.detail');
-        Route::get('/kelola_pelatihan/{id}/edit', [PageController::class, 'edit_pelatihan'])->name('admin.kelola.pelatihan.edit');
-        Route::put('/kelola_pelatihan/{id}', [PageController::class, 'update_pelatihan'])->name('admin.kelola.pelatihan.update');
-        Route::delete('/kelola_pelatihan/{id}', [PageController::class, 'delete_pelatihan'])->name('admin.kelola.pelatihan.delete');
+        Route::get('/kelola_pelatihan', [AdminController::class, 'kelola_pelatihan'])->name('admin.kelola.pelatihan');
+        Route::get('/kelola_pelatihan/create', [AdminController::class, 'create_pelatihan'])->name('admin.kelola.pelatihan.create');
+        Route::post('/kelola_pelatihan', [AdminController::class, 'store_pelatihan'])->name('admin.kelola.pelatihan.store');
+        Route::get('/kelola_pelatihan/{id}', [AdminController::class, 'detail_pelatihan'])->name('admin.kelola.pelatihan.detail');
+        Route::get('/kelola_pelatihan/{id}/edit', [AdminController::class, 'edit_pelatihan'])->name('admin.kelola.pelatihan.edit');
+        Route::put('/kelola_pelatihan/{id}', [AdminController::class, 'update_pelatihan'])->name('admin.kelola.pelatihan.update');
+        Route::delete('/kelola_pelatihan/{id}', [AdminController::class, 'delete_pelatihan'])->name('admin.kelola.pelatihan.delete');
 
         Route::prefix('backup')->name('admin.backup.')->group(function () {
             Route::get('/', [BackupController::class, 'index'])->name('index');

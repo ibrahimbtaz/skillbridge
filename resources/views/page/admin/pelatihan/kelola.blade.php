@@ -15,21 +15,49 @@
 
     <!-- Statistics Cards -->
     <div class="stat-grid">
-        <div class="stat-card">
-            <div class="label">Total Pelatihan</div>
-            <div class="value">{{ $totalPelatihan }}</div>
+        <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #ede9fe; color: #8b5cf6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $totalPelatihan }}</div>
+                    <div class="label">Total Pelatihan</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Aktif</div>
-            <div class="value" style="color: var(--green);">{{ $totalPelatihan }}</div>
+        <div class="stat-card" style="border-left: 4px solid #10b981;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #d1fae5; color: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $approvedCount ?? $totalPelatihan }}</div>
+                    <div class="label">Approved</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Draft</div>
-            <div class="value" style="color: #f59e0b;">0</div>
+        <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #fef3c7; color: #f59e0b; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $pendingCount ?? 0 }}</div>
+                    <div class="label">Pending</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Total Peserta</div>
-            <div class="value">0</div>
+        <div class="stat-card" style="border-left: 4px solid #ef4444;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #fee2e2; color: #ef4444; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $rejectedCount ?? 0 }}</div>
+                    <div class="label">Rejected</div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -121,27 +121,6 @@
                     </div>
                 </button>
             </form>
-
-            <!-- Full Backup -->
-            <form method="POST" action="{{ route('admin.backup.create') }}" class="backup-form">
-                @csrf
-                <input type="hidden" name="type" value="full">
-                <button type="submit" style="width: 100%; padding: 0; border: none; background: none; cursor: pointer;">
-                    <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #86efac; border-radius: 12px; padding: 24px; transition: all 0.3s; text-align: left;" onmouseover="this.style.borderColor='var(--green)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)';" onmouseout="this.style.borderColor='#86efac'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-                        <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; flex-shrink: 0;">
-                                <i class="fas fa-file-zipper"></i>
-                            </div>
-                            <div style="flex: 1;">
-                                <h4 style="font-weight: 700; color: var(--text-dark); font-size: 16px; margin: 0 0 6px 0;">Full Backup (DB + Files)</h4>
-                                <p style="color: var(--text-light); font-size: 13px; margin: 0 0 8px 0;">Backup database dan semua file aplikasi</p>
-                                <span style="color: var(--green); font-size: 12px; font-weight: 600;">🔒 Lengkap & Aman</span>
-                            </div>
-                            <i class="fas fa-arrow-right" style="font-size: 20px; color: var(--green);"></i>
-                        </div>
-                    </div>
-                </button>
-            </form>
         </div>
     </div>
 

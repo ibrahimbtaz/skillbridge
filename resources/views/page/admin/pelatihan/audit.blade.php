@@ -15,21 +15,49 @@
 
     <!-- Statistics Cards -->
     <div class="stat-grid">
-        <div class="stat-card">
-            <div class="label">Total Pelatihan</div>
-            <div class="value">{{ $totalPelatihan }}</div>
+        <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #ede9fe; color: #8b5cf6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $totalPelatihan }}</div>
+                    <div class="label">Total Pelatihan</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Pending Review</div>
-            <div class="value" style="color: #f59e0b;">{{ $pendingCount }}</div>
+        <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #fef3c7; color: #f59e0b; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $pendingCount }}</div>
+                    <div class="label">Pending Review</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Approved</div>
-            <div class="value" style="color: var(--green);">{{ $approvedCount }}</div>
+        <div class="stat-card" style="border-left: 4px solid #10b981;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #d1fae5; color: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $approvedCount }}</div>
+                    <div class="label">Approved</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="label">Rejected</div>
-            <div class="value" style="color: var(--red);">{{ $rejectedCount }}</div>
+        <div class="stat-card" style="border-left: 4px solid #ef4444;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 50px; height: 50px; background: #fee2e2; color: #ef4444; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <div>
+                    <div class="value">{{ $rejectedCount }}</div>
+                    <div class="label">Rejected</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -84,12 +112,48 @@
                     <button type="submit" class="btn btn-primary" style="flex: 1;">
                         <i class="fas fa-search"></i> Filter
                     </button>
-                    <a href="{{ route('admin.audit.pelatihan') }}" class="btn btn-secondary" style="padding: 10px 15px;">
-                        <i class="fas fa-undo"></i>
+                    <a href="{{ route('admin.audit.pelatihan') }}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                        <i class="fas fa-redo"></i> Reset
                     </a>
                 </div>
             </div>
         </form>
+
+        @if(request()->hasAny(['search', 'status', 'kategori', 'from_date', 'to_date']))
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span style="font-size: 13px; color: var(--text-light);">Filter aktif:</span>
+                @if(request('search'))
+                    <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        Pencarian: "{{ request('search') }}"
+                    </span>
+                @endif
+                @if(request('status'))
+                    <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        Status: {{ ucfirst(request('status')) }}
+                    </span>
+                @endif
+                @if(request('kategori'))
+                    <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        Kategori: {{ request('kategori') }}
+                    </span>
+                @endif
+                @if(request('from_date'))
+                    <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        Dari: {{ request('from_date') }}
+                    </span>
+                @endif
+                @if(request('to_date'))
+                    <span style="background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">
+                        Sampai: {{ request('to_date') }}
+                    </span>
+                @endif
+                <span style="font-size: 13px; color: var(--text-light); margin-left: 10px;">
+                    ({{ $pelatihans->count() }} hasil)
+                </span>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Table Section -->
