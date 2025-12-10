@@ -61,16 +61,57 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
-            'dump' => array_filter([
-                // Path kosong akan menggunakan mysqldump dari PATH environment
-                // Di Docker, mysqldump sudah tersedia di PATH
-                // Di Windows/Laragon, set MYSQL_DUMP_PATH di .env
-                'dump_binary_path' => env('MYSQL_DUMP_PATH', '') ?: null,
-                'use_single_transaction' => true,
-                'timeout' => 60 * 5,
-                // Hanya tambahkan jika ada nilai
-                'add_extra_option' => env('MYSQL_DUMP_EXTRA_OPTIONS') ?: null,
-            ])
+            'dump' => (function () {
+                // Deteksi otomatis environment
+                $isDocker = file_exists('/.dockerenv') ||
+                            (file_exists('/proc/1/cgroup') && strpos(file_get_contents('/proc/1/cgroup'), 'docker') !== false) ||
+                            env('APP_ENV_DOCKER', false);
+
+                $isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+                $isCli = php_sapi_name() === 'cli' || php_sapi_name() === 'cli-server';
+
+                $config = [
+                    'use_single_transaction' => true,
+                    'timeout' => 60 * 5,
+                ];
+
+                // Jika user set manual di .env, gunakan itu
+                if (env('MYSQL_DUMP_PATH')) {
+                    $config['dump_binary_path'] = env('MYSQL_DUMP_PATH');
+                } elseif ($isWindows) {
+                    // Auto-detect Laragon MySQL path
+                    $possiblePaths = [
+                        'C:/laragon/bin/mysql/mysql-8.0.30-winx64/bin',
+                        'C:/laragon/bin/mysql/mysql-8.0/bin',
+                        'C:/xampp/mysql/bin',
+                    ];
+                    foreach ($possiblePaths as $path) {
+                        if (is_dir($path)) {
+                            $config['dump_binary_path'] = $path;
+                            break;
+                        }
+                    }
+                }
+
+                // Jika user set manual di .env, gunakan itu
+                if (env('MYSQL_DUMP_EXTRA_OPTIONS')) {
+                    $config['add_extra_option'] = env('MYSQL_DUMP_EXTRA_OPTIONS');
+                } elseif ($isDocker) {
+                    // Docker dengan MariaDB client perlu --skip-ssl
+                    $config['add_extra_option'] = '--skip-ssl';
+                } elseif ($isWindows) {
+                    // Windows/Laragon dengan MySQL native
+                    // CLI bisa menggunakan TCP, tapi Web Server TIDAK BISA create socket (error 10106)
+                    if ($isCli) {
+                        $config['add_extra_option'] = '--set-gtid-purged=OFF --host=127.0.0.1 --protocol=TCP';
+                    } else {
+                        // Web request: JANGAN gunakan --protocol=TCP, biarkan mysqldump pakai default
+                        $config['add_extra_option'] = '--set-gtid-purged=OFF';
+                    }
+                }
+
+                return array_filter($config);
+            })()
         ],
 
         'mariadb' => [

@@ -168,17 +168,20 @@ Edit file `.env` dan sesuaikan untuk Docker:
 ```env
 APP_NAME=Skillbridge
 APP_ENV=local
-APP_KEY=base64:+UEwDIuhNrjTo9zrv102sm/ZLH/CXl0/yo7AUwR1VeE=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=mysql
-DB_HOST=db                    # ⬅️ Ganti dengan 'db'
+DB_HOST=db                    # ⬅️ Ganti dengan 'db' (nama service Docker)
 DB_PORT=3306
 DB_DATABASE=skillbridge
 DB_USERNAME=laravel           # ⬅️ Ganti dengan 'laravel'
 DB_PASSWORD=password          # ⬅️ Ganti dengan 'password'
+
+# Konfigurasi MySQL dump dideteksi otomatis (tidak perlu diubah)
 ```
+
+> **Note**: Tidak perlu file `.env.docker` terpisah. Konfigurasi backup MySQL otomatis menyesuaikan berdasarkan environment.
 
 ### 3. Build dan Jalankan Container
 
@@ -501,6 +504,36 @@ docker exec skillbridge-app php artisan route:list
 # Lihat database status
 docker exec skillbridge-app php artisan migrate:status
 ```
+
+---
+
+## 💾 Backup Database
+
+Skillbridge menggunakan [Spatie Laravel Backup](https://spatie.be/docs/laravel-backup/) untuk backup database. Konfigurasi dump MySQL/MariaDB **dideteksi otomatis** berdasarkan environment (Docker atau lokal).
+
+### Menjalankan Backup
+
+**Manual Installation:**
+```bash
+php artisan backup:run --only-db --disable-notifications
+```
+
+**Docker Installation:**
+```bash
+docker-compose exec app php artisan backup:run --only-db --disable-notifications
+```
+
+### Lokasi File Backup
+
+File backup tersimpan di folder `storage/app/backups/` dalam format ZIP.
+
+### Auto-Detection
+
+Sistem secara otomatis mendeteksi:
+- **Docker**: Menggunakan `--skip-ssl` (MariaDB client)
+- **Windows/Laragon**: Menggunakan `--set-gtid-purged=OFF` dan path MySQL dari Laragon
+
+Tidak perlu konfigurasi manual di file `.env`.
 
 ---
 

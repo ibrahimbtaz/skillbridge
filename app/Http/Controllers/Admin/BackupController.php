@@ -92,52 +92,52 @@ class BackupController extends Controller
 
             // Deteksi environment
             $isDocker = $this->isRunningInDocker();
+            $isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
             Log::info('Is Docker: ' . ($isDocker ? 'Yes' : 'No'));
+            Log::info('Is Windows: ' . ($isWindows ? 'Yes' : 'No'));
 
-            // Gunakan Artisan::call() - lebih reliable daripada proc_open
-            // untuk menjalankan backup command dari web request
             $exitCode = null;
-            $output = new \Symfony\Component\Console\Output\BufferedOutput();
+            $outputText = '';
 
-            try {
-                if ($option == 'database') {
-                    $exitCode = Artisan::call('backup:run', [
-                        '--only-db' => true,
-                        '--disable-notifications' => true,
-                    ], $output);
-                } else {
-                    $exitCode = Artisan::call('backup:run', [
-                        '--disable-notifications' => true,
-                    ], $output);
-                }
+            // Di Windows lokal, HARUS gunakan shell execution karena:
+            // - Web server (Apache) tidak bisa create TCP socket untuk mysqldump
+            // - PHP CLI bisa create socket dengan sempurna
+            // Di Docker, Artisan::call() berfungsi normal
+            if ($isWindows && !$isDocker) {
+                Log::info('Windows detected: Using shell execution to avoid socket issues');
 
-                $outputText = $output->fetch();
-                Log::info('Backup output: ' . $outputText);
-                Log::info('Backup exit code: ' . $exitCode);
-
-            } catch (\Exception $artisanException) {
-                Log::warning('Artisan::call failed, trying shell method: ' . $artisanException->getMessage());
-
-                // Fallback ke shell jika Artisan::call gagal (misalnya memory issue)
+                // Langsung gunakan shell method untuk Windows
                 $artisanPath = base_path('artisan');
 
-                if ($isDocker) {
-                    $phpBinary = 'php';
-                } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                    $possiblePaths = [
-                        'C:/laragon/bin/php/php-8.2.28-Win32-vs16-x64/php.exe',
-                        'C:/laragon/bin/php/php-8.2/php.exe',
-                        PHP_BINARY
-                    ];
-                    $phpBinary = PHP_BINARY;
-                    foreach ($possiblePaths as $path) {
-                        if (file_exists($path)) {
-                            $phpBinary = $path;
-                            break;
+                // Cari PHP binary
+                $possiblePaths = [
+                    'C:/laragon/bin/php/php-8.2.28-Win32-vs16-x64/php.exe',
+                    'C:/laragon/bin/php/php-8.2/php.exe',
+                    'C:/laragon/bin/php/php-8.3/php.exe',
+                    'C:/laragon/bin/php/php-8.1/php.exe',
+                ];
+                $phpBinary = null;
+                foreach ($possiblePaths as $path) {
+                    if (file_exists($path)) {
+                        $phpBinary = $path;
+                        break;
+                    }
+                }
+
+                // Fallback: cari di folder Laragon
+                if (!$phpBinary) {
+                    $laravelPhpDir = 'C:/laragon/bin/php';
+                    if (is_dir($laravelPhpDir)) {
+                        $dirs = glob($laravelPhpDir . '/php-*', GLOB_ONLYDIR);
+                        if (!empty($dirs)) {
+                            rsort($dirs); // Ambil versi terbaru
+                            $phpBinary = $dirs[0] . '/php.exe';
                         }
                     }
-                } else {
-                    $phpBinary = PHP_BINARY;
+                }
+
+                if (!$phpBinary || !file_exists($phpBinary)) {
+                    throw new \Exception('PHP binary tidak ditemukan di Laragon. Path yang dicek: ' . implode(', ', $possiblePaths));
                 }
 
                 Log::info('Using PHP binary: ' . $phpBinary);
@@ -158,30 +158,40 @@ class BackupController extends Controller
 
                 Log::info('Command: ' . $command);
 
-                $descriptorspec = [
-                    0 => ['pipe', 'r'],
-                    1 => ['pipe', 'w'],
-                    2 => ['pipe', 'w']
-                ];
-
-                $process = proc_open($command, $descriptorspec, $pipes, base_path());
-
-                if (!is_resource($process)) {
-                    throw new \Exception('Gagal menjalankan backup command. Cek permission PHP.');
-                }
-
-                fclose($pipes[0]);
-                $outputText = stream_get_contents($pipes[1]);
-                fclose($pipes[1]);
-                $errors = stream_get_contents($pipes[2]);
-                fclose($pipes[2]);
-                $exitCode = proc_close($process);
+                // Gunakan exec() yang lebih simple untuk Windows
+                $outputLines = [];
+                $exitCode = 0;
+                exec($command, $outputLines, $exitCode);
+                $outputText = implode("\n", $outputLines);
 
                 Log::info('Backup return code: ' . $exitCode);
                 Log::info('Backup output: ' . $outputText);
 
-                if (!empty($errors)) {
-                    Log::error('Backup errors: ' . $errors);
+            } else {
+                // Docker atau Linux: gunakan Artisan::call()
+                Log::info('Using Artisan::call() for backup');
+
+                $output = new \Symfony\Component\Console\Output\BufferedOutput();
+
+                try {
+                    if ($option == 'database') {
+                        $exitCode = Artisan::call('backup:run', [
+                            '--only-db' => true,
+                            '--disable-notifications' => true,
+                        ], $output);
+                    } else {
+                        $exitCode = Artisan::call('backup:run', [
+                            '--disable-notifications' => true,
+                        ], $output);
+                    }
+
+                    $outputText = $output->fetch();
+                    Log::info('Backup output: ' . $outputText);
+                    Log::info('Backup exit code: ' . $exitCode);
+
+                } catch (\Exception $artisanException) {
+                    Log::error('Artisan::call failed: ' . $artisanException->getMessage());
+                    throw $artisanException;
                 }
             }
 
