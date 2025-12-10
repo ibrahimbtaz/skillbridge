@@ -88,102 +88,132 @@ class BackupController extends Controller
             Log::info('Starting backup via web. Type: ' . $option);
             Log::info('PHP Version: ' . PHP_VERSION);
             Log::info('Running as: ' . (php_sapi_name()));
+            Log::info('OS: ' . PHP_OS);
 
-            // SOLUSI: Gunakan shell_exec dengan PHP binary explicit
-            // Ini memastikan environment yang benar untuk mysqldump
-            $phpBinary = 'C:/laragon/bin/php/php-8.2.28-Win32-vs16-x64/php.exe';
-            $artisanPath = base_path('artisan');
+            // Deteksi environment
+            $isDocker = $this->isRunningInDocker();
+            Log::info('Is Docker: ' . ($isDocker ? 'Yes' : 'No'));
 
-            // Cek apakah PHP binary ada
-            if (!file_exists($phpBinary)) {
-                // Fallback ke PHP_BINARY konstanta
-                $phpBinary = PHP_BINARY;
-            }
+            // Gunakan Artisan::call() - lebih reliable daripada proc_open
+            // untuk menjalankan backup command dari web request
+            $exitCode = null;
+            $output = new \Symfony\Component\Console\Output\BufferedOutput();
 
-            // Build command
-            if ($option == 'database') {
-                $command = sprintf(
-                    '"%s" "%s" backup:run --only-db --disable-notifications 2>&1',
-                    $phpBinary,
-                    $artisanPath
-                );
-            } else {
-                $command = sprintf(
-                    '"%s" "%s" backup:run --disable-notifications 2>&1',
-                    $phpBinary,
-                    $artisanPath
-                );
-            }
+            try {
+                if ($option == 'database') {
+                    $exitCode = Artisan::call('backup:run', [
+                        '--only-db' => true,
+                        '--disable-notifications' => true,
+                    ], $output);
+                } else {
+                    $exitCode = Artisan::call('backup:run', [
+                        '--disable-notifications' => true,
+                    ], $output);
+                }
 
-            Log::info('Command: ' . $command);
+                $outputText = $output->fetch();
+                Log::info('Backup output: ' . $outputText);
+                Log::info('Backup exit code: ' . $exitCode);
 
-            // Jalankan command dengan proc_open untuk kontrol lebih baik
-            $descriptorspec = [
-                0 => ['pipe', 'r'],  // stdin
-                1 => ['pipe', 'w'],  // stdout
-                2 => ['pipe', 'w']   // stderr
-            ];
+            } catch (\Exception $artisanException) {
+                Log::warning('Artisan::call failed, trying shell method: ' . $artisanException->getMessage());
 
-            $process = proc_open($command, $descriptorspec, $pipes, base_path());
+                // Fallback ke shell jika Artisan::call gagal (misalnya memory issue)
+                $artisanPath = base_path('artisan');
 
-            if (!is_resource($process)) {
-                throw new \Exception('Gagal menjalankan backup command. Cek permission PHP.');
-            }
+                if ($isDocker) {
+                    $phpBinary = 'php';
+                } elseif (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $possiblePaths = [
+                        'C:/laragon/bin/php/php-8.2.28-Win32-vs16-x64/php.exe',
+                        'C:/laragon/bin/php/php-8.2/php.exe',
+                        PHP_BINARY
+                    ];
+                    $phpBinary = PHP_BINARY;
+                    foreach ($possiblePaths as $path) {
+                        if (file_exists($path)) {
+                            $phpBinary = $path;
+                            break;
+                        }
+                    }
+                } else {
+                    $phpBinary = PHP_BINARY;
+                }
 
-            // Tutup stdin
-            fclose($pipes[0]);
+                Log::info('Using PHP binary: ' . $phpBinary);
 
-            // Baca stdout
-            $output = stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
+                if ($option == 'database') {
+                    $command = sprintf(
+                        '"%s" "%s" backup:run --only-db --disable-notifications 2>&1',
+                        $phpBinary,
+                        $artisanPath
+                    );
+                } else {
+                    $command = sprintf(
+                        '"%s" "%s" backup:run --disable-notifications 2>&1',
+                        $phpBinary,
+                        $artisanPath
+                    );
+                }
 
-            // Baca stderr
-            $errors = stream_get_contents($pipes[2]);
-            fclose($pipes[2]);
+                Log::info('Command: ' . $command);
 
-            // Tunggu process selesai
-            $returnCode = proc_close($process);
+                $descriptorspec = [
+                    0 => ['pipe', 'r'],
+                    1 => ['pipe', 'w'],
+                    2 => ['pipe', 'w']
+                ];
 
-            Log::info('Backup return code: ' . $returnCode);
-            Log::info('Backup output: ' . $output);
+                $process = proc_open($command, $descriptorspec, $pipes, base_path());
 
-            if (!empty($errors)) {
-                Log::error('Backup errors: ' . $errors);
+                if (!is_resource($process)) {
+                    throw new \Exception('Gagal menjalankan backup command. Cek permission PHP.');
+                }
+
+                fclose($pipes[0]);
+                $outputText = stream_get_contents($pipes[1]);
+                fclose($pipes[1]);
+                $errors = stream_get_contents($pipes[2]);
+                fclose($pipes[2]);
+                $exitCode = proc_close($process);
+
+                Log::info('Backup return code: ' . $exitCode);
+                Log::info('Backup output: ' . $outputText);
+
+                if (!empty($errors)) {
+                    Log::error('Backup errors: ' . $errors);
+                }
             }
 
             // Cek apakah backup berhasil
-            if (empty($output)) {
-                throw new \Exception('Backup tidak menghasilkan output. Cek permission atau path PHP.');
+            $outputText = $outputText ?? '';
+
+            if ($exitCode !== 0) {
+                throw new \Exception('Backup gagal dengan exit code: ' . $exitCode . '. Output: ' . substr($outputText, 0, 500));
             }
 
-            if ($returnCode !== 0 || str_contains($output, 'Backup failed')) {
-                $errorDetail = !empty($errors) ? $errors : substr($output, 0, 500);
-                throw new \Exception('Backup gagal. Detail: ' . $errorDetail);
+            // Verifikasi file backup baru dibuat
+            $disk = Storage::disk('backups');
+            $files = collect($disk->allFiles())->filter(function($file) {
+                return substr($file, -4) === '.zip';
+            })->sortByDesc(function($file) use ($disk) {
+                return $disk->lastModified($file);
+            });
+
+            $latestBackup = $files->first();
+
+            if ($latestBackup) {
+                Log::info('Backup completed successfully. File: ' . $latestBackup);
+                return redirect()->back()->with('success', 'Backup berhasil dibuat! File: ' . basename($latestBackup));
             }
 
             // Cek apakah output menunjukkan backup berhasil
-            if (str_contains($output, 'Backup completed') || str_contains($output, 'Successfully copied')) {
-                Log::info('Backup completed successfully via shell_exec');
-
-                // Verifikasi file backup baru dibuat
-                $disk = Storage::disk('backups');
-                $files = collect($disk->allFiles())->filter(function($file) {
-                    return substr($file, -4) === '.zip';
-                })->sortByDesc(function($file) use ($disk) {
-                    return $disk->lastModified($file);
-                });
-
-                $latestBackup = $files->first();
-
-                if ($latestBackup) {
-                    return redirect()->back()->with('success', 'Backup berhasil dibuat! File: ' . basename($latestBackup));
-                }
-
+            if (str_contains($outputText, 'Backup completed') || str_contains($outputText, 'Successfully')) {
                 return redirect()->back()->with('success', 'Backup berhasil dibuat!');
             }
 
             // Jika sampai sini, kemungkinan ada warning tapi backup mungkin berhasil
-            Log::warning('Backup finished but status unclear. Output: ' . substr($output, 0, 200));
+            Log::warning('Backup finished but status unclear. Output: ' . substr($outputText, 0, 200));
             return redirect()->back()->with('warning', 'Backup selesai. Refresh halaman untuk melihat hasil.');
 
         } catch (\Exception $e) {
@@ -273,5 +303,31 @@ class BackupController extends Controller
         $i = floor(log($bytes, 1024));
 
         return round($bytes / pow(1024, $i), 2) . ' ' . $units[$i];
+    }
+
+    /**
+     * Check if running inside Docker container
+     */
+    private function isRunningInDocker(): bool
+    {
+        // Method 1: Check for .dockerenv file
+        if (file_exists('/.dockerenv')) {
+            return true;
+        }
+
+        // Method 2: Check cgroup
+        if (file_exists('/proc/1/cgroup')) {
+            $cgroup = file_get_contents('/proc/1/cgroup');
+            if (strpos($cgroup, 'docker') !== false || strpos($cgroup, 'kubepods') !== false) {
+                return true;
+            }
+        }
+
+        // Method 3: Check environment variable (set it in docker-compose if needed)
+        if (env('APP_ENV_DOCKER', false)) {
+            return true;
+        }
+
+        return false;
     }
 }

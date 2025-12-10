@@ -10,13 +10,26 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nodejs \
-    npm
+    npm \
+    libzip-dev \
+    wget \
+    gnupg \
+    lsb-release
+
+# Install MySQL 8.0 client (bukan MariaDB) untuk kompatibilitas dengan MySQL 8.0 server
+RUN wget https://dev.mysql.com/get/mysql-apt-config_0.8.29-1_all.deb && \
+    dpkg -i mysql-apt-config_0.8.29-1_all.deb || true && \
+    apt-get update && \
+    apt-get install -y mysql-client || apt-get install -y default-mysql-client
 
 # Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && rm -f mysql-apt-config_0.8.29-1_all.deb
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Copy PHP config
+COPY docker/php/local.ini /usr/local/etc/php/conf.d/local.ini
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
