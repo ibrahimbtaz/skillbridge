@@ -323,7 +323,7 @@
             <a class="job-card" href="{{ route('loker.show', $loker->id) }}">
                 <div class="job-card-content">
                     <div class="job-header">
-                        <img class="job-logo" src="{{ $loker->mitra->logo_url }}" alt="Logo Perusahaan">
+                        <img class="job-logo" src="{{ asset('storage/'.$loker->mitra->logo_url) }}" alt="Logo Perusahaan">
                         <div class="job-info">
                             <span class="job-title">{{ $loker->title }}</span>
                             <div class="job-company">{{ $loker->mitra->nama_mitra }}</div>

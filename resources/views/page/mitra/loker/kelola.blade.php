@@ -50,7 +50,7 @@
         </a>
     </div>
 
-    <div class="summary-grid">
+    {{-- <div class="summary-grid">
         <div class="summary-card">
             <span class="summary-label">Total Aktif</span>
             <span class="summary-value">12</span>
@@ -66,9 +66,9 @@
             <span class="summary-value">18</span>
             <span class="summary-diff negative"><i class="fas fa-arrow-down"></i> 2 posisi expired</span>
         </div>
-    </div>
+    </div> --}}
 
-    <div class="content-card filters-card">
+    {{-- <div class="content-card filters-card">
         <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
             <div>
                 <h2 class="card-title">Filter &amp; Pencarian</h2>
@@ -109,18 +109,18 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <div class="content-card">
         <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
             <div style="display:flex; align-items: center; gap: 12px;">
                 <h2 class="card-title">Daftar Lowongan</h2>
-                <span class="badge-count">17 posisi</span>
+                {{-- <span class="badge-count">17 posisi</span> --}}
             </div>
-            <div style="display:flex; gap: 10px;">
+            {{-- <div style="display:flex; gap: 10px;">
                 <a href="#" class="btn btn-secondary"><i class="fas fa-file-export"></i> Export</a>
                 <a href="#" class="btn btn-secondary"><i class="fas fa-filter"></i> Simpan Filter</a>
-            </div>
+            </div> --}}
         </div>
         <div class="table-wrapper">
             <table>

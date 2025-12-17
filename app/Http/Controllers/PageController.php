@@ -67,7 +67,50 @@ class PageController extends Controller
 
         if ($user->role == 2) { // mitra
             $loker_count = $mitra->loker()->count();
-            return view('page.mitra.dashboard', compact('mitra', 'loker_count'));
+
+            // Get loker IDs for this mitra
+            $lokerIds = $mitra->loker()->pluck('id');
+
+            // Total pelamar untuk semua loker mitra ini
+            $totalPelamar = \DB::table('loker_mahasiswa')
+                ->whereIn('loker_id', $lokerIds)
+                ->count();
+
+            // Pesan/notifikasi belum dibaca
+            $unreadNotifications = \App\Models\Notification::where('user_id', $user->id)
+                ->unread()
+                ->count();
+
+            // Pelamar baru minggu ini
+            $pelamarMingguIni = \DB::table('loker_mahasiswa')
+                ->whereIn('loker_id', $lokerIds)
+                ->where('created_at', '>=', now()->startOfWeek())
+                ->count();
+
+            // Pelamar terbaru (5 terakhir)
+            $pelamarTerbaru = \DB::table('loker_mahasiswa')
+                ->join('mahasiswas', 'loker_mahasiswa.mahasiswa_id', '=', 'mahasiswas.id')
+                ->join('lokers', 'loker_mahasiswa.loker_id', '=', 'lokers.id')
+                ->whereIn('loker_mahasiswa.loker_id', $lokerIds)
+                ->select(
+                    'mahasiswas.id as mahasiswa_id',
+                    'mahasiswas.nama as nama_mahasiswa',
+                    'lokers.title as posisi',
+                    'loker_mahasiswa.created_at as tanggal_melamar',
+                    'loker_mahasiswa.status'
+                )
+                ->orderBy('loker_mahasiswa.created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            return view('page.mitra.dashboard', compact(
+                'mitra',
+                'loker_count',
+                'totalPelamar',
+                'unreadNotifications',
+                'pelamarMingguIni',
+                'pelamarTerbaru'
+            ));
         }
 
         abort(403, 'Kamu ngapain di sini?');

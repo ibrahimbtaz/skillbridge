@@ -229,11 +229,11 @@
     <div class="modal-content">
         <h2 class="modal-title">Update Status Lamaran</h2>
         <p id="modalPelamarName" style="color: var(--text-light); margin-bottom: 16px;"></p>
-        
+
         <form id="updateForm" method="POST">
             @csrf
             @method('PUT')
-            
+
             <div class="form-group">
                 <label class="form-label">Status</label>
                 <select name="status" id="modalStatus" class="form-select" required>
@@ -244,12 +244,12 @@
                     <option value="rejected">Ditolak</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label class="form-label">Catatan/Feedback untuk Pelamar</label>
                 <textarea name="catatan_mitra" id="modalCatatan" class="form-textarea" placeholder="Tulis catatan atau feedback..."></textarea>
             </div>
-            
+
             <div class="form-buttons">
                 <button type="button" class="btn btn-secondary" onclick="closeUpdateModal()">Batal</button>
                 <button type="submit" class="btn btn-primary">

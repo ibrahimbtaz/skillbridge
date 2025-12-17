@@ -10,15 +10,15 @@
                         <div class="label">Lowongan Aktif</div>
                     </div>
                     <div class="stat-card">
-                        <div class="value">28</div>
+                        <div class="value">{{$totalPelamar}}</div>
                         <div class="label">Total Pelamar</div>
                     </div>
                     <div class="stat-card">
-                        <div class="value">3</div>
+                        <div class="value">{{$unreadNotifications}}</div>
                         <div class="label">Pesan Belum Dibaca</div>
                     </div>
                     <div class="stat-card">
-                        <div class="value">12</div>
+                        <div class="value">{{$pelamarMingguIni}}</div>
                         <div class="label">Pelamar Baru (Minggu Ini)</div>
                     </div>
                 </div>
@@ -39,39 +39,43 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($pelamarTerbaru as $pelamar)
                                 <tr>
-                                    <td>Ahmad Syahputra</td>
-                                    <td>Senior Frontend Developer</td>
-                                    <td>10 Nov 2025</td>
-                                    <td>Baru Masuk</td>
+                                    <td>{{ $pelamar->nama_mahasiswa }}</td>
+                                    <td>{{ $pelamar->posisi }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($pelamar->tanggal_melamar)->format('d M Y') }}</td>
                                     <td>
-                                        <a href="#" class="btn-icon view" title="Lihat Profil">
-                                            <i class="fas fa-eye"></i> Lihat Profil
+                                        @switch($pelamar->status)
+                                            @case('pending')
+                                                <span class="badge badge-warning">Baru Masuk</span>
+                                                @break
+                                            @case('reviewed')
+                                                <span class="badge badge-info">Ditinjau</span>
+                                                @break
+                                            @case('interview')
+                                                <span class="badge badge-primary">Interview</span>
+                                                @break
+                                            @case('accepted')
+                                                <span class="badge badge-success">Diterima</span>
+                                                @break
+                                            @case('rejected')
+                                                <span class="badge badge-danger">Ditolak</span>
+                                                @break
+                                            @default
+                                                <span class="badge badge-secondary">{{ $pelamar->status }}</span>
+                                        @endswitch
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('mitra.pelamar.index') }}" class="btn-icon view" title="Lihat Detail">
+                                            <i class="fas fa-eye"></i> Lihat Detail
                                         </a>
                                     </td>
                                 </tr>
+                                @empty
                                 <tr>
-                                    <td>Budi Santoso</td>
-                                    <td>UI/UX Designer</td>
-                                    <td>09 Nov 2025</td>
-                                    <td>Ditinjau</td>
-                                    <td>
-                                        <a href="#" class="btn-icon view" title="Lihat Profil">
-                                            <i class="fas fa-eye"></i> Lihat Profil
-                                        </a>
-                                    </td>
+                                    <td colspan="5" class="text-center">Belum ada pelamar</td>
                                 </tr>
-                                <tr>
-                                    <td>Siti Nurhaliza</td>
-                                    <td>Senior Frontend Developer</td>
-                                    <td>09 Nov 2025</td>
-                                    <td>Baru Masuk</td>
-                                    <td>
-                                        <a href="#" class="btn-icon view" title="Lihat Profil">
-                                            <i class="fas fa-eye"></i> Lihat Profil
-                                        </a>
-                                    </td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

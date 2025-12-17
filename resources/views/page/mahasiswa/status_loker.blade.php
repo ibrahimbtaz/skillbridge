@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Status Lamaran Saya</title>
-    
+
     <style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; }
         .container { max-width: 900px; margin: 20px auto; }
@@ -14,7 +14,7 @@
         .card-header { padding: 20px; border-bottom: 1px solid #eee; }
         .card-header h1 { margin: 0; }
         .card-body { padding: 20px; }
-        
+
         .lamaran-item {
             display: flex;
             justify-content: space-between;
@@ -26,7 +26,7 @@
         .job-title { font-weight: bold; font-size: 1.1em; color: #333; }
         .company-name { color: #555; font-size: 0.9em; }
         .apply-date { color: #888; font-size: 0.8em; margin-top: 4px; }
-        
+
         .status {
             font-weight: bold;
             padding: 5px 12px;
@@ -51,7 +51,7 @@
             margin-left: 10px;
             cursor: pointer; /* Menambahkan cursor pointer */
         }
-        
+
         /* Untuk kasus jika tidak ada lamaran */
         .no-data {
             text-align: center;
@@ -104,7 +104,7 @@
                             </a>
                             <div class="company-name">{{ $loker->mitra->nama_mitra }}</div>
                             <div class="apply-date">Dilamar pada: {{ $loker->pivot->created_at->format('d M Y') }}</div>
-                            @if($loker->pivot->catatan)
+                            @if($loker->pivot->catatan)  
                                 <div style="font-size: 0.85em; color: #666; margin-top: 4px;">
                                     <i>Catatan: "{{ Str::limit($loker->pivot->catatan, 50) }}"</i>
                                 </div>
@@ -119,9 +119,9 @@
                             <span class="status {{ $statusClass[$loker->pivot->status] ?? 'status-Terkirim' }}">
                                 {{ $statusLabels[$loker->pivot->status] ?? 'Terkirim' }}
                             </span>
-                            
+
                             @if($loker->pivot->status === 'pending')
-                                <form action="{{ route('loker.cancel', $loker->id) }}" method="POST" style="margin-left: 10px;" 
+                                <form action="{{ route('loker.cancel', $loker->id) }}" method="POST" style="margin-left: 10px;"
                                       onsubmit="return confirm('Apakah Anda yakin ingin membatalkan lamaran ini?')">
                                     @csrf
                                     @method('DELETE')

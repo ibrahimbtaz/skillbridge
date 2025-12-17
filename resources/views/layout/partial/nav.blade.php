@@ -140,8 +140,9 @@
         <a href="{{ route('loker.index') }}">Lowongan Kerja</a>
         <a href="{{ route('pelatihan.index') }}">Pelatihan</a>
         @auth
+
             <!-- Notification Bell -->
-            <div class="notification-bell">
+            {{-- <div class="notification-bell">
                 <a href="{{ route('notifications.index') }}" title="Notifikasi">
                     <i class="fas fa-bell"></i>
                 </a>
@@ -151,7 +152,8 @@
                 @if($unreadCount > 0)
                     <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
                 @endif
-            </div>
+            </div> --}}
+            <a href="{{ route('mahasiswa.status_loker') }}" style="color: white;">Status Lamaran</a>
 
             <div class="user-info">
                 @php $u = Auth::user(); @endphp

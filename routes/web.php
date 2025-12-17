@@ -49,9 +49,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/pelatihan', [PelatihanController::class, 'index'])->name('pelatihan.index');
-Route::get('/pelatihan/{pelatihan}', [PelatihanController::class, 'show'])->name('pelatihan.show');
 Route::get('/pelatihan/rating', [PelatihanController::class, 'rating'])->name('pelatihan.rating');
 Route::get('/pelatihan/edit', [PelatihanController::class, 'edit'])->name('pelatihan.edit');
+Route::get('/pelatihan/{pelatihan}', [PelatihanController::class, 'show'])->name('pelatihan.show');
 
 //sementara gini dulu lahya
 Route::get('/mahasiswa/profile', [MahasiswaController::class, 'show'])->name('mahasiswa.profile');

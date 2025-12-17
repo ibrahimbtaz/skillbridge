@@ -21,6 +21,12 @@ class UserSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
         $users = [
             [
+                'name' => 'surya',
+                'email' => '202451014@std.umk.ac.id',
+                'password' => Hash::make('password'),
+                'role' => '3',
+            ],
+            [
                 'name' => 'user',
                 'email' => 'user@example.com',
                 'password' => Hash::make('password'),
